@@ -1,71 +1,10 @@
+// The tmux macros that used to live here (v_split, h_split, detach_session,
+// sync_panes, next_pane, show_sessions, create_or_attach) and clip_hist were
+// never bound to any key. They have been removed rather than left compiled
+// into every build; git history has them if you want them back.
+
 / {
     macros {
-        v_split: v_split {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp LC(B) &kp PRCNT>;
-        };
-
-        h_split: h_split {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp LC(B) &kp DQT>;
-        };
-
-        detach_session: detach_session {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp LC(B) &kp D>;
-        };
-
-        sync_panes: sync_panes {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp LC(B) &kp SPACE>;
-        };
-
-        next_pane: next_pane {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp LC(B) &kp O>;
-        };
-
-        show_sessions: show_sessions {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp LC(B) &kp S>;
-        };
-
-        create_or_attach: create_or_attach {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings
-                = <&macro_tap &kp T>
-                , <&macro_tap &kp M>
-                , <&macro_tap &kp U>
-                , <&macro_tap &kp X>
-                , <&macro_tap &kp SPC>
-                , <&macro_tap &kp N>
-                , <&macro_tap &kp E>
-                , <&macro_tap &kp W>
-                , <&macro_tap &kp MINUS>
-                , <&macro_tap &kp S>
-                , <&macro_tap &kp E>
-                , <&macro_tap &kp S>
-                , <&macro_tap &kp S>
-                , <&macro_tap &kp I>
-                , <&macro_tap &kp O>
-                , <&macro_tap &kp N>
-                , <&macro_tap &kp SPC>
-                , <&macro_tap &kp MINUS>
-                , <&macro_tap &kp A>
-                , <&macro_tap &kp SPC>
-                , <&macro_tap &kp MINUS>
-                , <&macro_tap &kp S>
-                , <&macro_tap &kp SPC>
-            ;
-        };
-
         shrug: shrug { // shrug emoji ¯\_(ツ)_/¯
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -77,8 +16,10 @@
                 , <&macro_tap &kp U>
                 , <&macro_release &kp LCTRL &kp LSHFT>
                 , <&macro_tap &kp N0 &kp N0 &kp A &kp F &kp SPC>
-                // \
-                , <&macro_tap &kp BACKSLASH>
+                // backslash (do not end this comment with one: a trailing
+                // backslash splices the next line into the comment, which is
+                // what used to silently swallow one of two &kp BACKSLASH
+                // lines here and left the output accidentally correct)
                 , <&macro_tap &kp BACKSLASH>
                 // _
                 , <&macro_tap &kp UNDER>
@@ -142,16 +83,6 @@
                 ;
         };
         
-        clip_hist: clip_hist { // CLIPBOARD_HISTORY
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings 
-                = <&macro_press &kp LGUI>
-                , <&macro_tap &kp V>
-                , <&macro_release &kp LGUI>
-                ;
-        };
-        
         new_dir: new_dir {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -192,13 +123,7 @@
                 ;
         };
 
-        home_macro: home_macro {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings
-                = <&macro_tap &kp TILDE>
-                , <&macro_tap &kp FSLH>
-                ;
-        };
+        // home_macro was removed together with td_home, the only thing that
+        // referenced it. See config/behaviors.dtsi.
     };
 };
