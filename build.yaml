@@ -23,6 +23,20 @@ include:
     shield: arcduo_dongle dongle_screen
     artifact-name: arcduo_dongle
 
+  # Same dongle, plus ZMK Studio for live keymap editing over USB.
+  #
+  # Kept as a separate, opt-in artifact rather than folded into the dongle
+  # above: it links, but takes RAM from 90.0% to 95.5% on top of LVGL and
+  # two BLE peripheral connections, leaving only ~5.7 KB spare. That is
+  # enough to link and not obviously enough to survive every runtime
+  # allocation, so flash this one only if you want Studio and are willing
+  # to fall back to arcduo_dongle.
+  - board: xiao_ble/nrf52840/zmk
+    shield: arcduo_dongle dongle_screen
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_STUDIO=y
+    artifact-name: arcduo_dongle_studio
+
   # Settings reset firmware — flash to clear BLE pairings
   - board: nice_nano/nrf52840/zmk
     shield: settings_reset

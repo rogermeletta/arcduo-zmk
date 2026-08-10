@@ -160,9 +160,9 @@ layers:
   - BT(3)
   - OUT TOG
   - sudo !!
-  - ''
-  - ''
-  - ''
+  - F23
+  - F24
+  - F22
   - BRI DEC
   - ''
   - PREV

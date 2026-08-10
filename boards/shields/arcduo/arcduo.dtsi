@@ -91,20 +91,37 @@ RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,10) RC(2,9) RC(2,8) RC(2,7) RC(2,6
     };
   };
 
+  // Auto-mouse layer: moving the cursor ball temporarily switches to the
+  // MOUSE layer, so clicks, scroll, clipboard keys and the right-hand
+  // modifiers are under your fingers without reaching for a thumb key.
+  //
+  // require-prior-idle-ms keeps it from firing when you brush the ball while
+  // typing. excluded-positions lists the keys that must NOT dismiss the
+  // layer while it is active -- everything you legitimately press while
+  // pointing. Any other key press drops back to BASE immediately.
+  //
+  // Tune the 200 ms and the timeout below to taste once you have flashed it.
+  /omit-if-no-ref/ arcduo_auto_mouse: arcduo_auto_mouse {
+    compatible = "zmk,input-processor-temp-layer";
+    #input-processor-cells = <2>;
+    require-prior-idle-ms = <200>;
+    excluded-positions = <0 1 2 3 4 10 11 12 13 14 16 17 18 19 20 21 22 23 24 30 31 32 34>;
+  };
+
   trackball_listener: trackball_listener {
     compatible = "zmk,input-listener";
     status = "disabled";
     device = <&trackball_split>;
-    input-processors = <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_XY_SWAP)>, <&zip_xy_scaler 2 3>;
+    input-processors =
+        <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_XY_SWAP)>,
+        <&zip_xy_scaler 2 3>,
+        <&arcduo_auto_mouse 5 750>;
 
-    // Precision ("snipe") mode: scale movement down 16x while the MOUSE
-    // layer is held. This was previously gated on layer 6, which does not
-    // exist -- the keymap only defines layers 0-5 -- so it never activated.
-    precision {
-      layers = <5>;
-      input-processors = <&zip_xy_scaler 1 16>;
-      process-next;
-    };
+    // There used to be a child node here scaling movement down 16x, gated on
+    // `layers = <6>`. The keymap only defines layers 0-5, so it never ran.
+    // It is not restored on layer 5, because layer 5 is now what the
+    // auto-mouse layer activates -- precision would engage the instant you
+    // touched the ball, making the cursor permanently slow.
   };
 
   trackball_listener2: trackball_listener2 {

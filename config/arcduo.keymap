@@ -38,6 +38,14 @@
 // #define SYM     3
 // #define EXTRAS  4
 // #define MOUSE   5
+//
+// MOUSE is also activated automatically while the right trackball is moving
+// (see arcduo_auto_mouse in boards/shields/arcduo/arcduo.dtsi), so the mouse
+// buttons, scroll and clipboard keys on it are reachable without a thumb key.
+//
+// On EXTRAS, F22/F23/F24 drive the YADS dongle screen: F22 toggles it off and
+// on, F23 dims, F24 brightens. Those are the keycodes YADS listens for by
+// default (CONFIG_DONGLE_SCREEN_* in boards/shields/arcduo/arcduo_dongle.conf).
 
   keymap {
        compatible = "zmk,keymap";
@@ -108,7 +116,7 @@
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
      &shrug           &lgtm            &gcm             &none            &kp C_BRI_INC                                                &bt BT_SEL(0)    &bt BT_SEL(1)    &bt BT_SEL(2)    &bt BT_SEL(3)    &out OUT_TOG
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &sudo            &none            &none            &none            &kp C_BRI_DEC                                                &none            &kp C_PREV       &kp C_PP         &kp C_STOP       &kp C_NEXT
+     &sudo            &kp F23          &kp F24          &kp F22          &kp C_BRI_DEC                                                &none            &kp C_PREV       &kp C_PP         &kp C_STOP       &kp C_NEXT
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
      &none            &none            &none            &none            &none                                                        &new_dir         &kp K_MUTE       &kp C_VOL_DN     &kp C_VOL_UP     &studio_unlock
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
