@@ -59,11 +59,19 @@
         x-input-code = <INPUT_REL_X>;
         y-input-code = <INPUT_REL_Y>;
 
-        // Keep the sensor awake while ZMK is ACTIVE, and make it a wakeup
-        // source. This replaces the old CONFIG_PMW3610_RUN_DOWNSHIFT_TIME_MS
-        // =3264 / REST*_SAMPLE_TIME_MS tuning, which held the sensor in its
-        // highest-power RUN mode for 3.2 s after every movement purely to
-        // hide first-motion lag.
-        force-awake;
+        // NOTE: `force-awake` is deliberately NOT set.
+        //
+        // It writes 0xF0 to the sensor's PERFORMANCE register (pmw3610.c),
+        // pinning it in RUN mode at 8 ms sampling for as long as ZMK is
+        // ACTIVE, and making the sensor a wakeup source. That removes
+        // first-motion lag, but it also means every desk vibration is
+        // sampled and reported -- which false-triggered the auto-mouse
+        // layer, and could wake the keyboard from sleep.
+        //
+        // Without it the sensor downshifts normally: RUN -> REST1 after
+        // 128 ms (40 ms sampling), then REST2/REST3. Far less sensitive to
+        // vibration while idle. If first-motion lag becomes annoying,
+        // prefer raising CONFIG_PMW3610_ALT_RUN_DOWNSHIFT_TIME_MS a little
+        // over re-enabling force-awake.
     };
 };
