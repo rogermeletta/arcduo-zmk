@@ -49,7 +49,43 @@ draw_config:
 parse_config:
   preprocess: true
   skip_binding_parsing: false
-  raw_binding_map: {}
+  # Legends for bindings keymap-drawer cannot name on its own.
+  #
+  # This used to live as a KEYMAP_raw_binding_map env var inside the vendored
+  # copy of the draw workflow, where most of it was stale: it mapped `&msc
+  # MOVE_UP` (this keymap uses `&msc SCRL_*`), and behaviours that no longer
+  # exist (&td_cursor, &td_layers, &td_clk_scrl, &h_split, &v_split, tmux
+  # macros), while missing the tap-dances actually in use -- which is why
+  # `&td_tab` renders literally in keymap-drawer/arcduo.yaml today.
+  raw_binding_map:
+    "&td_tab": {t: TAB, h: Num}
+    "&td_space": {t: SPACE, h: Nav}
+    "&td_bs": {t: BSPC, h: Num}
+    "&td_grave": "`"
+    "&td_hyphen": "-"
+    "&td_equals": "="
+    "&td_bore": {t: Base, h: Extra}
+    "&caps_word": Caps Word
+    "&studio_unlock": ZMK Studio
+    "&bootloader": Bootloader
+    "&shrug": '¯\_(ツ)_/¯'
+    "&lgtm": LGTM
+    "&gcm": git commit
+    "&sudo": sudo !!
+    "&new_dir": New Dir
+    "&mkp LCLK": L Click
+    "&mkp RCLK": R Click
+    "&mkp MCLK": M Click
+    "&mkp MB4": Back
+    "&mkp MB5": Forward
+    "&mmv MOVE_UP": Move ↑
+    "&mmv MOVE_DOWN": Move ↓
+    "&mmv MOVE_LEFT": Move ←
+    "&mmv MOVE_RIGHT": Move →
+    "&msc SCRL_UP": Wheel ↑
+    "&msc SCRL_DOWN": Wheel ↓
+    "&msc SCRL_LEFT": Wheel ←
+    "&msc SCRL_RIGHT": Wheel →
   sticky_label: sticky
   toggle_label: toggle
   tap_toggle_label: tap-toggle

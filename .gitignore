@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Local west workspace, if you ever run `west init` inside the repo.
+# NOTE: /zephyr is deliberately NOT listed -- zephyr/module.yml is tracked and
+# is what registers this repo as a ZMK module (board_root). Ignoring it would
+# silently drop the shield from the build.
+/.west/
+/bootloader/
+/modules/
+/tools/
+/zmk/
+/zmk-*/
+
+# Build output
+/build/
+/build-*/
+*.uf2
+*.hex
+
+# Python
+.venv/
+__pycache__/

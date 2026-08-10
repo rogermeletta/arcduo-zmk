@@ -31,12 +31,12 @@ layers:
   - ','
   - .
   - /
-  - '&td_tab'
-  - L CLK
+  - {t: TAB, h: Num}
+  - L Click
   - {t: RETURN, h: Extra}
   - {t: RETURN, h: Mouse}
-  - '&td_space'
-  - '&td_bs'
+  - {t: SPACE, h: Nav}
+  - {t: BSPC, h: Num}
   Num:
   - {t: '1', h: F1}
   - {t: '2', h: F2}
@@ -53,7 +53,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - ''
-  - '&td_hyphen'
+  - '-'
   - {t: '4', h: RSHIFT}
   - {t: '5', h: RCTRL}
   - {t: '6', h: RALT}
@@ -121,13 +121,13 @@ layers:
   - '&'
   - '{'
   - $
-  - '&td_grave'
+  - '`'
   - ''
   - ''
   - ''
   - {t: ▽, type: trans}
   - {type: held}
-  - '&td_hyphen'
+  - '-'
   - ;
   - (
   - '['
@@ -149,9 +149,9 @@ layers:
   - {t: ▽, type: trans}
   - ''
   Extra:
-  - SHRUG
+  - ¯\_(ツ)_/¯
   - LGTM
-  - GIT COMMIT
+  - git commit
   - ''
   - BRI INC
   - BT(0)
@@ -159,7 +159,7 @@ layers:
   - BT(2)
   - BT(3)
   - OUT TOG
-  - '&sudo'
+  - sudo !!
   - ''
   - ''
   - ''
@@ -174,7 +174,7 @@ layers:
   - ''
   - ''
   - ''
-  - NEW DIR
+  - New Dir
   - MUTE
   - VOL DN
   - VOL UP
@@ -186,21 +186,21 @@ layers:
   - ''
   - BT CLR
   Mouse:
-  - '&msc SCRL_LEFT'
-  - '&msc SCRL_UP'
-  - MOVE UP
-  - '&msc SCRL_DOWN'
-  - '&msc SCRL_RIGHT'
+  - Wheel ←
+  - Wheel ↑
+  - Move ↑
+  - Wheel ↓
+  - Wheel →
   - ''
   - ''
   - ''
   - ''
   - ''
-  - BACK
-  - MOVE L
-  - MOVE D
-  - MOVE R
-  - FWD
+  - Back
+  - Move ←
+  - Move ↓
+  - Move →
+  - Forward
   - ''
   - RSHIFT
   - RCTRL
@@ -210,7 +210,7 @@ layers:
   - CUT
   - COPY
   - PASTE
-  - Mid CLK
+  - M Click
   - ''
   - ''
   - ''
@@ -224,26 +224,35 @@ layers:
   - ''
 combos:
 - p: [13, 16]
-  k: CAPS WORD
+  k: Caps Word
+  l: [Base]
 - p: [23, 31]
-  k: Mid CLK
+  k: M Click
+  l: [Base]
 - p: [13, 31]
-  k: R CLK
+  k: R Click
+  l: [Base]
 - p: [13, 14]
   k: (
+  l: [Base]
 - p: [15, 16]
   k: )
+  l: [Base]
 - p: [3, 4]
   k: '['
+  l: [Base]
 - p: [5, 6]
   k: ']'
+  l: [Base]
 - p: [23, 24]
   k: '{'
+  l: [Base]
 - p: [25, 26]
   k: '}'
+  l: [Base]
 - p: [0, 1]
   k: ESC
+  l: [Base]
 - p: [32, 33]
-  k: L_BASE L_EXTRA
-- p: [32, 10]
-  k: L_BASE L_EXTRA
+  k: {t: Base, h: Extra}
+  l: [Base]

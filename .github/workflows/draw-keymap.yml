@@ -1,0 +1,40 @@
+name: Draw keymap
+
+# Renders keymap-drawer/arcduo.svg from config/arcduo.keymap.
+#
+# This replaces a 267-line vendored copy of caksoylar's workflow that had
+# drifted: it pinned actions/checkout@v4, actions/cache@v4,
+# actions/upload-artifact@v4 and git-auto-commit-action@v5, and defaulted
+# amend_commit to true, so every render force-pushed an amended commit over
+# published history.
+#
+# It also used to be a `needs: build` job inside build.yml, which meant the
+# diagram silently stopped being regenerated for the entire eight months the
+# firmware build was red.
+
+on:
+  push:
+    paths:
+      - "config/*.keymap"
+      - "config/*.dtsi"
+      - "config/*.json"
+      - "keymap-drawer/config.yaml"
+      - ".github/workflows/draw-keymap.yml"
+  workflow_dispatch:
+
+jobs:
+  draw:
+    permissions:
+      contents: write
+    uses: caksoylar/keymap-drawer/.github/workflows/draw-zmk.yml@main
+    with:
+      keymap_patterns: config/arcduo.keymap
+      # Non-default location, so it has to be passed explicitly.
+      config_path: keymap-drawer/config.yaml
+      output_folder: keymap-drawer
+      json_path: config
+      commit_message: "keymap-drawer render"
+      # Deliberately left at the default (false). Amending rewrites published
+      # history and needs a force push.
+      # amend_commit: true
+      fail_on_error: true
