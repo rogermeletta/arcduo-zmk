@@ -1,13 +1,19 @@
 if SHIELD_ARCDUO_DONGLE
 
-config ZMK_KEYBOARD_NAME
-  default "ArcDuo"
-
 config ZMK_SPLIT_ROLE_CENTRAL
   default y
 
 config ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS
-    default 2
+  default 2
+
+# ZMK sizes the BLE connection and bond tables for a single peripheral
+# (BT_MAX_CONN / BT_MAX_PAIRED default to 6 = 5 host profiles + 1 peripheral).
+# ArcDuo's dongle serves two peripherals, so both need one more slot.
+config BT_MAX_CONN
+  default 7
+
+config BT_MAX_PAIRED
+  default 7
 
 endif
 
@@ -15,5 +21,11 @@ if SHIELD_ARCDUO_LEFT || SHIELD_ARCDUO_RIGHT || SHIELD_ARCDUO_DONGLE
 
 config ZMK_SPLIT
   default y
+
+# Applies to every part, not just the dongle. When this was inside the
+# dongle-only block above, the two halves built with an empty keyboard name,
+# so they advertised over BLE and showed up in logs as nameless devices.
+config ZMK_KEYBOARD_NAME
+  default "ArcDuo"
 
 endif

@@ -1,0 +1,69 @@
+// vim: set ft=dts:
+//
+// Board-level hardware for the ArcDuo halves on a nice!nano v2.
+//
+// The file name must match the Zephyr board target: `nice_nano/nrf52840/zmk`
+// normalises to `nice_nano_nrf52840_zmk`. The previous `nice_nano_v2.overlay`
+// matches nothing under Zephyr 4.1, so it was silently skipped and left
+// `&trackball` undefined.
+
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
+&pinctrl {
+    spi0_default: spi0_default {
+        group1 {
+            // The PMW3610 speaks 3-wire SPI, so MOSI and MISO share P0.17.
+            psels
+              = <NRF_PSEL(SPIM_SCK, 0, 8)>
+              , <NRF_PSEL(SPIM_MOSI, 0, 17)>
+              , <NRF_PSEL(SPIM_MISO, 0, 17)>
+              ;
+        };
+    };
+
+    spi0_sleep: spi0_sleep {
+        group1 {
+            psels
+              = <NRF_PSEL(SPIM_SCK, 0, 8)>
+              , <NRF_PSEL(SPIM_MOSI, 0, 17)>
+              , <NRF_PSEL(SPIM_MISO, 0, 17)>
+              ;
+            low-power-enable;
+        };
+    };
+};
+
+&spi0 {
+    status = "okay";
+    compatible = "nordic,nrf-spim";
+    pinctrl-0 = <&spi0_default>;
+    pinctrl-1 = <&spi0_sleep>;
+    pinctrl-names = "default", "sleep";
+    cs-gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
+
+    // One sensor node, because each half has exactly one sensor.
+    //
+    // This file previously declared two nodes here (trackball@0 and
+    // trackball2@0) that were both status "okay", both reg <0>, on the same
+    // chip-select and the same IRQ pin. Every half therefore started two
+    // driver instances addressing one physical sensor. The per-half
+    // differences (CPI, axis inversion) now live in the shield-named
+    // directories beside this file.
+    trackball: trackball@0 {
+        status = "okay";
+        compatible = "pixart,pmw3610-alt";
+        reg = <0>;
+        spi-max-frequency = <2000000>;
+        irq-gpios = <&gpio0 6 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_X>;
+        y-input-code = <INPUT_REL_Y>;
+
+        // Keep the sensor awake while ZMK is ACTIVE, and make it a wakeup
+        // source. This replaces the old CONFIG_PMW3610_RUN_DOWNSHIFT_TIME_MS
+        // =3264 / REST*_SAMPLE_TIME_MS tuning, which held the sensor in its
+        // highest-power RUN mode for 3.2 s after every movement purely to
+        // hide first-motion lag.
+        force-awake;
+    };
+};

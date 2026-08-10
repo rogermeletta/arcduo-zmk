@@ -26,11 +26,8 @@
 		;
 };
 
-&spi0 {
-  status = "okay";
-};
-
-&trackball_split { 
+// &spi0 is enabled in boards/nice_nano_nrf52840_zmk.overlay.
+&trackball_split {
 	device = <&trackball>;
 };
 

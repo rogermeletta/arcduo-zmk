@@ -1,37 +1,32 @@
-# This file generates the GitHub Actions matrix.
-# For simple board + shield combinations, add them to the top level board and
-# shield arrays, for more control, add individual board + shield combinations
-# to the `include` property. You can also use the `cmake-args` property to
-# pass flags to the build command, `snippet` to add a Zephyr snippet, and
-# `artifact-name` to assign a name to distinguish build outputs from each other:
+# This file generates the GitHub Actions build matrix.
 #
-# board: [ "nice_nano_v2" ]
-# shield: [ "corne_left", "corne_right" ]
-# include:
-#   - board: bdn9_rev2
-#   - board: nice_nano_v2
-#     shield: reviung41
-#   - board: nice_nano_v2
-#     shield: corne_left
-#     snippet: studio-rpc-usb-uart
-#     cmake-args: -DCONFIG_ZMK_STUDIO=y
-#     artifact-name: corne_left_with_studio
+# Board targets use Zephyr 4.1 hardware-model-v2 naming with ZMK's `zmk`
+# board variant. The pre-4.1 names (nice_nano_v2, seeeduino_xiao_ble) are
+# no longer valid and ZMK's CI now fails the build on them.
+#   nice_nano_v2       -> nice_nano/nrf52840/zmk   (revision 2.0.0 is default)
+#   seeeduino_xiao_ble -> xiao_ble/nrf52840/zmk
+# See https://zmk.dev/blog/2025/12/09/zephyr-4-1
 #
+# ArcDuo is a dongle-driven split: both halves are BLE peripherals and the
+# XIAO dongle is the split central, so the dongle is the only build that
+# carries the keymap at runtime.
 ---
 include:
-  - board: nice_nano_v2
+  # Keyboard halves (split peripherals, one PMW3610 trackball each)
+  - board: nice_nano/nrf52840/zmk
     shield: arcduo_left
-  - board: nice_nano_v2
+  - board: nice_nano/nrf52840/zmk
     shield: arcduo_right
-  - board: seeeduino_xiao_ble
-    shield: arcduo_dongle prospector_adapter
 
-  # Firmware Reset
-  - board: nice_nano_v2
+  # Dongle (split central) with the YADS dongle screen
+  - board: xiao_ble/nrf52840/zmk
+    shield: arcduo_dongle dongle_screen
+    artifact-name: arcduo_dongle
+
+  # Settings reset firmware — flash to clear BLE pairings
+  - board: nice_nano/nrf52840/zmk
     shield: settings_reset
-    format: reset
-    artifact-name: firmware_reset_nano_v2
-  - board: seeeduino_xiao_ble
+    artifact-name: firmware_reset_nice_nano
+  - board: xiao_ble/nrf52840/zmk
     shield: settings_reset
-    format: reset
     artifact-name: firmware_reset_xiao

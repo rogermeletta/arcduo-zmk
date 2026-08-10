@@ -4,18 +4,36 @@ manifest:
       url-base: https://github.com/zmkfirmware
     - name: badjeff
       url-base: https://github.com/badjeff
-    - name: carrefinho
-      url-base: https://github.com/carrefinho
+    - name: janpfischer
+      url-base: https://github.com/janpfischer
+
+  # Revisions are pinned to exact commits on purpose.
+  #
+  # This repo previously tracked `revision: main` on every project, which is
+  # what silently broke it: ZMK moved to Zephyr 4.1 on 2025-12-09 (new HWMv2
+  # board targets) and badjeff's PMW3610 driver renamed its compatible to
+  # `pixart,pmw3610-alt` to avoid colliding with the driver Zephyr 4.1 now
+  # ships itself. Both landed without a single commit here, and CI went red.
+  #
+  # See https://zmk.dev/blog/2025/06/20/pinned-zmk
+  #
+  # To upgrade: bump one revision at a time and rebuild.
   projects:
     - name: zmk
       remote: zmkfirmware
-      revision: main
+      # main @ 2026-08-06. There is no tagged release with Zephyr 4.1 yet:
+      # v0.3.0 (2025-08-01) predates it, and v0.4.0 is still an open PR.
+      revision: 268b1b1e82150460f00fd701bcd08583d5c75d29
       import: app/west.yml
     - name: zmk-pmw3610-driver
       remote: badjeff
-      revision: main
-    - name: prospector-zmk-module
-      remote: carrefinho
-      revision: main
+      # main @ 2026-04-16 — first line carrying the `pixart,pmw3610-alt`
+      # compatible and the CONFIG_PMW3610_ALT_* Kconfig prefix.
+      revision: 44b4a76b74d293a93cec4ccb7e04cb8d29c10f93
+    - name: zmk-dongle-screen
+      remote: janpfischer
+      # upgrade-4.1 @ 2026-03-12 — YADS's Zephyr 4.1 branch. Its `main` still
+      # targets ZMK v0.3 only. Tracked in janpfischer/zmk-dongle-screen#29.
+      revision: a8cec2626b8ea94e9a047eac1e53792980369c93
   self:
     path: config
