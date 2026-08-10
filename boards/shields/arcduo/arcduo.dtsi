@@ -91,25 +91,22 @@ RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,10) RC(2,9) RC(2,8) RC(2,7) RC(2,6
     };
   };
 
-  // Auto-mouse layer: moving the cursor ball temporarily switches to the
-  // MOUSE layer, so clicks, scroll, clipboard keys and the right-hand
-  // modifiers are under your fingers without reaching for a thumb key.
+  // No auto-mouse layer.
   //
-  // require-prior-idle-ms keeps it from firing when you brush the ball while
-  // typing. excluded-positions lists the keys that must NOT dismiss the
-  // layer while it is active -- everything you legitimately press while
-  // pointing. Any other key press drops back to BASE immediately.
+  // A zip_temp_layer instance used to sit at the end of the cursor ball's
+  // processor chain, switching to the MOUSE layer on any motion. It was
+  // removed because zip_temp_layer reacts to *any* input event, including
+  // the single-count jitter a sensitive optical sensor produces from desk
+  // vibration -- so the layer changed under you at random.
   //
-  // Raised 200 -> 400 ms because the layer was triggering on desk vibration.
-  // The main fix for that was dropping `force-awake` from the sensor node
-  // (see boards/nice_nano_nrf52840_zmk.overlay); this is the second line of
-  // defence, covering shock transmitted through the desk while typing.
-  /omit-if-no-ref/ arcduo_auto_mouse: arcduo_auto_mouse {
-    compatible = "zmk,input-processor-temp-layer";
-    #input-processor-cells = <2>;
-    require-prior-idle-ms = <400>;
-    excluded-positions = <0 1 2 3 4 10 11 12 13 14 16 17 18 19 20 21 22 23 24 30 31 32 34>;
-  };
+  // Guarding it with require-prior-idle-ms only covered vibration that
+  // happened just after a keystroke, not while the board sat idle, and the
+  // alternative (desensitising the sensor) cost pointer responsiveness.
+  // Dropping the auto-layer keeps the sensor fast: jitter now shows up as
+  // harmless sub-pixel cursor noise instead of a layer change.
+  //
+  // The MOUSE layer is unchanged and still reached by holding the right
+  // inner thumb (`&lt 5 RETURN`, position 33), exactly as before.
 
   trackball_listener: trackball_listener {
     compatible = "zmk,input-listener";
@@ -117,14 +114,17 @@ RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,10) RC(2,9) RC(2,8) RC(2,7) RC(2,6
     device = <&trackball_split>;
     input-processors =
         <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_XY_SWAP)>,
-        <&zip_xy_scaler 2 3>,
-        <&arcduo_auto_mouse 5 750>;
+        <&zip_xy_scaler 2 3>;
 
-    // There used to be a child node here scaling movement down 16x, gated on
-    // `layers = <6>`. The keymap only defines layers 0-5, so it never ran.
-    // It is not restored on layer 5, because layer 5 is now what the
-    // auto-mouse layer activates -- precision would engage the instant you
-    // touched the ball, making the cursor permanently slow.
+    // A child node here could scale movement down while the MOUSE layer is
+    // held, giving a precision/snipe mode -- now safe to add again, since
+    // layer 5 is only entered deliberately. Not enabled by default.
+    //
+    // precision {
+    //   layers = <5>;
+    //   input-processors = <&zip_xy_scaler 1 16>;
+    //   process-next;
+    // };
   };
 
   trackball_listener2: trackball_listener2 {

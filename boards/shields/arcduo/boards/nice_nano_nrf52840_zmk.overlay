@@ -59,19 +59,23 @@
         x-input-code = <INPUT_REL_X>;
         y-input-code = <INPUT_REL_Y>;
 
-        // NOTE: `force-awake` is deliberately NOT set.
+        // Keep the sensor at full 8 ms sampling while ZMK is ACTIVE, so the
+        // pointer responds instantly rather than waiting up to 40/100/500 ms
+        // for the sensor to climb out of REST1/REST2/REST3.
         //
-        // It writes 0xF0 to the sensor's PERFORMANCE register (pmw3610.c),
-        // pinning it in RUN mode at 8 ms sampling for as long as ZMK is
-        // ACTIVE, and making the sensor a wakeup source. That removes
-        // first-motion lag, but it also means every desk vibration is
-        // sampled and reported -- which false-triggered the auto-mouse
-        // layer, and could wake the keyboard from sleep.
+        // This does make the sensor pick up desk vibration. That is fine
+        // now: with the auto-mouse layer gone (see arcduo.dtsi) the only
+        // consequence is sub-pixel cursor noise, not a layer change.
         //
-        // Without it the sensor downshifts normally: RUN -> REST1 after
-        // 128 ms (40 ms sampling), then REST2/REST3. Far less sensitive to
-        // vibration while idle. If first-motion lag becomes annoying,
-        // prefer raising CONFIG_PMW3610_ALT_RUN_DOWNSHIFT_TIME_MS a little
-        // over re-enabling force-awake.
+        // Two side effects worth knowing:
+        //  - the sensor is also a wakeup source, so vibration can wake a
+        //    sleeping half
+        //  - RUN mode is held for the whole ACTIVE window, not just while
+        //    pointing, which costs battery on both halves
+        // If either bites, drop this property and instead set
+        // CONFIG_PMW3610_ALT_RUN_DOWNSHIFT_TIME_MS=1000 and
+        // CONFIG_PMW3610_ALT_REST1_SAMPLE_TIME_MS=20 in the per-side .conf
+        // files -- near-instant in practice, without pinning RUN mode.
+        force-awake;
     };
 };
