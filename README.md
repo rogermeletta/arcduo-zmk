@@ -19,8 +19,9 @@ halves will not act as a keyboard without it.
 
 ## Trackballs
 
-Both balls appear on the keymap diagram below as the two round shapes in the
-middle, roughly where they sit on the case.
+Both balls appear on the keymap diagram below as the two circles facing each
+other across the split, at the inner edge of each half. The halves are mirror
+images, balls included.
 
 | | Left ball | Right ball |
 | --- | --- | --- |

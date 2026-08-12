@@ -37,14 +37,24 @@ draw_config:
   # draw_key_sides is on, which gives every key an outer and a slightly
   # smaller inner rect -- once both are circles that reads as a ball sitting
   # in its socket, and rect.side's brightness(90%) shades the socket for free.
+  # The separate combo diagrams redraw the whole board from scratch, out of
+  # plain type-less keys, so `.ball` does not exist there -- and they prepend
+  # the combo's own legend box as position 0, which shifts every board key up
+  # by one. That is the only reason the balls have to be named twice, and by
+  # index: keypos-36/37 in the layer diagrams, keypos-37/38 in the combo ones.
+  # If the layout ever gains or loses a key, these numbers move with it.
   svg_extra_style: |
-    rect.key.ball {
+    rect.key.ball,
+    g[class^="layer-combopos"] g.keypos-37 rect.key,
+    g[class^="layer-combopos"] g.keypos-38 rect.key {
         rx: 999px;
         ry: 999px;
         fill: #dbe6f2;
     }
     @media (prefers-color-scheme: dark) {
-    rect.key.ball { fill: #3d5674; }
+    rect.key.ball,
+    g[class^="layer-combopos"] g.keypos-37 rect.key,
+    g[class^="layer-combopos"] g.keypos-38 rect.key { fill: #3d5674; }
     }
   footer_text: ""
   shrink_wide_legends: 7
