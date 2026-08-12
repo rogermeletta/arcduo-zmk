@@ -97,15 +97,19 @@
             require-prior-idle-ms = <100>;
         };
 
-        // Also on NAV, because this is the only Escape on the board and the
-        // UHK has one on its mod layer too (left row1 position 8). Deliberately
-        // NOT on NUM: positions 0 and 1 are the digits 1 and 2 there, so typing
-        // "12" would fire it -- the same trap described at the top of this file.
-        // On NAV those positions are Cmd+T and Cmd+W, which are never chorded.
+        // BASE only. This was briefly scoped to <0 2> as well, because the UHK
+        // has an Escape on its Mod layer -- but the UHK puts it on the *Q* key,
+        // and NAV now carries `&kp ESC` on position 0 directly. Leaving the
+        // combo armed on NAV would be a second, worse Escape stacked on the
+        // real one, and it would misfire on Esc-then-Opt+Cmd+Left: Escape
+        // followed by the very next key over, while switching tabs.
+        //
+        // Still deliberately NOT on NUM: positions 0 and 1 are the digits 1
+        // and 2 there, so typing "12" would fire it.
         Escape {
             bindings = <&kp ESC>;
             key-positions = <0 1>;     // Q + W
-            layers = <0 2>;
+            layers = <0>;
             require-prior-idle-ms = <100>;
         };
 

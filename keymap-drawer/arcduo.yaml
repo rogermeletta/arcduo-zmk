@@ -79,38 +79,38 @@ layers:
   - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}
   Nav:
-  - Cmd+T
-  - Cmd+W
+  - ESC
   - Opt+Cmd+LEFT
+  - Cmd+T
   - Opt+Cmd+RIGHT
-  - Cmd+`
-  - PSCRN
-  - CAPS
+  - Ctl+Sft+Cmd+F
+  - PG UP
+  - HOME
   - UP
-  - INS
+  - END
   - DEL
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - Cmd+TAB
-  - Cmd+LEFT
+  - {t: CAPS, h: LCMD}
+  - {t: Cmd+LEFT, h: LALT}
+  - {t: Cmd+TAB, h: LCTRL}
+  - {t: Cmd+RIGHT, h: LSHIFT}
+  - Opt+Cmd+6
+  - PG DN
   - LEFT
   - DOWN
   - RIGHT
-  - RETURN
   - Ctl+Opt+Cmd+T
-  - Ctl+RET
   - Sft+Cmd+5
-  - Ctl+Sft+Cmd+F
-  - Opt+Cmd+EJECT
-  - Cmd+RIGHT
-  - HOME
-  - PG DN
-  - PG UP
-  - END
-  - ''
-  - ''
+  - Cmd+`
+  - Cmd+W
+  - Ctl+Opt+Cmd+V
+  - Ctl+Opt+Cmd+B
+  - Opt+Cmd+1
+  - Opt+Cmd+2
+  - Opt+Cmd+3
+  - Ctl+Opt+Cmd+4
+  - Ctl+Opt+Cmd+5
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   - {type: held}
   - Sft+Cmd+SPACE
   - {t: ▽, type: trans}
@@ -160,7 +160,7 @@ layers:
   - ¯\_(ツ)_/¯
   - LGTM
   - git commit
-  - Opt+Cmd+6
+  - ''
   - BRI INC
   - BT(0)
   - BT(1)
@@ -172,23 +172,23 @@ layers:
   - F24
   - F22
   - BRI DEC
-  - ''
+  - Opt+Cmd+EJECT
   - PREV
   - PP
   - NEXT
   - ''
-  - Opt+Cmd+1
-  - Opt+Cmd+2
-  - Opt+Cmd+3
-  - Ctl+Opt+Cmd+4
-  - Ctl+Opt+Cmd+5
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
   - New Dir
   - MUTE
   - VOL DN
   - VOL UP
   - ZMK Studio
-  - Ctl+Opt+Cmd+V
-  - Ctl+Opt+Cmd+B
+  - ''
+  - ''
   - ''
   - ''
   - {type: held}
@@ -264,7 +264,7 @@ combos:
   l: [Base]
 - p: [0, 1]
   k: ESC
-  l: [Base, Nav]
+  l: [Base]
 - p: [31, 34]
   k: Cmd+SPACE
   l: [Base]
