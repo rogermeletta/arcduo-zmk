@@ -58,7 +58,9 @@ unaffected — the thumb that holds it is on the other hand.
 
 The one place the correspondence breaks is the window-manager chord family
 (`Opt+Cmd+<digit>` and `Ctrl+Opt+Cmd+<key>`), which is nine chords on its own and
-does not fit next to the arrows. It lives on `EXTRAS`.
+does not fit next to the arrows. It lives on `EXTRAS` — except
+`Ctrl+Opt+Cmd+T`, which is on `NAV` because it toggles AirPods noise cancelling
+via AirBuddy rather than moving a window, and gets used constantly.
 
 ---
 
@@ -93,8 +95,9 @@ holding the layer.
 | Line start / end, back / forward (`Cmd+←/→`) | 15, 25 |
 | Home, PgDn, PgUp, End | 26, 27, 28, 29 |
 | Print Screen, Caps Lock, Insert, Delete | 5, 6, 8, 9 |
-| 1Password | `Shift+Cmd+Space` | 33 |
+| 1Password (`Shift+Cmd+Space`) | 33 |
 | Delete word (`Opt+Bspc`) | 35 |
+| Escape (combo, `Q`+`W`) | 0+1 |
 
 Positions 10-13 stay transparent so the home-row modifiers still work — that is
 what makes `Shift+←` select text on this layer.
@@ -107,8 +110,17 @@ what makes `Shift+←` select text on this layer.
 | Sanitised paste | `Cmd+Opt+V` | 24 |
 | ä ö ü | `Opt+U` then vowel | 20, 21, 22 |
 | Backspace | | 14 |
-| Numbers, F1–F12 | | row 0, F-keys on hold |
+| Space | | 33 |
+| Numbers 1–0, F1–F10 on hold | | row 0 |
+| F11 | | 31 |
+| F12 | on hold | 29 |
 | Numpad and operators | | right hand, unchanged |
+
+Fn is reachable from **either** outer thumb — left (Tab) or right (Backspace).
+The umlauts and both clipboard chords are on the left hand, so for those hold Fn
+with the **right** thumb and type with the left; for the numpad hold it with the
+left thumb and type with the right. Same one-hand-holds, other-hand-types shape
+either way.
 
 **Window-manager family (EXTRAS).**
 
@@ -123,8 +135,9 @@ what makes `Shift+←` select text on this layer.
 
 | Function | Chord | Where |
 | --- | --- | --- |
-| Raycast | `Cmd+Space` | combo, left-click + Space thumbs |
-| Mouse move / scroll / clicks | | MOUSE layer, unchanged |
+| Raycast | `Cmd+Space` | combo, left-click + Space thumbs (80 ms window) |
+| Mouse move, scroll, left and middle click | | MOUSE layer |
+| Right click | | combo, `F` + left-click thumb — on BASE and MOUSE |
 | Transport (prev, play-pause, next) | | EXTRAS 16, 17, 18 |
 
 The window-manager chords are deliberately left as chords rather than given
@@ -140,6 +153,8 @@ in a comment would be worse than saying nothing.
 | **Caret mode on the trackballs** | Not possible in ZMK at the pinned SHA. See below. |
 | **ä ö ü on the right hand** | The Fn right hand is the numpad, which is staying. The umlauts are on the Fn *left* hand instead; the gesture is still thumb-holds / fingers-type, just on one hand. Freeing three right-hand positions means giving up either the numpad's `1 2 3` (duplicated on the top row anyway) or its `-` `=` `/` operators — a small edit if it turns out to matter. |
 | Numeric keypad `KP_*` scancodes | The digits are the ordinary number keycodes, not the keypad ones. macOS treats them identically outside a handful of apps. |
+| **Double-tap-to-toggle on Mod and Mouse** | The UHK sets `holdAndDoubleTapToggle` on six of its layer keys, so Mod and Mouse can be *locked* for a long selection or a long scroll rather than held. Here both are hold-only. Adding it is a small change — make position 32 a tap-dance `bindings = <&lt 2 RETURN>, <&tog 2>`, and the same for 33 with layer 5, giving the toggled layer an exit key. It is left out for now because a tap-dance re-introduces a tapping-term delay on that key (see the note in `config/behaviors.dtsi` about why three of them were just removed), and because holding has been enough so far. Say the word. |
+| **`'` and `\`** | Neither exists anywhere on this board, on any layer — this predates the UHK work, but the UHK has both on its base layer, so it is a parity gap. `SYM`'s left hand is entirely unbound, but `SYM` is held with the left index on `G`, so that hand is not usable while it is active. The honest fix is to displace something on `SYM`'s right hand: position 16 is `;`, which already exists on `BASE`. |
 | Keymap switching (MAC / PC / GAM / COL) | ZMK has no runtime keymap switching. `&to` can swap base layers if you ever want a gaming or Windows base — say the word and it is a small change. |
 | Scroll Lock, Pause/Break | No function on macOS. |
 | `Alt+Tab` | Not a macOS shortcut; `Cmd+Tab` is on NAV 2. |

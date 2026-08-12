@@ -60,26 +60,24 @@
         // under the left fingers with the arrows under the right hand. Holding
         // NAV with the right thumb meant driving the arrows with the same hand
         // that was holding the layer down.
-        td_space: td_space {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <85>;
-            bindings = <&lt 4 SPACE>, <&kp SPACE>; // hold, tap, double_tap
-        };
-
-        td_bs: td_bs {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <85>;
-            bindings = <&lt 1 BACKSPACE>, <&kp BACKSPACE>; // hold, tap, double_tap
-        };
-
-        td_tab: td_tab {
-            compatible = "zmk,behavior-tap-dance";
-            #binding-cells = <0>;
-            tapping-term-ms = <85>;
-            bindings = <&lt 1 TAB>, <&kp TAB>; // hold, tap, double_tap
-        };
+        // td_space, td_bs and td_tab were removed. Each wrapped a layer-tap in
+        // a two-entry tap-dance, `<&lt N KEY>, <&kp KEY>`, with an 85 ms term
+        // -- and the second entry only repeated what the first one's tap
+        // already did, so the tap-dance bought nothing and cost two things.
+        //
+        // behavior_tap_dance.c emits nothing on the first press: it starts the
+        // 85 ms timer and waits. So every Tab, Space and Backspace was delayed
+        // 85 ms, and every layer hold cost 85 ms on top of the layer-tap's own
+        // 200 ms term before Fn or Extras engaged.
+        //
+        // Worse, `on_tap_dance_binding_pressed` jumps straight to
+        // behaviors[behavior_count - 1] once the counter reaches the binding
+        // count, invoking it ONCE. Two fast presses of Backspace therefore
+        // deleted one character, not two.
+        //
+        // The three thumb keys now bind `&lt 1 TAB`, `&lt 4 SPACE` and
+        // `&lt 1 BACKSPACE` directly. Taps are emitted on release with no
+        // timer, and repeats are no longer swallowed.
 
         td_bore: BASE_or_EXTRA {
             compatible = "zmk,behavior-tap-dance";

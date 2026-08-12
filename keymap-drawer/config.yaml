@@ -75,9 +75,6 @@ parse_config:
   # macros), while missing the tap-dances actually in use -- which is why
   # `&td_tab` renders literally in keymap-drawer/arcduo.yaml today.
   raw_binding_map:
-    "&td_tab": {t: TAB, h: Num}
-    "&td_space": {t: SPACE, h: Nav}
-    "&td_bs": {t: BSPC, h: Num}
     "&td_grave": "`"
     "&td_hyphen": "-"
     "&td_equals": "="

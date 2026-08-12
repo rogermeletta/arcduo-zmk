@@ -35,8 +35,8 @@ layers:
   - L Click
   - {t: RETURN, h: Nav}
   - {t: RETURN, h: Mouse}
-  - {t: SPACE, h: Nav}
-  - {t: BSPC, h: Num}
+  - {t: SPACE, h: Extra}
+  - {t: BACK SPACE, h: Num}
   - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}
   Num:
@@ -70,10 +70,10 @@ layers:
   - {t: '2', h: F2}
   - {t: '3', h: F3}
   - {t: /, h: DEV TOOLS}
-  - ''
-  - ''
+  - {type: held}
+  - F11
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - SPACE
   - '0'
   - .
   - {t: Scroll, type: ball}
@@ -191,7 +191,7 @@ layers:
   - Ctl+Opt+Cmd+B
   - ''
   - ''
-  - {t: ▽, type: trans}
+  - {type: held}
   - BT CLR
   - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}
@@ -229,7 +229,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: RETURN, type: held}
+  - {type: held}
   - {t: ▽, type: trans}
   - ''
   - {t: Scroll, type: ball}
@@ -240,10 +240,10 @@ combos:
   l: [Base]
 - p: [23, 31]
   k: M Click
-  l: [Base]
+  l: [Base, Mouse]
 - p: [13, 31]
   k: R Click
-  l: [Base]
+  l: [Base, Mouse]
 - p: [13, 14]
   k: (
   l: [Base]
@@ -264,7 +264,7 @@ combos:
   l: [Base]
 - p: [0, 1]
   k: ESC
-  l: [Base]
+  l: [Base, Nav]
 - p: [31, 34]
   k: Cmd+SPACE
   l: [Base]
