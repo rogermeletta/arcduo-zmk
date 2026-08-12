@@ -116,15 +116,27 @@ RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,10) RC(2,9) RC(2,8) RC(2,7) RC(2,6
         <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_XY_SWAP)>,
         <&zip_xy_scaler 2 3>;
 
-    // A child node here could scale movement down while the MOUSE layer is
-    // held, giving a precision/snipe mode -- now safe to add again, since
-    // layer 5 is only entered deliberately. Not enabled by default.
+    // Snipe mode: hold the right inner thumb (&lt 5 RETURN, position 33) to
+    // enter the MOUSE layer and the cursor ball slows to a quarter speed for
+    // pixel work. The mouse buttons on that layer sit under the left hand,
+    // so you can snipe and click at the same time.
     //
-    // precision {
-    //   layers = <5>;
-    //   input-processors = <&zip_xy_scaler 1 16>;
-    //   process-next;
-    // };
+    // `process-next` is required, not cosmetic: without it the base
+    // processors above are skipped entirely (input_listener.c returns early),
+    // which would drop zip_xy_transform and leave the axes inverted/swapped
+    // while sniping. With it, the override runs first and the base chain
+    // still runs, so the ratios multiply:
+    //     1200 CPI * 1/4 (here) * 2/3 (base) = 200 CPI effective
+    //
+    // This was previously dead code gated on layer 6, and used 1/16 -- which
+    // would have compounded to ~50 CPI, far too slow to be usable.
+    // Both scalers track remainders, so slow movement accumulates rather
+    // than being rounded away.
+    precision {
+      layers = <5>;
+      input-processors = <&zip_xy_scaler 1 4>;
+      process-next;
+    };
   };
 
   trackball_listener2: trackball_listener2 {
