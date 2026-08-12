@@ -96,6 +96,20 @@
             require-prior-idle-ms = <100>;
         };
 
+        // Spotlight. On the UHK this is a dedicated key next to the right
+        // space (LGUI+SPACE at right-half position 29); there is no spare key
+        // for it here, so it becomes a two-thumb chord.
+        //
+        // require-prior-idle-ms guards it the same way the letter combos are
+        // guarded: position 30 is Tab and 31 is left click, both of which get
+        // pressed in quick succession during ordinary use.
+        Spotlight {
+            bindings = <&kp LG(SPACE)>;
+            key-positions = <30 31>;   // Tab + left click thumbs
+            layers = <0>;
+            require-prior-idle-ms = <100>;
+        };
+
         // Hold for EXTRAS, tap to return to BASE. Both inner thumb keys.
         //
         // A second combo, BASE_or_SLOW, used to fire the same &td_bore from

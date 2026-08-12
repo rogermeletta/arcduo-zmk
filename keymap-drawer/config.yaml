@@ -110,12 +110,16 @@ parse_config:
     # boards/shields/arcduo/arcduo.dtsi -- keep the two in sync.
     #
     # `type: ball` is the hook for the round styling in svg_extra_style above.
-    # Left ball scrolls, right ball moves the cursor; the flip on Num and the
-    # quarter-speed snipe on Mouse are the only per-layer differences.
+    # Left ball scrolls, right ball moves the cursor. On Nav the two swap, as
+    # they do on the UHK's Mod layer; on Mouse the cursor ball drops to
+    # quarter speed for sniping.
     "&ball_scroll": {t: Scroll, type: ball}
-    "&ball_scroll_flip": {t: Scroll ↔flip, type: ball}
     "&ball_cursor": {t: Cursor, type: ball}
     "&ball_snipe": {t: Snipe ¼×, type: ball}
+    # Umlaut macros carried over from the UHK's Fn layer.
+    "&ae_macro": ä
+    "&oe_macro": ö
+    "&ue_macro": ü
   sticky_label: sticky
   toggle_label: toggle
   tap_toggle_label: tap-toggle
@@ -123,16 +127,20 @@ parse_config:
     t: ▽
     type: trans
   mark_alternate_layer_activators: false
+  # macOS names, matching both the keycaps and the way the UHK Agent labels
+  # these keys (LCmd / LOption in its own UI). The keymap is a macOS keymap;
+  # rendering LG() as "Gui" made the carried-over UHK chords needlessly hard
+  # to read against the shortcuts they came from.
   modifier_fn_map:
     left_ctrl: Ctl
     right_ctrl: Ctl
     left_shift: Sft
     right_shift: Sft
-    left_alt: Alt
+    left_alt: Opt
     right_alt: AGr
-    left_gui: Gui
-    right_gui: Gui
-    keycode_combiner: "{mods}+ {key}"
+    left_gui: Cmd
+    right_gui: Cmd
+    keycode_combiner: "{mods}+{key}"
     mod_combiner: "{mod_1}+{mod_2}"
     special_combinations:
       left_ctrl+left_alt+left_gui+left_shift: Hyper

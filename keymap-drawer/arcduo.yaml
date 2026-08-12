@@ -60,9 +60,9 @@ layers:
   - {t: '5', h: RCTRL}
   - {t: '6', h: RALT}
   - {t: +, h: RCMD}
-  - ''
-  - ''
-  - ''
+  - ä
+  - ö
+  - ü
   - BACK SPACE
   - SPACE
   - '='
@@ -76,47 +76,47 @@ layers:
   - {t: ▽, type: trans}
   - '0'
   - .
-  - {t: Scroll ↔flip, type: ball}
+  - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}
   Nav:
-  - '!'
-  - '@'
-  - '#'
-  - $
-  - '%'
-  - ^
-  - '&'
+  - Sft+Cmd+5
+  - Cmd+`
+  - Cmd+TAB
+  - Cmd+W
+  - Cmd+T
+  - PSCRN
+  - CAPS
   - UP
-  - ''
-  - {t: INSERT, h: RSHIFT}
+  - INS
+  - DEL
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - ''
-  - ''
+  - Opt+Cmd+EJECT
+  - PP
   - LEFT
   - DOWN
   - RIGHT
   - RETURN
-  - ''
-  - ''
-  - ''
-  - ''
-  - ''
-  - ''
+  - Cmd+LEFT
+  - Cmd+RIGHT
+  - Opt+Cmd+LEFT
+  - Opt+Cmd+RIGHT
+  - Ctl+Sft+Cmd+F
+  - MUTE
   - HOME
   - PG DN
   - PG UP
   - END
-  - ''
-  - ''
+  - PREV
+  - NEXT
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - ''
-  - {t: Scroll, type: ball}
+  - Opt+BSPC
   - {t: Cursor, type: ball}
+  - {t: Scroll, type: ball}
   Symbols:
   - ''
   - ''
@@ -160,7 +160,7 @@ layers:
   - ¯\_(ツ)_/¯
   - LGTM
   - git commit
-  - ''
+  - Opt+Cmd+6
   - BRI INC
   - BT(0)
   - BT(1)
@@ -172,26 +172,26 @@ layers:
   - F24
   - F22
   - BRI DEC
-  - ''
+  - Ctl+Opt+Cmd+T
   - PREV
   - PP
   - STOP
   - NEXT
-  - ''
-  - ''
-  - ''
-  - ''
-  - ''
+  - Opt+Cmd+1
+  - Opt+Cmd+2
+  - Opt+Cmd+3
+  - Ctl+Opt+Cmd+4
+  - Ctl+Opt+Cmd+5
   - New Dir
   - MUTE
   - VOL DN
   - VOL UP
   - ZMK Studio
-  - ''
-  - ''
+  - Ctl+Opt+Cmd+V
+  - Ctl+Opt+Cmd+B
   - {type: held}
   - ''
-  - ''
+  - Sft+Cmd+V
   - BT CLR
   - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}
@@ -264,6 +264,9 @@ combos:
   l: [Base]
 - p: [0, 1]
   k: ESC
+  l: [Base]
+- p: [30, 31]
+  k: Cmd+SPACE
   l: [Base]
 - p: [32, 33]
   k: {t: Base, h: Extra}

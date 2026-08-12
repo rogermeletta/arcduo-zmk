@@ -123,6 +123,44 @@
                 ;
         };
 
+        // Umlauts, carried over from the UHK keymap, where they sat on the Fn
+        // layer as three separate macros.
+        //
+        // macOS composes these with the Option+U dead key: Option+U arms the
+        // diaeresis, the next vowel receives it. So each macro is two taps and
+        // needs no explicit press/release pair -- `&kp LA(U)` already sends
+        // Option+U as one keystroke.
+        //
+        // These are macOS-only. On Linux or Windows the same output needs the
+        // Unicode input dance the shrug macro uses (Ctrl+Shift+U, hex, space),
+        // which is why the UHK config kept separate Mac and PC keymaps.
+        ae_macro: ae_macro { // ä
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings
+                = <&macro_tap &kp LA(U)>
+                , <&macro_tap &kp A>
+                ;
+        };
+
+        oe_macro: oe_macro { // ö
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings
+                = <&macro_tap &kp LA(U)>
+                , <&macro_tap &kp O>
+                ;
+        };
+
+        ue_macro: ue_macro { // ü
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings
+                = <&macro_tap &kp LA(U)>
+                , <&macro_tap &kp U>
+                ;
+        };
+
         // home_macro was removed together with td_home, the only thing that
         // referenced it. See config/behaviors.dtsi.
     };

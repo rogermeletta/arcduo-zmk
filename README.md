@@ -28,8 +28,14 @@ images, balls included.
 | Function | Scroll | Cursor |
 | Sensor | PMW3610 @ 200 CPI | PMW3610 @ 1200 CPI |
 | Every layer | scrolls, scaled 1/16 | moves the pointer, scaled 2/3 → ~800 CPI |
-| On **Num** | horizontal scroll is inverted | unchanged |
+| On **Nav** | **moves the pointer**, scaled 4× → ~800 CPI | **scrolls**, scaled 1/96 |
 | On **Mouse** | unchanged | **snipe**: a further 1/4 → ~200 CPI for pixel work |
+
+The two balls swapping roles on Nav is carried over from the UHK, whose left key
+cluster and right trackball are configured `navigationModeModLayer = Cursor` and
+`= Scroll` respectively. Both scaling factors put the two balls at the same
+effective speed as each other — ~800 CPI for the pointer, one scroll tick per
+2 mm of travel.
 
 Snipe mode is why the mouse buttons on the MOUSE layer sit under the *left*
 hand: hold the right inner thumb to slow the right ball down, and you can
@@ -91,14 +97,19 @@ screen orders the battery widgets by pairing order.
 
 ## Layers
 
-| # | Name | Reached by |
-| --- | --- | --- |
-| 0 | Base | default |
-| 1 | Num | hold Tab or Backspace thumb |
-| 2 | Nav | hold Space thumb |
-| 3 | Symbols | hold `G` |
-| 4 | Extra | hold left inner thumb, or the both-inner-thumbs combo |
-| 5 | Mouse | hold right inner thumb |
+| # | Name | Reached by | |
+| --- | --- | --- | --- |
+| 0 | Base | default | |
+| 1 | Num | hold Tab or Backspace thumb | the UHK's Fn layer |
+| 2 | Nav | hold Space thumb | the UHK's Mod layer |
+| 3 | Symbols | hold `G` | |
+| 4 | Extra | hold left inner thumb, or the both-inner-thumbs combo | the UHK's window-manager chords |
+| 5 | Mouse | hold right inner thumb | the UHK's Mouse layer |
+
+The layer bodies are shaped after Roger's Ultimate Hacking Keyboard v1 "QWERTY
+for Mac" keymap, so that switching between the two boards costs as little as
+possible. [docs/UHK-PARITY.md](docs/UHK-PARITY.md) has the full mapping table,
+including what did not fit and why.
 
 ![keymap images](keymap-drawer/arcduo.svg)
 
