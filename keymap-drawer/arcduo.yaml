@@ -37,6 +37,8 @@ layers:
   - {t: RETURN, h: Mouse}
   - {t: SPACE, h: Nav}
   - {t: BSPC, h: Num}
+  - {t: Scroll, type: ball}
+  - {t: Cursor, type: ball}
   Num:
   - {t: '1', h: F1}
   - {t: '2', h: F2}
@@ -74,6 +76,8 @@ layers:
   - {t: ▽, type: trans}
   - '0'
   - .
+  - {t: Scroll ↔flip, type: ball}
+  - {t: Cursor, type: ball}
   Nav:
   - '!'
   - '@'
@@ -111,6 +115,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - ''
+  - {t: Scroll, type: ball}
+  - {t: Cursor, type: ball}
   Symbols:
   - ''
   - ''
@@ -148,6 +154,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - ''
+  - {t: Scroll, type: ball}
+  - {t: Cursor, type: ball}
   Extra:
   - ¯\_(ツ)_/¯
   - LGTM
@@ -185,6 +193,8 @@ layers:
   - ''
   - ''
   - BT CLR
+  - {t: Scroll, type: ball}
+  - {t: Cursor, type: ball}
   Mouse:
   - Wheel ←
   - Wheel ↑
@@ -222,6 +232,8 @@ layers:
   - {t: RETURN, type: held}
   - {t: ▽, type: trans}
   - ''
+  - {t: Scroll, type: ball}
+  - {t: Snipe ¼×, type: ball}
 combos:
 - p: [13, 16]
   k: Caps Word

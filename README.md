@@ -17,8 +17,33 @@ Both halves are BLE **peripherals**; the dongle is the split **central**. The
 dongle is therefore required — it is the part that runs the keymap, and the
 halves will not act as a keyboard without it.
 
-The left ball scrolls and the right ball moves the cursor. Holding the MOUSE
-layer scales the right ball down 16x for precision work.
+## Trackballs
+
+Both balls appear on the keymap diagram below as the two round shapes in the
+middle, roughly where they sit on the case.
+
+| | Left ball | Right ball |
+| --- | --- | --- |
+| Function | Scroll | Cursor |
+| Sensor | PMW3610 @ 200 CPI | PMW3610 @ 1200 CPI |
+| Every layer | scrolls, scaled 1/16 | moves the pointer, scaled 2/3 → ~800 CPI |
+| On **Num** | horizontal scroll is inverted | unchanged |
+| On **Mouse** | unchanged | **snipe**: a further 1/4 → ~200 CPI for pixel work |
+
+Snipe mode is why the mouse buttons on the MOUSE layer sit under the *left*
+hand: hold the right inner thumb to slow the right ball down, and you can
+still click while sniping.
+
+There is **no auto-mouse layer**. A `zip_temp_layer` used to switch to MOUSE on
+any ball motion, but it fires on any input event at all — including the
+single-count jitter a sensitive sensor picks up from desk vibration — so the
+layer changed at random. It was removed rather than desensitising the sensor;
+jitter is now harmless sub-pixel cursor noise.
+
+Neither ball does anything by itself: the halves only publish raw sensor data
+over `zmk,input-split`, and every processor above runs on the **dongle**. That
+is why a change to a ball's behaviour means reflashing the dongle, and a change
+to the sensor itself means reflashing the halves.
 
 ## Building
 
@@ -79,6 +104,15 @@ screen orders the battery widgets by pairing order.
 The keymap image is regenerated automatically by
 [keymap-drawer](https://github.com/caksoylar/keymap-drawer) whenever
 `config/arcduo.keymap` changes.
+
+The two round shapes are the trackballs. keymap-drawer only knows about keys,
+so they are faked in three places that have to stay in step: two extra
+positions in `config/arcduo.json`, two bindings per layer guarded by
+`#ifdef KEYMAP_DRAWER` in `config/arcduo.keymap` (a define that only the
+drawer's preprocessor ever sees — the firmware build drops the block), and the
+`&ball_*` legends plus the round styling in `keymap-drawer/config.yaml`. Their
+real behaviour lives in the input listeners in
+`boards/shields/arcduo/arcduo.dtsi`; if you change those, update the legends.
 
 ## Credits & Inspiration
 

@@ -39,9 +39,13 @@
 // #define EXTRAS  4
 // #define MOUSE   5
 //
-// MOUSE is also activated automatically while the right trackball is moving
-// (see arcduo_auto_mouse in boards/shields/arcduo/arcduo.dtsi), so the mouse
-// buttons, scroll and clipboard keys on it are reachable without a thumb key.
+// The two trackballs are input devices, not keys, so they have no bindings
+// here -- what they do per layer is decided by the input-listener chains in
+// boards/shields/arcduo/arcduo.dtsi. Each layer below still ends with two
+// extra bindings inside `#ifdef KEYMAP_DRAWER`, purely so keymap-drawer can
+// draw the balls; KEYMAP_DRAWER is defined by parse_config.zmk_preamble in
+// keymap-drawer/config.yaml and never by a firmware build, so the compiled
+// keymap is unaffected. Keep them in sync with the listeners.
 //
 // On EXTRAS, F22/F23/F24 drive the YADS dongle screen: F22 toggles it off and
 // on, F23 dims, F24 brightens. Those are the keycodes YADS listens for by
@@ -61,6 +65,11 @@
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
                                                         &td_tab          &mkp LCLK        &lt 4 RETURN             &lt 5 RETURN       &td_space        &td_bs                  
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
+// The two trackballs. Drawer-only; see the header comment at the top of
+// this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
+#ifdef KEYMAP_DRAWER
+     &ball_scroll     &ball_cursor
+#endif
             >;
         };
 
@@ -76,6 +85,11 @@
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
                                                         &none            &none            &trans                   &trans             &kp N0           &kp DOT                          
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
+// The two trackballs. Drawer-only; see the header comment at the top of
+// this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
+#ifdef KEYMAP_DRAWER
+     &ball_scroll_flip  &ball_cursor
+#endif
             >;
         };
 
@@ -91,6 +105,11 @@
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
                                                         &none            &none            &trans                   &trans             &trans           &none                          
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
+// The two trackballs. Drawer-only; see the header comment at the top of
+// this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
+#ifdef KEYMAP_DRAWER
+     &ball_scroll     &ball_cursor
+#endif
             >;
         };
 
@@ -106,6 +125,11 @@
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
                                                         &trans           &trans           &trans                   &trans             &trans           &none                          
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
+// The two trackballs. Drawer-only; see the header comment at the top of
+// this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
+#ifdef KEYMAP_DRAWER
+     &ball_scroll     &ball_cursor
+#endif
             >;
         };
 
@@ -122,6 +146,11 @@
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
                                                         &none            &none            &none                    &none              &none            &bt BT_CLR                         
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯           
+// The two trackballs. Drawer-only; see the header comment at the top of
+// this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
+#ifdef KEYMAP_DRAWER
+     &ball_scroll     &ball_cursor
+#endif
             >;
         };
 
@@ -137,6 +166,11 @@
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
                                                         &trans           &trans           &trans                   &kp RETURN         &trans            &none                          
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯           
+// The two trackballs. Drawer-only; see the header comment at the top of
+// this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
+#ifdef KEYMAP_DRAWER
+     &ball_scroll     &ball_snipe
+#endif
             >;
         };
   };

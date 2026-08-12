@@ -1,6 +1,19 @@
 {
   "id": "arcduo",
   "name": "ArcDuo",
+  "_comment": [
+    "Physical layout for keymap-drawer only; ZMK never reads this file. The",
+    "authoritative layout is the zmk,physical-layout node in",
+    "boards/shields/arcduo/arcduo.dtsi.",
+    "",
+    "The two row-4 entries are not keys: they are the integrated trackballs,",
+    "placed in the split gap where they actually sit on the case. They exist",
+    "so the diagram can show what each ball does per layer, and are matched by",
+    "the two #ifdef KEYMAP_DRAWER bindings at the end of every layer in",
+    "config/arcduo.keymap -- keymap-drawer requires the key count of each",
+    "layer to equal the key count of the layout. row/col are decorative here;",
+    "keymap-drawer only reads x, y, w, h, r, rx, ry."
+  ],
   "layouts": {
     "default_transform": {
       "name": "default_transform",
@@ -43,7 +56,10 @@
         { "row": 3, "col":  5, "x": 2.48, "y": 3.125, "r":  30, "rx":  2.98, "ry": 7.895, "h": 1 },
         { "row": 3, "col":  7, "x": 9.52, "y": 3.125, "r": -30, "rx": 10.02, "ry": 7.895, "h": 1 },
         { "row": 3, "col":  8, "x": 9.52, "y": 3.125, "r": -15, "rx": 10.02, "ry": 7.895 },
-        { "row": 3, "col":  9, "x": 9.52, "y": 3.125, "r": 0 }
+        { "row": 3, "col":  9, "x": 9.52, "y": 3.125, "r": 0 },
+
+        { "row": 4, "col":  0, "x": 5.02, "y":  1.55, "w": 1.6, "h": 1.6 },
+        { "row": 4, "col":  1, "x": 6.38, "y":  0.35, "w": 1.6, "h": 1.6 }
     ]
   }
 },
