@@ -54,11 +54,17 @@
             hold-while-undecided;
         };
 
+        // Hold gives EXTRAS, not NAV. NAV moved to the left inner thumb
+        // (position 32) because that is how the UHK is held: the Mod key is a
+        // left thumb key there, and its layer puts window and tab management
+        // under the left fingers with the arrows under the right hand. Holding
+        // NAV with the right thumb meant driving the arrows with the same hand
+        // that was holding the layer down.
         td_space: td_space {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <85>;
-            bindings = <&lt 2 SPACE>, <&kp SPACE>; // hold, tap, double_tap
+            bindings = <&lt 4 SPACE>, <&kp SPACE>; // hold, tap, double_tap
         };
 
         td_bs: td_bs {

@@ -39,17 +39,26 @@ actually sends.
 | UHK layer | ArcDuo layer | Reached by |
 | --- | --- | --- |
 | base | `BASE` (0) | default |
-| mod | `NAV` (2) | hold right thumb (Space) |
-| fn | `NUM` (1) | hold left outer thumb (Tab) or right outer thumb (Bspc) |
+| mod | `NAV` (2) | hold **left inner** thumb |
+| fn | `NUM` (1) | hold **left outer** thumb (Tab), or right outer thumb (Bspc) |
 | mouse | `MOUSE` (5) | hold right inner thumb |
-| — | `EXTRAS` (4) | hold left inner thumb — the window-manager chords |
+| — | `EXTRAS` (4) | hold right middle thumb (Space) — window-manager chords |
 | — | `SYM` (3) | hold `G` |
 
-The UHK's mod layer is its workhorse: arrows, window management and tab
-navigation all on one held thumb. `NAV` already was the ArcDuo's arrow layer, so
-it absorbs the rest of that role. The one place the correspondence breaks is the
-window-manager chord family (`Ctrl+Opt+Cmd+…`), which is ten chords on its own
-and does not fit next to the arrows — it lives on `EXTRAS` instead.
+Both of the layers carried over from the UHK are held with the **left thumb**,
+because that is how they are held on the UHK: Fn and Mod are both left thumb
+keys there, with Fn outboard of Mod, and the ArcDuo now matches that order. It
+matters more than it looks. The UHK's Mod layer puts window and tab management
+under the left fingers and the arrows under the right hand; holding Mod with the
+right thumb, as an earlier draft of this branch did, meant driving the arrows
+with the same hand that was holding the layer down.
+
+`EXTRAS` moved to the Space thumb to make room. Its own left-hand contents are
+unaffected — the thumb that holds it is on the other hand.
+
+The one place the correspondence breaks is the window-manager chord family
+(`Opt+Cmd+<digit>` and `Ctrl+Opt+Cmd+<key>`), which is nine chords on its own and
+does not fit next to the arrows. It lives on `EXTRAS`.
 
 ---
 
@@ -57,35 +66,66 @@ and does not fit next to the arrows — it lives on `EXTRAS` instead.
 
 ### Carried over
 
-| UHK function | Chord | ArcDuo |
+**Mod layer (NAV) — left hand.** Tab and window management, all reachable with
+the left fingers while the left thumb holds the layer, which is how it is used
+on the UHK.
+
+| Function | Chord | Position |
 | --- | --- | --- |
-| Screenshot / recording tool | `Shift+Cmd+5` | NAV 0 |
-| Cycle windows of current app | `Cmd+\`` | NAV 1 |
-| App switcher | `Cmd+Tab` | NAV 2 |
-| Close window / tab | `Cmd+W` | NAV 3 |
-| New tab | `Cmd+T` | NAV 4 |
-| Sleep displays | `Opt+Cmd+Eject` | NAV 14 |
-| Back / line start | `Cmd+←` | NAV 20 |
-| Forward / line end | `Cmd+→` | NAV 21 |
-| Previous tab | `Opt+Cmd+←` | NAV 22 |
-| Next tab | `Opt+Cmd+→` | NAV 23 |
-| Fullscreen | `Ctrl+Shift+Cmd+F` | NAV 24 |
-| Caps Lock | `CAPS` | NAV 6 |
-| Print Screen / Insert / Delete | | NAV 5 / 8 / 9 |
-| Arrows, Home, End, PgUp, PgDn | | NAV 7, 16-18, 26-29 |
-| Play-pause, mute, prev, next | | NAV 15, 25, 30, 31 |
-| Delete word | `Opt+Bspc` | NAV 35 |
-| Spotlight | `Cmd+Space` | combo, thumbs 30+31 |
-| ä ö ü | `Opt+U` then vowel | NUM 20, 21, 22 |
-| F1–F12 | | NUM row 0, on hold |
-| Window manager | `Opt+Cmd+1/2/3` | EXTRAS 20, 21, 22 |
-| Window manager | `Ctrl+Opt+Cmd+4/5` | EXTRAS 23, 24 |
-| Window manager | `Opt+Cmd+6` | EXTRAS 3 |
-| Window manager | `Ctrl+Opt+Cmd+T` | EXTRAS 15 |
-| Window manager | `Ctrl+Opt+Cmd+V` | EXTRAS 30 |
-| Window manager | `Ctrl+Opt+Cmd+B` | EXTRAS 31 |
-| Window manager | `Shift+Cmd+V` | EXTRAS 34 |
+| New tab | `Cmd+T` | 0 |
+| Close tab / window | `Cmd+W` | 1 |
+| Previous tab | `Opt+Cmd+←` | 2 |
+| Next tab | `Opt+Cmd+→` | 3 |
+| Cycle windows of current app | ``Cmd+` `` | 4 |
+| App switcher | `Cmd+Tab` | 14 |
+| AirPods noise cancelling (AirBuddy) | `Ctrl+Opt+Cmd+T` | 20 |
+| AirPods force connect | `Ctrl+Enter` | 21 |
+| Screenshot / recording tool | `Shift+Cmd+5` | 22 |
+| Fullscreen | `Ctrl+Shift+Cmd+F` | 23 |
+| Sleep displays | `Opt+Cmd+Eject` | 24 |
+
+**Mod layer (NAV) — right hand.** Navigation, driven by the hand that is not
+holding the layer.
+
+| Function | Position |
+| --- | --- |
+| Arrows (inverted T) | 7, 16, 17, 18 |
+| Line start / end, back / forward (`Cmd+←/→`) | 15, 25 |
+| Home, PgDn, PgUp, End | 26, 27, 28, 29 |
+| Print Screen, Caps Lock, Insert, Delete | 5, 6, 8, 9 |
+| 1Password | `Shift+Cmd+Space` | 33 |
+| Delete word (`Opt+Bspc`) | 35 |
+
+Positions 10-13 stay transparent so the home-row modifiers still work — that is
+what makes `Shift+←` select text on this layer.
+
+**Fn layer (NUM).**
+
+| Function | Chord | Position |
+| --- | --- | --- |
+| Clipboard history | `Shift+Cmd+V` | 23 |
+| Sanitised paste | `Cmd+Opt+V` | 24 |
+| ä ö ü | `Opt+U` then vowel | 20, 21, 22 |
+| Backspace | | 14 |
+| Numbers, F1–F12 | | row 0, F-keys on hold |
+| Numpad and operators | | right hand, unchanged |
+
+**Window-manager family (EXTRAS).**
+
+| Chord | Position |
+| --- | --- |
+| `Opt+Cmd+1` / `2` / `3` | 20, 21, 22 |
+| `Ctrl+Opt+Cmd+4` / `5` | 23, 24 |
+| `Opt+Cmd+6` | 3 |
+| `Ctrl+Opt+Cmd+V` / `B` | 30, 31 |
+
+**Elsewhere.**
+
+| Function | Chord | Where |
+| --- | --- | --- |
+| Raycast | `Cmd+Space` | combo, left-click + Space thumbs |
 | Mouse move / scroll / clicks | | MOUSE layer, unchanged |
+| Transport (prev, play-pause, next) | | EXTRAS 16, 17, 18 |
 
 The window-manager chords are deliberately left as chords rather than given
 names. `Ctrl+Opt+Cmd+<key>` and `Opt+Cmd+<digit>` are the binding style of
@@ -98,7 +138,8 @@ in a comment would be worse than saying nothing.
 | UHK function | Why not |
 | --- | --- |
 | **Caret mode on the trackballs** | Not possible in ZMK at the pinned SHA. See below. |
-| Numeric keypad (`KP_0`–`KP_9`, `KP_.`) | Needs a 3×3 block plus thumbs; the number row on `NUM` already covers the digits, and macOS treats keypad digits identically outside a handful of apps. |
+| **ä ö ü on the right hand** | The Fn right hand is the numpad, which is staying. The umlauts are on the Fn *left* hand instead; the gesture is still thumb-holds / fingers-type, just on one hand. Freeing three right-hand positions means giving up either the numpad's `1 2 3` (duplicated on the top row anyway) or its `-` `=` `/` operators — a small edit if it turns out to matter. |
+| Numeric keypad `KP_*` scancodes | The digits are the ordinary number keycodes, not the keypad ones. macOS treats them identically outside a handful of apps. |
 | Keymap switching (MAC / PC / GAM / COL) | ZMK has no runtime keymap switching. `&to` can swap base layers if you ever want a gaming or Windows base — say the word and it is a small change. |
 | Scroll Lock, Pause/Break | No function on macOS. |
 | `Alt+Tab` | Not a macOS shortcut; `Cmd+Tab` is on NAV 2. |

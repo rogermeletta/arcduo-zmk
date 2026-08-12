@@ -96,18 +96,21 @@
             require-prior-idle-ms = <100>;
         };
 
-        // Spotlight. On the UHK this is a dedicated key next to the right
-        // space (LGUI+SPACE at right-half position 29); there is no spare key
-        // for it here, so it becomes a two-thumb chord.
+        // Raycast. On the UHK this is the key immediately right of the right
+        // space bar (LGUI+SPACE at right-half position 29); all six thumbs
+        // here are already spoken for, so it becomes a two-thumb chord --
+        // left click and space, one thumb each, mirroring how it sits beside
+        // the space bar on the UHK.
         //
-        // require-prior-idle-ms guards it the same way the letter combos are
-        // guarded: position 30 is Tab and 31 is left click, both of which get
-        // pressed in quick succession during ordinary use.
-        Spotlight {
+        // No require-prior-idle-ms, deliberately, unlike the letter combos:
+        // the whole point is to reach for this straight after typing, and an
+        // idle guard would swallow exactly that. Both keys are thumb keys, so
+        // a simultaneous press inside the 50 ms combo window is not something
+        // ordinary typing produces.
+        Raycast {
             bindings = <&kp LG(SPACE)>;
-            key-positions = <30 31>;   // Tab + left click thumbs
+            key-positions = <31 34>;   // left click + space thumbs
             layers = <0>;
-            require-prior-idle-ms = <100>;
         };
 
         // Hold for EXTRAS, tap to return to BASE. Both inner thumb keys.

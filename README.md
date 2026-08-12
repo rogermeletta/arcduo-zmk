@@ -100,11 +100,15 @@ screen orders the battery widgets by pairing order.
 | # | Name | Reached by | |
 | --- | --- | --- | --- |
 | 0 | Base | default | |
-| 1 | Num | hold Tab or Backspace thumb | the UHK's Fn layer |
-| 2 | Nav | hold Space thumb | the UHK's Mod layer |
+| 1 | Num | hold left outer (Tab) or right outer (Bspc) thumb | the UHK's Fn layer |
+| 2 | Nav | hold left inner thumb | the UHK's Mod layer |
 | 3 | Symbols | hold `G` | |
-| 4 | Extra | hold left inner thumb, or the both-inner-thumbs combo | the UHK's window-manager chords |
+| 4 | Extra | hold Space thumb, or the both-inner-thumbs combo | the UHK's window-manager chords |
 | 5 | Mouse | hold right inner thumb | the UHK's Mouse layer |
+
+Both layers carried over from the UHK are held with the **left** thumb, matching
+how they are held there — which leaves the right hand free for the arrows on Nav
+and keeps tab and window management under the left fingers.
 
 The layer bodies are shaped after Roger's Ultimate Hacking Keyboard v1 "QWERTY
 for Mac" keymap, so that switching between the two boards costs as little as

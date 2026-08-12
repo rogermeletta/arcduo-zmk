@@ -33,7 +33,7 @@ layers:
   - /
   - {t: TAB, h: Num}
   - L Click
-  - {t: RETURN, h: Extra}
+  - {t: RETURN, h: Nav}
   - {t: RETURN, h: Mouse}
   - {t: SPACE, h: Nav}
   - {t: BSPC, h: Num}
@@ -54,7 +54,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - ''
+  - BACK SPACE
   - '-'
   - {t: '4', h: RSHIFT}
   - {t: '5', h: RCTRL}
@@ -63,8 +63,8 @@ layers:
   - ä
   - ö
   - ü
-  - BACK SPACE
-  - SPACE
+  - Sft+Cmd+V
+  - Cmd+Opt+V
   - '='
   - {t: '1', h: F1}
   - {t: '2', h: F2}
@@ -79,11 +79,11 @@ layers:
   - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}
   Nav:
-  - Sft+Cmd+5
-  - Cmd+`
-  - Cmd+TAB
-  - Cmd+W
   - Cmd+T
+  - Cmd+W
+  - Opt+Cmd+LEFT
+  - Opt+Cmd+RIGHT
+  - Cmd+`
   - PSCRN
   - CAPS
   - UP
@@ -93,26 +93,26 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - Opt+Cmd+EJECT
-  - PP
+  - Cmd+TAB
+  - Cmd+LEFT
   - LEFT
   - DOWN
   - RIGHT
   - RETURN
-  - Cmd+LEFT
-  - Cmd+RIGHT
-  - Opt+Cmd+LEFT
-  - Opt+Cmd+RIGHT
+  - Ctl+Opt+Cmd+T
+  - Ctl+RET
+  - Sft+Cmd+5
   - Ctl+Sft+Cmd+F
-  - MUTE
+  - Opt+Cmd+EJECT
+  - Cmd+RIGHT
   - HOME
   - PG DN
   - PG UP
   - END
-  - PREV
-  - NEXT
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ''
+  - ''
+  - {type: held}
+  - Sft+Cmd+SPACE
   - {t: ▽, type: trans}
   - Opt+BSPC
   - {t: Cursor, type: ball}
@@ -172,11 +172,11 @@ layers:
   - F24
   - F22
   - BRI DEC
-  - Ctl+Opt+Cmd+T
+  - ''
   - PREV
   - PP
-  - STOP
   - NEXT
+  - ''
   - Opt+Cmd+1
   - Opt+Cmd+2
   - Opt+Cmd+3
@@ -189,9 +189,9 @@ layers:
   - ZMK Studio
   - Ctl+Opt+Cmd+V
   - Ctl+Opt+Cmd+B
-  - {type: held}
   - ''
-  - Sft+Cmd+V
+  - ''
+  - {t: ▽, type: trans}
   - BT CLR
   - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}
@@ -265,7 +265,7 @@ combos:
 - p: [0, 1]
   k: ESC
   l: [Base]
-- p: [30, 31]
+- p: [31, 34]
   k: Cmd+SPACE
   l: [Base]
 - p: [32, 33]
