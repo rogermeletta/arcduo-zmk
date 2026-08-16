@@ -107,6 +107,40 @@ If the halves and dongle will not pair, flash `firmware_reset_*.uf2` to each
 first to clear stored bonds, then reflash — pairing the **left** half before
 the right, since the dongle screen orders the battery widgets by pairing order.
 
+## Bluetooth
+
+The dongle plays both BLE roles at once: **central** to the two halves, and
+**peripheral** to the host. It advertises as **`ArcDuo`**, set once in
+`boards/shields/arcduo/Kconfig.defconfig` for all three parts — when that only
+covered the dongle, the halves built with an empty name and showed up nameless
+in logs.
+
+There are **five host profiles**, not four. ZMK derives them as
+`BT_MAX_PAIRED - ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS` = 7 − 2, which is why
+`BT_MAX_PAIRED` is bumped to 7. Extra binds profiles 0–3; the fifth has no key.
+
+To pair a host, hold **Extra** and:
+
+1. Tap `BT0`–`BT3` (`Y U I O`) to select a profile. The dongle advertises
+   whenever the selected profile is not *connected*, so an unused profile is
+   immediately discoverable.
+2. If the profile is already bonded to something else, tap `BT CLR` (right
+   pinky home) first. That clears **only the active host profile** —
+   `zmk_ble_clear_bonds()` calls `clear_profile_bond(active_profile)` and does
+   not touch the split bonds, so the halves stay paired.
+3. Pair from the host's Bluetooth settings.
+4. Tap `USB/BLE` (`P`) to send over BLE. **This step is easy to miss:** the
+   dongle is plugged into USB, and ZMK prefers USB output when it is connected,
+   so the host can be paired and connected while every keystroke still goes
+   down the cable. The setting persists.
+
+If a host shows a stale name, that is the host caching it — macOS in particular
+keeps the name from first pairing and never refreshes. Remove the device and
+pair again.
+
+`firmware_reset_*.uf2` is the nuclear option: it clears *all* bonds including
+the split ones, so the halves have to be re-paired to the dongle afterwards.
+
 ## Layers
 
 | # | Name | Reached by | |

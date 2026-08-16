@@ -176,7 +176,7 @@ layers:
   - PREV
   - PP
   - NEXT
-  - ''
+  - BT CLR
   - F19
   - F20
   - F21
@@ -192,7 +192,7 @@ layers:
   - Reset
   - {type: held}
   - {t: ▽, type: trans}
-  - BT CLR
+  - ''
   - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}
   Mouse:
