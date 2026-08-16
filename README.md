@@ -104,7 +104,7 @@ screen orders the battery widgets by pairing order.
 | 0 | Base | default | |
 | 1 | Num | hold left outer (Tab) or right outer (Bspc) thumb | the UHK's Fn layer |
 | 2 | Nav | hold **either** inner thumb | the UHK's Mod layer |
-| 3 | Symbols | hold `G` | |
+| 3 | Symbols | hold `G` (type right) or `H` (type left) | mirrored — same symbol, mirrored finger |
 | 4 | Extra | hold Space thumb, or the both-inner-thumbs combo | radios, brightness, transport |
 | 5 | Mouse | toggle: hold Extra, tap the left-click thumb | the UHK's Mouse layer |
 
@@ -115,6 +115,12 @@ and keeps tab and window management under the left fingers.
 Nav is on the right inner thumb as well, which is the one place this deliberately
 departs from the UHK. Holding it there puts the layer and the arrows on the same
 hand, so the right hand alone can navigate with the left off the board entirely.
+
+Symbols is mirrored: the same symbol sits on the mirrored finger of both halves,
+so there is one set to learn and it is always typeable by whichever hand is not
+on a trackball. It carries only what has no home elsewhere — the six brackets
+are Base combos, `-` `+` `=` are on Num, `;` is on Base — which is what makes
+room for `\ | ' "`, none of which could be typed on this board at all before.
 
 The layer bodies are shaped after Roger's Ultimate Hacking Keyboard v1 "QWERTY
 for Mac" keymap, so that switching between the two boards costs as little as

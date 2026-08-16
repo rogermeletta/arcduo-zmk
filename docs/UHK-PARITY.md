@@ -60,7 +60,7 @@ actually sends.
 | fn | `NUM` (1) | hold **left outer** thumb (Tab), or right outer thumb (Bspc) |
 | mouse | `MOUSE` (5) | **toggle**: hold `EXTRAS`, tap the left-click thumb |
 | — | `EXTRAS` (4) | hold right middle thumb (Space) — radios, brightness, transport, macros |
-| — | `SYM` (3) | hold `G` |
+| — | `SYM` (3) | hold `G` (type right) or `H` (type left) |
 
 Both of the layers carried over from the UHK are held with the **left thumb**,
 because that is how they are held on the UHK: Fn and Mod are both left thumb
@@ -204,7 +204,7 @@ in a comment would be worse than saying nothing.
 | **ä ö ü on the right hand** | The Fn right hand is the numpad, which is staying. The umlauts are on the Fn *left* hand instead; the gesture is still thumb-holds / fingers-type, just on one hand. Freeing three right-hand positions means giving up either the numpad's `1 2 3` (duplicated on the top row anyway) or its `-` `=` `/` operators — a small edit if it turns out to matter. |
 | Numeric keypad `KP_*` scancodes | The digits are the ordinary number keycodes, not the keypad ones. macOS treats them identically outside a handful of apps. |
 | **Double-tap-to-toggle on Mod and Mouse** | The UHK sets `holdAndDoubleTapToggle` on six of its layer keys, so Mod and Mouse can be *locked* for a long selection or a long scroll rather than held. Here both are hold-only. Adding it is a small change — make position 32 a tap-dance `bindings = <&lt 2 RETURN>, <&tog 2>`, and the same for 33 with layer 5, giving the toggled layer an exit key. It is left out for now because a tap-dance re-introduces a tapping-term delay on that key (see the note in `config/behaviors.dtsi` about why three of them were just removed), and because holding has been enough so far. Say the word. |
-| **`'` and `\`** | Neither exists anywhere on this board, on any layer — this predates the UHK work, but the UHK has both on its base layer, so it is a parity gap. `SYM`'s left hand is entirely unbound, but `SYM` is held with the left index on `G`, so that hand is not usable while it is active. The honest fix is to displace something on `SYM`'s right hand: position 16 is `;`, which already exists on `BASE`. |
+| ~~`'` and `\`~~ | **Fixed.** Both, plus `"` and `|`, were untypeable on this board on any layer — `\` existed only inside the shrug macro, and `"` and `|` are the shifted forms of `'` and `\`, so they died with them. All four are now on `SYM`'s home row, on both halves. |
 | Keymap switching (MAC / PC / GAM / COL) | ZMK has no runtime keymap switching. `&to` can swap base layers if you ever want a gaming or Windows base — say the word and it is a small change. |
 | Scroll Lock, Pause/Break | No function on macOS. |
 | `Alt+Tab` | Not a macOS shortcut; `Cmd+Tab` is on `NAV`'s `D`. |

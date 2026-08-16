@@ -123,7 +123,11 @@ parse_config:
   trans_legend:
     t: ▽
     type: trans
-  mark_alternate_layer_activators: false
+  # Three layers now have two ways in -- Num from either outer thumb, Nav from
+  # either inner thumb, Symbols from G or H -- and with this off the diagram
+  # marked only the first one it found as held, so the second looked like an
+  # ordinary transparent key.
+  mark_alternate_layer_activators: true
   # macOS names, matching both the keycaps and the way the UHK Agent labels
   # these keys (LCmd / LOption in its own UI). The keymap is a macOS keymap;
   # rendering LG() as "Gui" made the carried-over UHK chords needlessly hard

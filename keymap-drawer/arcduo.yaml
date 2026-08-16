@@ -16,7 +16,7 @@ layers:
   - {t: D, h: LCTRL}
   - {t: F, h: LSHIFT}
   - {t: G, h: Symbols}
-  - H
+  - {t: H, h: Symbols}
   - {t: J, h: RSHIFT}
   - {t: K, h: RCTRL}
   - {t: L, h: RALT}
@@ -75,7 +75,7 @@ layers:
   - {t: ▽, type: trans}
   - SPACE
   - '0'
-  - .
+  - {t: ., type: held alternate}
   - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}
   Nav:
@@ -112,48 +112,48 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {type: held}
-  - Sft+Cmd+SPACE
+  - {t: Sft+Cmd+SPACE, type: held alternate}
   - {t: ▽, type: trans}
   - Opt+BSPC
   - {t: Cursor, type: ball}
   - {t: Scroll, type: ball}
   Symbols:
-  - ''
-  - ''
-  - ''
-  - ''
-  - ''
+  - '>'
+  - '~'
+  - \
+  - '`'
+  - <
+  - <
+  - '`'
+  - \
+  - '~'
+  - '>'
+  - $
+  - '"'
+  - ''''
+  - '|'
+  - {type: held}
+  - {type: held alternate}
+  - '|'
+  - ''''
+  - '"'
+  - $
+  - '@'
+  - '#'
+  - _
   - '*'
   - '&'
-  - '{'
-  - $
-  - '`'
-  - ''
-  - ''
-  - ''
-  - {t: ▽, type: trans}
-  - {type: held}
-  - '-'
-  - ;
-  - (
-  - '['
-  - +
-  - ''
-  - ''
-  - ''
-  - ''
-  - ''
-  - '@'
+  - '&'
+  - '*'
   - _
-  - <
   - '#'
-  - '%'
+  - '@'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - ''
+  - {t: ▽, type: trans}
   - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}
   Extra:

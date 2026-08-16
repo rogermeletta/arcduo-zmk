@@ -68,7 +68,12 @@
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
      &kp Q            &kp W            &kp E            &kp R            &kp T                                                        &kp Y            &kp U            &kp I            &kp O            &kp P
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &hml LCMD A      &hml LALT S      &hml LCTRL D     &hml LSHIFT F    &lt 3 G                                                      &kp H            &hmr RSHIFT J    &hmr RCTRL K     &hmr RALT L      &hmr RCMD SEMI
+// `G` and `H` both hold SYM -- see that layer for why. Both are `&lt`, whose
+// tap-preferred flavor only resolves to a hold once the 200 ms term expires
+// with no other key pressed, so rolling through "go" or "th" still types the
+// letter. H is three times commoner than G in English, so this doubles the
+// exposure to the one failure mode &lt does have: pausing with the key down.
+     &hml LCMD A      &hml LALT S      &hml LCTRL D     &hml LSHIFT F    &lt 3 G                                                      &lt 3 H          &hmr RSHIFT J    &hmr RCTRL K     &hmr RALT L      &hmr RCMD SEMI
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
      &kp Z            &kp X            &kp C            &kp V            &kp B                                                        &kp N            &kp M            &kp COMMA        &kp PERIOD       &kp SLASH
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
@@ -174,14 +179,36 @@
         SYM {
             display-name = "Symbols";     
             bindings = <
+// Mirrored, and reachable from either hand. `G` (14) holds the layer for the
+// right hand, `H` (15) holds it for the left, and the same symbol sits on the
+// mirrored finger on both halves -- so there is one set to learn, and it is
+// always typeable by whichever hand is free. On a board with two trackballs
+// that is the common case.
+//
+// The left half used to be entirely &none, because the layer was held by the
+// left index and only the right hand could reach anything.
+//
+// What is NOT here, and why. Brackets are all six BASE combos already
+// (F+G, H+J, R+T, Y+U, V+B, N+M), `;` is on BASE, `-` `+` `=` are on NUM, and
+// `%` is Shift+5. Those took a third of the old layer and had homes elsewhere.
+// The 14 that remain are the ones with nowhere else to go, and four of them --
+// \ | ' " -- could not be typed on this board at ALL before now: `\` existed
+// only inside the shrug macro, and `|` and `"` are shifted forms of `\` and
+// `'`, so they died with them.
+//
+// `^` is the one deliberate omission from that set: 15 slots per hand minus
+// the layer key leaves 14, and it lost to the backtick. It is Shift+6.
+//
+// &td_grave rather than &kp GRAVE: tap for `, double-tap for `` plus Left,
+// which lands the cursor inside an inline code span.
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
-     &none            &none            &none            &none            &none                                                        &kp ASTRK        &kp AMPS         &kp LEFT_BRACE   &kp DLLR         &td_grave
+     &kp GT           &kp TILDE        &kp BSLH         &td_grave        &kp LT                                                       &kp LT           &td_grave        &kp BSLH         &kp TILDE        &kp GT
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &none            &none            &none            &trans           &none                                                        &td_hyphen       &kp SEMI         &kp LPAR         &kp LBKT         &kp PLUS
+     &kp DLLR         &kp DQT          &kp SQT          &kp PIPE         &trans                                                       &trans           &kp PIPE         &kp SQT          &kp DQT          &kp DLLR
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &none            &none            &none            &none            &none                                                        &kp AT_SIGN      &kp UNDERSCORE   &kp LT           &kp HASH         &kp PRCNT
+     &kp AT_SIGN      &kp HASH         &kp UNDERSCORE   &kp ASTRK        &kp AMPS                                                     &kp AMPS         &kp ASTRK        &kp UNDERSCORE   &kp HASH         &kp AT_SIGN
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
-                                                        &trans           &trans           &trans                   &trans             &trans           &none                          
+                                                        &trans           &trans           &trans                   &trans             &trans           &trans
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
 // The two trackballs. Drawer-only; see the header comment at the top of
 // this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
