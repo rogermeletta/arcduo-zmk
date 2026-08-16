@@ -32,7 +32,7 @@ layers:
   - .
   - /
   - {t: TAB, h: Num}
-  - L Click
+  - {t: L Click, h: Nav}
   - {t: RETURN, h: Nav}
   - {t: RETURN, h: Extra}
   - {t: SPACE, h: Nav}
@@ -91,7 +91,7 @@ layers:
   - DEL
   - {t: CAPS, h: LCMD}
   - {t: Cmd+LEFT, h: LALT}
-  - {t: Cmd+TAB, h: LCTRL}
+  - {t: Cmd+Tab, h: LCTRL}
   - {t: Cmd+RIGHT, h: LSHIFT}
   - Opt+Cmd+6
   - PG DN
@@ -110,10 +110,10 @@ layers:
   - Ctl+Opt+Cmd+4
   - Ctl+Opt+Cmd+5
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
   - {type: held}
+  - {t: ▽, type: trans}
   - Sft+Cmd+SPACE
-  - {type: held alternate}
+  - {t: ▽, type: trans}
   - Opt+BSPC
   - {t: Cursor, type: ball}
   - {t: Scroll, type: ball}
@@ -238,7 +238,7 @@ combos:
 - p: [13, 16]
   k: Caps Word
   l: [Base]
-- p: [23, 31]
+- p: [12, 31]
   k: M Click
   l: [Base, Mouse]
 - p: [13, 31]

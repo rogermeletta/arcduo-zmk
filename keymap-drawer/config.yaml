@@ -80,6 +80,10 @@ parse_config:
     "&td_equals": "="
     "&td_bore": {t: Base, h: Extra}
     "&caps_word": Caps Word
+    # `nav_hold` is the hold half of &nav_lt: a macro, so the drawer
+    # cannot see it is a layer. `cmd_tab` is the app switcher on NAV's D.
+    "&nav_hold 2": Nav
+    "&cmd_tab LGUI": Cmd+Tab
     "&studio_unlock": ZMK Studio
     "&bootloader": Bootloader
     "&sys_reset": Reset

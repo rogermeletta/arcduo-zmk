@@ -10,6 +10,54 @@
         // that were never worth a key. Their EXTRAS slots became the F13-F21
         // pad. git history has all five if any are wanted back.
 
+        // The UHK's app switcher. On the UHK you hold Mod, tap D repeatedly,
+        // and the switcher stays open until you let Mod go. `&kp LG(TAB)`
+        // cannot do that: it releases Cmd on key release, and releasing Cmd is
+        // what *commits* the switch, so every tap picks the previous app.
+        //
+        // So this presses Cmd and never releases it -- there is deliberately
+        // no &macro_pause_for_release, so the macro is over after the Tab and
+        // the key release does nothing. Cmd stays down, the switcher stays
+        // open, and each further tap steps one app along. `nav_hold` below is
+        // the other half: it drops Cmd when the NAV layer is released.
+        //
+        // Parameterised so it can be the *tap* half of a hold-tap and keep the
+        // Ctrl hold on that key. Called as `&cmd_tab LGUI`.
+        cmd_tab: cmd_tab {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings
+                = <&macro_param_1to1>
+                , <&macro_press &kp MACRO_PLACEHOLDER>
+                , <&macro_tap &kp TAB>
+                ;
+        };
+
+        // Holds a layer, and releases Cmd on the way out.
+        //
+        // This is the hold half of `nav_lt` in behaviors.dtsi, and it exists
+        // only to close what `cmd_tab` opens: ZMK has no layer-exit hook, so
+        // the release has to hang off the layer key itself.
+        //
+        // The Cmd release is unconditional, which is safe rather than sloppy:
+        // zmk_hid_unregister_mod() reference-counts explicit modifiers and
+        // returns -EINVAL without underflowing when the count is already zero
+        // (app/src/hid.c:62). So releasing NAV without having used cmd_tab is
+        // a no-op, and doing it while the LCMD home-row mod is also held just
+        // decrements 2 to 1 and leaves Cmd down.
+        nav_hold: nav_hold {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings
+                = <&macro_param_1to1>
+                , <&macro_press &mo MACRO_PLACEHOLDER>
+                , <&macro_pause_for_release>
+                , <&macro_param_1to1>
+                , <&macro_release &mo MACRO_PLACEHOLDER>
+                , <&macro_release &kp LGUI>
+                ;
+        };
+
         grave_macro: grave_macro {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;

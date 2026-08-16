@@ -79,6 +79,57 @@
         // `&lt 1 BACKSPACE` directly. Taps are emitted on release with no
         // timer, and repeats are no longer swallowed.
 
+        // NAV's layer-tap. Identical to `&lt` (tap-preferred, 200 ms) except
+        // that the hold half is the `nav_hold` macro, which releases Cmd on
+        // the way out. That is what closes the app switcher `&cmd_tab` opens
+        // on NAV's D -- ZMK has no layer-exit hook, so it hangs off here.
+        nav_lt: nav_layer_tap {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <200>;
+            bindings = <&nav_hold>, <&kp>;
+        };
+
+        // Left click, or NAV on a long press. Called as `&lclk_nav 2 LCLK`.
+        //
+        // Dragging still works, via quick-tap: click once and press again
+        // within quick-tap-ms and the hold-tap is forced to the TAP branch
+        // (behavior_hold_tap.c:629 decides HT_QUICK_TAP on key-down), which
+        // presses `&mkp LCLK` and holds it until the key is released. So
+        // tap-then-hold is a click-and-drag, and a plain long hold is NAV.
+        // That is the only way to get both out of one key: a hold-tap decides
+        // from timing and key positions alone and cannot see the ball moving.
+        //
+        // 250 ms rather than the 190 ms used for the home-row mods, on both
+        // counts: a slow deliberate click should not turn into a layer, and
+        // the double-press for a drag should not need to be hurried.
+        lclk_nav: left_click_or_nav {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <250>;
+            quick-tap-ms = <250>;
+            bindings = <&mo>, <&mkp>;
+        };
+
+        // `hml`, but the tap is the cmd_tab macro instead of a keycode, so
+        // NAV's D can be the app switcher and still hold Ctrl -- which is what
+        // makes Ctrl+arrow (Mission Control spaces) work from that layer.
+        // Called as `&hml_ct LCTRL LGUI`.
+        hml_ct: homerow_mod_left_cmd_tab {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <190>;
+            quick-tap-ms = <175>;
+            require-prior-idle-ms = <150>;
+            bindings = <&kp>, <&cmd_tab>;
+            hold-trigger-key-positions = <5 6 7 8 9 15 16 17 18 19 25 26 27 28 29 33 34 35>;
+            hold-trigger-on-release;
+            hold-while-undecided;
+        };
+
         td_bore: BASE_or_EXTRA {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;

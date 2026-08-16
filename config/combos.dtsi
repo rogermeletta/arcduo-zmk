@@ -43,9 +43,19 @@
         // Note the combo layer filter tests zmk_keymap_highest_layer_active()
         // (app/src/combo.c:169), not "any active layer", so listing 5 is what
         // arms these while MOUSE is on top.
+        //
+        // Thumb plus middle finger is middle click, thumb plus index is right
+        // click. Middle click moved off V (23) onto D (12) on request, which
+        // makes the pair a mnemonic rather than two arbitrary letters.
+        //
+        // The cost, and it is real: D is the LCTRL home-row mod, and a
+        // position that takes part in a combo cannot resolve its hold until
+        // the combo window closes (see the caveat on `hmr` in behaviors.dtsi).
+        // So Ctrl-hold on D now carries the combo timeout, the same way Shift
+        // on F already does because of RightClick below.
         MiddleClick {
             bindings = <&mkp MCLK>;
-            key-positions = <23 31>;   // V + left click thumb
+            key-positions = <12 31>;   // D + left click thumb
             layers = <0 5>;
         };
 

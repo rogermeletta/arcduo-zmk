@@ -147,7 +147,7 @@ the split ones, so the halves have to be re-paired to the dongle afterwards.
 | --- | --- | --- | --- |
 | 0 | Base | default | |
 | 1 | Num | hold left outer (Tab) or right outer (Bspc) thumb | the UHK's Fn layer |
-| 2 | Nav | hold left inner thumb, or the right Space thumb | the UHK's Mod layer |
+| 2 | Nav | hold left inner thumb, right Space thumb, or long-press left click | the UHK's Mod layer |
 | 3 | Symbols | hold `G` (type right) or `H` (type left) | mirrored — same symbol, mirrored finger |
 | 4 | Extra | hold right inner thumb | F13–F21 pad, radios, screen, transport |
 | 5 | Mouse | toggle: hold Extra, tap the left-click thumb | the UHK's Mouse layer |

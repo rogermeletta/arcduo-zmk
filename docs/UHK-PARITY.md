@@ -56,7 +56,7 @@ actually sends.
 | UHK layer | ArcDuo layer | Reached by |
 | --- | --- | --- |
 | base | `BASE` (0) | default |
-| mod | `NAV` (2) | hold **left inner** thumb, or the right **Space** thumb |
+| mod | `NAV` (2) | hold **left inner** thumb, right **Space** thumb, or long-press **left click** |
 | fn | `NUM` (1) | hold **left outer** thumb (Tab), or right outer thumb (Bspc) |
 | mouse | `MOUSE` (5) | **toggle**: hold `EXTRAS` (right inner), tap the left-click thumb |
 | — | `EXTRAS` (4) | hold right **inner** thumb — F13–F21 pad, radios, screen, transport |
@@ -101,7 +101,7 @@ the UHK's Mod layer and this layer put on it.
 | `T` | `Ctrl+Shift+Cmd+F` | same | fullscreen |
 | `A` | Caps Lock | same, **hold = Cmd** | |
 | `S` | `Cmd+←` | same, **hold = Opt** | back |
-| `D` | `Cmd+Tab` | same, **hold = Ctrl** | app switcher |
+| `D` | `Cmd+Tab` | same, **hold = Ctrl** | app switcher, and it cycles — see below |
 | `F` | `Cmd+→` | same, **hold = Shift** | forward |
 | `G` | `Opt+Cmd+6` | same | |
 | `Z` | — | `Shift+Cmd+5` | *deviation, see below* |
@@ -203,7 +203,6 @@ in a comment would be worse than saying nothing.
 | --- | --- |
 | **Caret mode on the trackballs** | Not possible in *upstream* ZMK at the pinned SHA — but an out-of-tree module does it. See below. |
 | Print Screen, Scroll Lock, Pause/Break | UHK `[`, `]`, `\` on Mod. None of the three does anything on macOS, and none of those keys exists here. |
-| `Cmd+Tab` cycling | `&kp LG(TAB)` on `D` presses and releases Cmd, so it only ever flips to the previous app — you cannot hold and step through the list. The UHK has the same limitation. A tri-state behaviour fixes it; see the note at the end. |
 | **ä ö ü on the right hand** | The Fn right hand is the numpad, which is staying. The umlauts are on the Fn *left* hand instead; the gesture is still thumb-holds / fingers-type, just on one hand. Freeing three right-hand positions means giving up either the numpad's `1 2 3` (duplicated on the top row anyway) or its `-` `=` `/` operators — a small edit if it turns out to matter. |
 | Numeric keypad `KP_*` scancodes | The digits are the ordinary number keycodes, not the keypad ones. macOS treats them identically outside a handful of apps. |
 | **Double-tap-to-toggle on Mod and Mouse** | The UHK sets `holdAndDoubleTapToggle` on six of its layer keys, so Mod and Mouse can be *locked* for a long selection or a long scroll rather than held. Here both are hold-only. Adding it is a small change — make position 32 a tap-dance `bindings = <&lt 2 RETURN>, <&tog 2>`, and the same for 33 with layer 5, giving the toggled layer an exit key. It is left out for now because a tap-dance re-introduces a tapping-term delay on that key (see the note in `config/behaviors.dtsi` about why three of them were just removed), and because holding has been enough so far. Say the word. |
@@ -311,19 +310,43 @@ the listener chains.
 
 ---
 
-## Two things worth adding later
+## The app switcher
 
-**`Cmd+Tab` cannot cycle.** `&kp LG(TAB)` presses and releases Cmd in one go, so
-it always flips to the previous app and never steps through the list. You cannot
-work around it with the Cmd home-row mod either: `hml`'s
-`hold-trigger-key-positions` does not include `D`, so holding `A` and pressing
-`D` resolves `A` as a tap. The fix is a tri-state behaviour —
-`bindings = <&kt LGUI>, <&kp TAB>, <&kt LGUI>` — which holds Cmd across repeated
-taps and releases it on the next unrelated key. It is not upstream (PR #1366
-closed for inactivity) but exists as
-[`caksoylar/zmk-smart-toggle`](https://github.com/caksoylar/zmk-smart-toggle) and
-[`dhruvinsh/zmk-tri-state`](https://github.com/dhruvinsh/zmk-tri-state). The UHK
-has the same limitation, so this would be an upgrade rather than parity.
+`NAV`'s `D` steps through the app switcher the way the UHK does: hold the layer,
+tap `D` as many times as you like, let the layer go to commit. That does not
+come free, because `&kp LG(TAB)` cannot do it — it releases Cmd on key release,
+and releasing Cmd is exactly what *commits* the switch, so every tap picks the
+previous app and closes the switcher again.
+
+Two pieces, both in `config/`:
+
+- `cmd_tab` (`macros.dtsi`) presses Cmd and taps Tab, with **no**
+  `&macro_pause_for_release`. The macro is over after the Tab, so the key
+  release does nothing and Cmd stays down — switcher open, next tap steps along.
+- `nav_hold` (`macros.dtsi`), the hold half of `nav_lt` (`behaviors.dtsi`),
+  releases Cmd when the layer is released. ZMK has no layer-exit hook, so the
+  release has to hang off the layer key itself.
+
+The Cmd release is unconditional, which is safe rather than sloppy:
+`zmk_hid_unregister_mod()` reference-counts explicit modifiers and returns
+`-EINVAL` without underflowing when the count is already zero
+(`app/src/hid.c:62`). Leaving `NAV` without having touched `D` is a no-op, and
+doing it while the `LCMD` home-row mod is also held decrements 2 to 1 and
+leaves Cmd where it was.
+
+`D` keeps its Ctrl hold through `hml_ct`, a copy of `hml` whose *tap* is the
+macro instead of a keycode — which is what keeps `Ctrl+arrow` (Mission Control
+spaces) working from this layer.
+
+This is a place where an out-of-tree tri-state behaviour
+([`caksoylar/zmk-smart-toggle`](https://github.com/caksoylar/zmk-smart-toggle),
+[`dhruvinsh/zmk-tri-state`](https://github.com/dhruvinsh/zmk-tri-state)) would
+be tidier — it also ends on the next unrelated key, not just on layer release.
+It was not worth a fourth pinned west dependency for one key.
+
+---
+
+## Still worth adding later
 
 **Double-tap-to-toggle**, described in the table above. No new dependency, and
 it is the only `holdAndDoubleTapToggle` behaviour from the UHK that is missing.

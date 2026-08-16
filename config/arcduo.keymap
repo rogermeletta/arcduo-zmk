@@ -95,7 +95,7 @@
 //
 // If the hold is missed, `&lt 5 B` on position 24 restores it for the cost of
 // making one more letter a hold-tap. One line, either way.
-                                                        &lt 1 TAB        &mkp LCLK        &lt 2 RETURN             &lt 4 RETURN       &lt 2 SPACE      &lt 1 BACKSPACE
+                                                        &lt 1 TAB        &lclk_nav 2 LCLK &nav_lt 2 RETURN         &lt 4 RETURN       &nav_lt 2 SPACE  &lt 1 BACKSPACE
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
 // The two trackballs. Drawer-only; see the header comment at the top of
 // this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
@@ -163,7 +163,7 @@
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
      &kp ESC          &kp LA(LG(LEFT))&kp LG(T)        &kp LA(LG(RIGHT))&kp LC(LS(LG(F)))                                            &kp PG_UP        &kp HOME         &kp UP           &kp END          &kp DEL
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &hml LCMD CAPS   &hml LALT LG(LEFT) &hml LCTRL LG(TAB) &hml LSHIFT LG(RIGHT) &kp LA(LG(N6))                                     &kp PG_DN        &kp LEFT_ARROW   &kp DOWN         &kp RIGHT_ARROW  &kp LC(LA(LG(T)))
+     &hml LCMD CAPS   &hml LALT LG(LEFT) &hml_ct LCTRL LGUI &hml LSHIFT LG(RIGHT) &kp LA(LG(N6))                                     &kp PG_DN        &kp LEFT_ARROW   &kp DOWN         &kp RIGHT_ARROW  &kp LC(LA(LG(T)))
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
      &kp LS(LG(N5))   &kp LG(GRAVE)    &kp LG(W)        &kp LC(LA(LG(V)))&kp LC(LA(LG(B)))                                            &kp LA(LG(N1))   &kp LA(LG(N2))   &kp LA(LG(N3))   &kp LC(LA(LG(N4)))&kp LC(LA(LG(N5)))
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
