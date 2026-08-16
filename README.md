@@ -37,8 +37,8 @@ cluster and right trackball are configured `navigationModeModLayer = Cursor` and
 effective speed as each other — ~800 CPI for the pointer, one scroll tick per
 2 mm of travel.
 
-MOUSE is a **toggle**, not a hold: hold Extras (right Space thumb) and tap the
-left-click thumb to lock it on, then tap the right inner thumb to leave. Both
+MOUSE is a **toggle**, not a hold: hold Extras (right inner thumb) and tap the
+left-click thumb to lock it on, then tap that same inner thumb to leave. Both
 inner thumbs are Nav, which is what displaced it — and a toggle suits snipe
 mode better anyway, since it leaves every thumb free to click while you are
 lining up a pixel.
@@ -92,10 +92,20 @@ and v0.4.0 is still pending — so ZMK is pinned to a `main` commit.
 1. Double-tap the reset button on the board to mount it as a USB drive.
 2. Copy the matching `.uf2` onto it. It reboots automatically.
 
-Flash all three parts after any keymap change. If the halves and dongle will
-not pair, flash `firmware_reset_*.uf2` to each first to clear stored bonds,
-then reflash — pairing the **left** half before the right, since the dongle
-screen orders the battery widgets by pairing order.
+**Keymap changes need the dongle only.** The dongle is the split central: it
+runs the keymap, the combos, the behaviors and both trackball input-listener
+chains. The halves only scan their matrix and publish raw sensor data. Editing
+`config/*.keymap` or `*.dtsi`, or a per-layer trackball override, produces
+byte-identical half firmware — verified by building both halves either side of
+such a change and comparing the `.uf2`.
+
+Flash the halves when something they actually compile changes: the shield
+overlays under `boards/shields/arcduo/`, `config/arcduo_{left,right}.conf`, or
+a `config/west.yml` bump that moves the PMW3610 driver or ZMK itself.
+
+If the halves and dongle will not pair, flash `firmware_reset_*.uf2` to each
+first to clear stored bonds, then reflash — pairing the **left** half before
+the right, since the dongle screen orders the battery widgets by pairing order.
 
 ## Layers
 
@@ -103,18 +113,19 @@ screen orders the battery widgets by pairing order.
 | --- | --- | --- | --- |
 | 0 | Base | default | |
 | 1 | Num | hold left outer (Tab) or right outer (Bspc) thumb | the UHK's Fn layer |
-| 2 | Nav | hold **either** inner thumb | the UHK's Mod layer |
+| 2 | Nav | hold left inner thumb, or the right Space thumb | the UHK's Mod layer |
 | 3 | Symbols | hold `G` (type right) or `H` (type left) | mirrored — same symbol, mirrored finger |
-| 4 | Extra | hold Space thumb, or the both-inner-thumbs combo | radios, brightness, transport |
+| 4 | Extra | hold right inner thumb | radios, brightness, transport |
 | 5 | Mouse | toggle: hold Extra, tap the left-click thumb | the UHK's Mouse layer |
 
 Both layers carried over from the UHK are held with the **left** thumb, matching
 how they are held there — which leaves the right hand free for the arrows on Nav
 and keeps tab and window management under the left fingers.
 
-Nav is on the right inner thumb as well, which is the one place this deliberately
+Nav is on the right Space thumb as well, which is the one place this deliberately
 departs from the UHK. Holding it there puts the layer and the arrows on the same
 hand, so the right hand alone can navigate with the left off the board entirely.
+It has the Space thumb because Nav is reached constantly and Extra almost never.
 
 Symbols is mirrored: the same symbol sits on the mirrored finger of both halves,
 so there is one set to learn and it is always typeable by whichever hand is not

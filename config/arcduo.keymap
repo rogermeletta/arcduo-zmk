@@ -77,23 +77,25 @@
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
      &kp Z            &kp X            &kp C            &kp V            &kp B                                                        &kp N            &kp M            &kp COMMA        &kp PERIOD       &kp SLASH
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
-// NAV sits on BOTH inner thumbs. Holding it with the left thumb drives the
-// arrows with the right hand; holding it with the right thumb puts the layer
-// and the arrows on the same hand, so the right hand alone can navigate while
-// the left is off the board.
+// NAV is on the left INNER thumb and the right SPACE thumb. Holding it on the
+// left drives the arrows with the right hand; holding it on the right puts the
+// layer and the arrows on the same hand, so the right hand alone can navigate
+// while the left is off the board. NAV and EXTRAS swapped sides on the right:
+// NAV is reached constantly and EXTRAS almost never, so NAV gets the larger,
+// better-placed Space thumb and EXTRAS takes the inner key.
 //
 // That displaced MOUSE, which used to own position 33. All six thumbs are
-// spoken for -- NUM on both outer, NAV on both inner, left click, EXTRAS --
-// so MOUSE became a toggle: hold EXTRAS (34) and tap the left-click thumb
-// (31) to lock it on, tap the right inner thumb to leave. See the MOUSE and
-// EXTRAS layers below. A toggle rather than a hold is actually the better fit
+// spoken for -- NUM on both outer, NAV on left inner and right Space, left
+// click, EXTRAS -- so MOUSE became a toggle: hold EXTRAS (33) and tap the
+// left-click thumb (31) to lock it on, tap 33 again to leave. See the MOUSE
+// and EXTRAS layers below. A toggle rather than a hold is the better fit
 // for the one thing on that layer that a trackball cannot replace, snipe
 // mode, since it frees every thumb for clicking while sniping -- and it is
 // what the UHK does too, whose Mouse key is `holdAndDoubleTapToggle`.
 //
 // If the hold is missed, `&lt 5 B` on position 24 restores it for the cost of
 // making one more letter a hold-tap. One line, either way.
-                                                        &lt 1 TAB        &mkp LCLK        &lt 2 RETURN             &lt 2 RETURN       &lt 4 SPACE      &lt 1 BACKSPACE
+                                                        &lt 1 TAB        &mkp LCLK        &lt 2 RETURN             &lt 4 RETURN       &lt 2 SPACE      &lt 1 BACKSPACE
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
 // The two trackballs. Drawer-only; see the header comment at the top of
 // this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
@@ -241,9 +243,9 @@
      &none            &none            &none            &none            &none                                                        &new_dir         &kp K_MUTE       &kp C_VOL_DN     &kp C_VOL_UP     &studio_unlock
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
 // Position 31 is `&tog 5` -- the MOUSE layer's only way in, now that its old
-// thumb key is NAV. The left-click thumb is the mnemonic: hold Space with the
-// right thumb, tap the click key with the left, and the mouse layer locks on.
-                                                        &none            &tog 5           &none                    &none              &trans           &bt BT_CLR
+// thumb key is NAV. The left-click thumb is the mnemonic: hold this layer with
+// the right inner thumb, tap the click key with the left, and MOUSE locks on.
+                                                        &none            &tog 5           &none                    &trans             &trans           &bt BT_CLR
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯           
 // The two trackballs. Drawer-only; see the header comment at the top of
 // this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
@@ -264,10 +266,9 @@
      &kp C_AC_UNDO    &kp C_AC_CUT     &kp C_AC_COPY    &kp C_AC_PASTE   &mkp MCLK                                                    &none             &none            &none            &none            &none
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
 // Position 33 leaves the layer. This is the same thumb that used to *hold*
-// MOUSE before NAV took it, so the finger already goes there; it just means
-// "out" now instead of "in". `&to 0` rather than `&tog 5` so it cannot leave
-// a stray layer active. 34 stays transparent, which keeps EXTRAS reachable
-// from here -- that is the other way back out.
+// MOUSE, so the finger already goes there; it just means "out" now instead of
+// "in", and it is also the thumb that got you here (hold 33, tap 31). `&to 0`
+// rather than `&tog 5` so it cannot leave a stray layer active.
                                                         &trans           &trans           &trans                   &to 0              &trans            &none
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯           
 // The two trackballs. Drawer-only; see the header comment at the top of

@@ -34,8 +34,8 @@ layers:
   - {t: TAB, h: Num}
   - L Click
   - {t: RETURN, h: Nav}
-  - {t: RETURN, h: Nav}
-  - {t: SPACE, h: Extra}
+  - {t: RETURN, h: Extra}
+  - {t: SPACE, h: Nav}
   - {t: BACK SPACE, h: Num}
   - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}
@@ -112,8 +112,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {type: held}
-  - {t: Sft+Cmd+SPACE, type: held alternate}
-  - {t: ▽, type: trans}
+  - Sft+Cmd+SPACE
+  - {type: held alternate}
   - Opt+BSPC
   - {t: Cursor, type: ball}
   - {t: Scroll, type: ball}
@@ -190,8 +190,8 @@ layers:
   - ''
   - {t: Mouse, h: toggle}
   - ''
-  - ''
   - {type: held}
+  - {t: ▽, type: trans}
   - BT CLR
   - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}

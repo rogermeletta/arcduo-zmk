@@ -56,22 +56,25 @@ actually sends.
 | UHK layer | ArcDuo layer | Reached by |
 | --- | --- | --- |
 | base | `BASE` (0) | default |
-| mod | `NAV` (2) | hold **either inner** thumb |
+| mod | `NAV` (2) | hold **left inner** thumb, or the right **Space** thumb |
 | fn | `NUM` (1) | hold **left outer** thumb (Tab), or right outer thumb (Bspc) |
-| mouse | `MOUSE` (5) | **toggle**: hold `EXTRAS`, tap the left-click thumb |
-| — | `EXTRAS` (4) | hold right middle thumb (Space) — radios, brightness, transport, macros |
+| mouse | `MOUSE` (5) | **toggle**: hold `EXTRAS` (right inner), tap the left-click thumb |
+| — | `EXTRAS` (4) | hold right **inner** thumb — radios, brightness, transport |
 | — | `SYM` (3) | hold `G` (type right) or `H` (type left) |
 
-Both of the layers carried over from the UHK are held with the **left thumb**,
-because that is how they are held on the UHK: Fn and Mod are both left thumb
-keys there, with Fn outboard of Mod, and the ArcDuo now matches that order. It
+Both of the layers carried over from the UHK are reachable with the **left
+thumb**, because that is how they are held on the UHK: Fn and Mod are both left
+thumb keys there, with Fn outboard of Mod, and the ArcDuo matches that order. It
 matters more than it looks. The UHK's Mod layer puts window and tab management
-under the left fingers and the arrows under the right hand; holding Mod with the
-right thumb, as an earlier draft of this branch did, meant driving the arrows
-with the same hand that was holding the layer down.
+under the left fingers and the arrows under the right hand; holding Mod with
+*only* the right thumb, as an earlier draft of this branch did, meant driving
+the arrows with the same hand that was holding the layer down.
 
-`EXTRAS` moved to the Space thumb to make room. Its own left-hand contents are
-unaffected — the thumb that holds it is on the other hand.
+`NAV` is on the right **Space** thumb as well, which the UHK has no equivalent
+of. Held there, the layer and the arrows are on the same hand, so the right hand
+can navigate alone. It gets the Space thumb rather than the inner one on
+frequency: `NAV` is reached constantly and `EXTRAS` almost never, so `EXTRAS`
+takes the inner key.
 
 The window-manager chord family (`Opt+Cmd+<digit>` and `Ctrl+Opt+Cmd+<key>`) was
 briefly exiled to `EXTRAS`, on the theory that nine chords could not fit beside
