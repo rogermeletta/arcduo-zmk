@@ -37,9 +37,11 @@ cluster and right trackball are configured `navigationModeModLayer = Cursor` and
 effective speed as each other — ~800 CPI for the pointer, one scroll tick per
 2 mm of travel.
 
-Snipe mode is why the mouse buttons on the MOUSE layer sit under the *left*
-hand: hold the right inner thumb to slow the right ball down, and you can
-still click while sniping.
+MOUSE is a **toggle**, not a hold: hold Extras (right Space thumb) and tap the
+left-click thumb to lock it on, then tap the right inner thumb to leave. Both
+inner thumbs are Nav, which is what displaced it — and a toggle suits snipe
+mode better anyway, since it leaves every thumb free to click while you are
+lining up a pixel.
 
 There is **no auto-mouse layer**. A `zip_temp_layer` used to switch to MOUSE on
 any ball motion, but it fires on any input event at all — including the
@@ -101,14 +103,18 @@ screen orders the battery widgets by pairing order.
 | --- | --- | --- | --- |
 | 0 | Base | default | |
 | 1 | Num | hold left outer (Tab) or right outer (Bspc) thumb | the UHK's Fn layer |
-| 2 | Nav | hold left inner thumb | the UHK's Mod layer |
+| 2 | Nav | hold **either** inner thumb | the UHK's Mod layer |
 | 3 | Symbols | hold `G` | |
-| 4 | Extra | hold Space thumb, or the both-inner-thumbs combo | the UHK's window-manager chords |
-| 5 | Mouse | hold right inner thumb | the UHK's Mouse layer |
+| 4 | Extra | hold Space thumb, or the both-inner-thumbs combo | radios, brightness, transport |
+| 5 | Mouse | toggle: hold Extra, tap the left-click thumb | the UHK's Mouse layer |
 
 Both layers carried over from the UHK are held with the **left** thumb, matching
 how they are held there — which leaves the right hand free for the arrows on Nav
 and keeps tab and window management under the left fingers.
+
+Nav is on the right inner thumb as well, which is the one place this deliberately
+departs from the UHK. Holding it there puts the layer and the arrows on the same
+hand, so the right hand alone can navigate with the left off the board entirely.
 
 The layer bodies are shaped after Roger's Ultimate Hacking Keyboard v1 "QWERTY
 for Mac" keymap, so that switching between the two boards costs as little as

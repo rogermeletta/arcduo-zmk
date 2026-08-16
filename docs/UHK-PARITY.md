@@ -56,9 +56,9 @@ actually sends.
 | UHK layer | ArcDuo layer | Reached by |
 | --- | --- | --- |
 | base | `BASE` (0) | default |
-| mod | `NAV` (2) | hold **left inner** thumb |
+| mod | `NAV` (2) | hold **either inner** thumb |
 | fn | `NUM` (1) | hold **left outer** thumb (Tab), or right outer thumb (Bspc) |
-| mouse | `MOUSE` (5) | hold right inner thumb |
+| mouse | `MOUSE` (5) | **toggle**: hold `EXTRAS`, tap the left-click thumb |
 | — | `EXTRAS` (4) | hold right middle thumb (Space) — radios, brightness, transport, macros |
 | — | `SYM` (3) | hold `G` |
 
@@ -288,7 +288,10 @@ to be missed.
    mirrored, add or drop one `INPUT_TRANSFORM_*` flag on the `cursor` node in
    `boards/shields/arcduo/arcduo.dtsi`; nothing else changes.
 2. **Right-ball scroll rate on NAV.** `1/96` is calculated, not felt. Adjust the
-   divisor on the `scroll` node in the same file.
+   divisor on the `scroll` node in the same file. Its *direction* is settled —
+   `INPUT_TRANSFORM_Y_INVERT` was dropped from that node because vertical scroll
+   came out the wrong way round. Horizontal is still `X_INVERT`; the two flags
+   are independent, but note both are evaluated *after* `XY_SWAP`.
 3. **The Raycast combo** (thumbs 31+34 — left click and right Space). Thumb
    combos can be awkward; if it misfires or is hard to hit, it can move to any
    free position. Note a miss is not a no-op: position 31 is left click, so a

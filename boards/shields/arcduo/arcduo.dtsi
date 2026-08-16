@@ -151,10 +151,19 @@ RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,10) RC(2,9) RC(2,8) RC(2,7) RC(2,6
     // UHK's scrollSpeedDivisor of 8. The left ball scrolls at 200 CPI / 16,
     // which is one tick per 16/7.9 = 2.0 mm of ball travel. This sensor runs
     // at 1200 CPI = 47.2 counts/mm, so the same 2 mm needs 96 counts.
+    //
+    // INPUT_TRANSFORM_Y_INVERT is deliberately absent: it was there, and the
+    // vertical scroll came out the wrong way round. Note the flags are not
+    // independent -- input_processor_transform.c applies XY_SWAP first and
+    // then tests the INVERT flags against the *post-swap* code, so Y_INVERT
+    // here acts on whatever the swap turned into REL_Y, which is what
+    // zip_xy_to_scroll_mapper feeds to the vertical wheel. Flipping this one
+    // flag is the whole of "invert vertical scroll"; X_INVERT still controls
+    // horizontal.
     scroll {
       layers = <2>;
       input-processors =
-          <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_XY_SWAP)>,
+          <&zip_xy_transform (INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_XY_SWAP)>,
           <&zip_xy_to_scroll_mapper>,
           <&zip_scroll_scaler 1 96>;
     };

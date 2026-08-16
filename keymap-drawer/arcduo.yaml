@@ -34,7 +34,7 @@ layers:
   - {t: TAB, h: Num}
   - L Click
   - {t: RETURN, h: Nav}
-  - {t: RETURN, h: Mouse}
+  - {t: RETURN, h: Nav}
   - {t: SPACE, h: Extra}
   - {t: BACK SPACE, h: Num}
   - {t: Scroll, type: ball}
@@ -188,7 +188,7 @@ layers:
   - VOL UP
   - ZMK Studio
   - ''
-  - ''
+  - {t: Mouse, h: toggle}
   - ''
   - ''
   - {type: held}
@@ -229,7 +229,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {type: held}
+  - {t: Base, h: toggle}
   - {t: ▽, type: trans}
   - ''
   - {t: Scroll, type: ball}
