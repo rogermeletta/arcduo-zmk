@@ -115,7 +115,7 @@ the right, since the dongle screen orders the battery widgets by pairing order.
 | 1 | Num | hold left outer (Tab) or right outer (Bspc) thumb | the UHK's Fn layer |
 | 2 | Nav | hold left inner thumb, or the right Space thumb | the UHK's Mod layer |
 | 3 | Symbols | hold `G` (type right) or `H` (type left) | mirrored — same symbol, mirrored finger |
-| 4 | Extra | hold right inner thumb | radios, brightness, transport |
+| 4 | Extra | hold right inner thumb | F13–F21 pad, radios, screen, transport |
 | 5 | Mouse | toggle: hold Extra, tap the left-click thumb | the UHK's Mouse layer |
 
 Both layers carried over from the UHK are held with the **left** thumb, matching
@@ -126,6 +126,13 @@ Nav is on the right Space thumb as well, which is the one place this deliberatel
 departs from the UHK. Holding it there puts the layer and the arrows on the same
 hand, so the right hand alone can navigate with the left off the board entirely.
 It has the Space thumb because Nav is reached constantly and Extra almost never.
+
+Extra's left hand is `F13`–`F21` — nine keycodes macOS defines and binds to
+nothing, which is what Raycast, Karabiner, BetterTouchTool and Hammerspoon
+want as triggers. They replaced five text macros. `&bootloader` and
+`&sys_reset` sit on Extra's two left thumbs; before that neither was bound
+anywhere, so the bootloader meant finding the physical reset button. Note it
+only reaches the dongle — the halves do not run the keymap.
 
 Symbols is mirrored: the same symbol sits on the mirrored finger of both halves,
 so there is one set to learn and it is always typeable by whichever hand is not

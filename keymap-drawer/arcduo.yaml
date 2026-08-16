@@ -69,7 +69,7 @@ layers:
   - {t: '1', h: F1}
   - {t: '2', h: F2}
   - {t: '3', h: F3}
-  - {t: /, h: DEV TOOLS}
+  - {t: /, h: F12}
   - {type: held}
   - F11
   - {t: ▽, type: trans}
@@ -157,39 +157,39 @@ layers:
   - {t: Scroll, type: ball}
   - {t: Cursor, type: ball}
   Extra:
-  - ¯\_(ツ)_/¯
-  - LGTM
-  - git commit
-  - ''
+  - F13
+  - F14
+  - F15
+  - F22
   - BRI INC
   - BT(0)
   - BT(1)
   - BT(2)
   - BT(3)
   - OUT TOG
-  - sudo !!
+  - F16
+  - F17
+  - F18
   - F23
-  - F24
-  - F22
   - BRI DEC
-  - Opt+Cmd+EJECT
+  - ''
   - PREV
   - PP
   - NEXT
   - ''
+  - F19
+  - F20
+  - F21
+  - F24
+  - Opt+Cmd+EJECT
   - ''
-  - ''
-  - ''
-  - ''
-  - ''
-  - New Dir
   - MUTE
   - VOL DN
   - VOL UP
   - ZMK Studio
-  - ''
+  - Bootloader
   - {t: Mouse, h: toggle}
-  - ''
+  - Reset
   - {type: held}
   - {t: ▽, type: trans}
   - BT CLR

@@ -5,93 +5,10 @@
 
 / {
     macros {
-        shrug: shrug { // shrug emoji ¯\_(ツ)_/¯
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <10>;
-            tap-ms = <20>;
-            bindings
-                // ¯ (Macros)
-                = <&macro_press &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp U>
-                , <&macro_release &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp N0 &kp N0 &kp A &kp F &kp SPC>
-                // backslash (do not end this comment with one: a trailing
-                // backslash splices the next line into the comment, which is
-                // what used to silently swallow one of two &kp BACKSLASH
-                // lines here and left the output accidentally correct)
-                , <&macro_tap &kp BACKSLASH>
-                // _
-                , <&macro_tap &kp UNDER>
-                // (
-                , <&macro_tap &kp LPAR>
-                // ツ (Katakana Letter Tu)
-                , <&macro_press &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp U>
-                , <&macro_release &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp N3 &kp N0 &kp C &kp N4 &kp SPC>
-                // )
-                , <&macro_tap &kp RPAR>
-                // _
-                , <&macro_tap &kp UNDER>
-                // /
-                , <&macro_tap &kp FSLH>
-                // ¯ (Macron)
-                , <&macro_press &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp U>
-                , <&macro_release &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp N0 &kp N0 &kp A &kp F &kp SPC>
-                ;
-        };
-
-        gcm: gcm { // git commit WIP
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <10>;
-            tap-ms = <20>;
-            bindings = <
-                &macro_tap &kp G &kp I &kp T &kp SPACE
-                &kp C &kp O &kp M &kp M &kp I &kp T &kp SPACE
-                &kp MINUS &kp A &kp M &kp SPACE
-                &kp DQT &kp LS(W) &kp LS(I) &kp LS(P) &kp DQT
-            >;
-        };
-
-        lgtm: lgtm { // LGTM Approval
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <10>;
-            tap-ms = <20>;
-            bindings = <
-                &macro_tap
-                &kp LS(L) &kp LS(G) &kp LS(T) &kp LS(M)
-                &kp SPACE &kp MINUS &kp SPACE
-                &kp LS(A) &kp P &kp P &kp R &kp O &kp V &kp E &kp D &kp EXCL
-            >;
-        };
-
-        sudo: sudo { // SUDO_BANG_BANG
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <10>;
-            tap-ms = <20>;
-            bindings
-                = <&macro_tap &kp S &kp U &kp D &kp O>  // "sudo"
-                , <&macro_tap &kp SPACE>                // space
-                , <&macro_tap &kp EXCL &kp EXCL>        // "!!"
-                , <&macro_tap &kp RET>                  // Enter key
-                ;
-        };
-        
-        new_dir: new_dir {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings
-                = <&macro_press &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp N>
-                , <&macro_release &kp LCTRL &kp LSHFT>
-                ;
-        };
+        // shrug, gcm ("git commit -am WIP"), lgtm, sudo ("sudo !!") and
+        // new_dir (Ctrl+Shift+N) were removed on request -- five text macros
+        // that were never worth a key. Their EXTRAS slots became the F13-F21
+        // pad. git history has all five if any are wanted back.
 
         grave_macro: grave_macro {
             compatible = "zmk,behavior-macro";

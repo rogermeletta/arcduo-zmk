@@ -59,7 +59,7 @@ actually sends.
 | mod | `NAV` (2) | hold **left inner** thumb, or the right **Space** thumb |
 | fn | `NUM` (1) | hold **left outer** thumb (Tab), or right outer thumb (Bspc) |
 | mouse | `MOUSE` (5) | **toggle**: hold `EXTRAS` (right inner), tap the left-click thumb |
-| — | `EXTRAS` (4) | hold right **inner** thumb — radios, brightness, transport |
+| — | `EXTRAS` (4) | hold right **inner** thumb — F13–F21 pad, radios, screen, transport |
 | — | `SYM` (3) | hold `G` (type right) or `H` (type left) |
 
 Both of the layers carried over from the UHK are reachable with the **left

@@ -232,20 +232,45 @@
 // the UHK puts them (N M , . / and V B and G), so these were eight bindings
 // kept in two places. Removed rather than left to drift.
 //
-// What is left is the board's own layer: radios, brightness, transport,
-// volume, text macros, and Opt+Cmd+Eject (sleep displays), which is a UHK
-// *Fn*-layer binding on a key this board does not have (`\`).
+// What is left is the board's own layer, plus a programmable pad.
+//
+// LEFT HAND, columns 0-2: F13-F21. Nine keycodes macOS defines and binds to
+// nothing, which is exactly what Raycast, Karabiner, BetterTouchTool and
+// Hammerspoon want as triggers -- nine more Stream Deck buttons without
+// another box on the desk. They replace five text macros (shrug, gcm, lgtm,
+// sudo, new_dir) that were removed on request.
+//
+// LEFT HAND, column 3: the YADS dongle screen. F22 toggles it, F23 dims, F24
+// brightens; those are the keycodes YADS listens for by default, set by
+// CONFIG_DONGLE_SCREEN_* in boards/shields/arcduo/arcduo_dongle.conf.
+// Column 4 is the *display*: host brightness up/down, and Opt+Cmd+Eject to
+// sleep the displays -- a UHK *Fn*-layer binding on a key this board does not
+// have (`\`).
+//
+// RIGHT HAND: radios on the top row, transport and volume below.
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
-     &shrug           &lgtm            &gcm             &none            &kp C_BRI_INC                                                &bt BT_SEL(0)    &bt BT_SEL(1)    &bt BT_SEL(2)    &bt BT_SEL(3)    &out OUT_TOG
+     &kp F13          &kp F14          &kp F15          &kp F22          &kp C_BRI_INC                                                &bt BT_SEL(0)    &bt BT_SEL(1)    &bt BT_SEL(2)    &bt BT_SEL(3)    &out OUT_TOG
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &sudo            &kp F23          &kp F24          &kp F22          &kp C_BRI_DEC                                                &kp LA(LG(C_EJECT))&kp C_PREV     &kp C_PP         &kp C_NEXT       &none
+     &kp F16          &kp F17          &kp F18          &kp F23          &kp C_BRI_DEC                                                &none            &kp C_PREV       &kp C_PP         &kp C_NEXT       &none
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &none            &none            &none            &none            &none                                                        &new_dir         &kp K_MUTE       &kp C_VOL_DN     &kp C_VOL_UP     &studio_unlock
+     &kp F19          &kp F20          &kp F21          &kp F24          &kp LA(LG(C_EJECT))                                          &none            &kp K_MUTE       &kp C_VOL_DN     &kp C_VOL_UP     &studio_unlock
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
 // Position 31 is `&tog 5` -- the MOUSE layer's only way in, now that its old
 // thumb key is NAV. The left-click thumb is the mnemonic: hold this layer with
 // the right inner thumb, tap the click key with the left, and MOUSE locks on.
-                                                        &none            &tog 5           &none                    &trans             &trans           &bt BT_CLR
+//
+// &bootloader and &sys_reset were bound NOWHERE in this keymap before now, so
+// getting into the bootloader meant finding the physical reset button. They
+// go on the two dead left thumbs rather than in the finger block, which was
+// where they sat when this layer was pitched: `&bootloader` next to Prev
+// means one slipped index finger drops the dongle off USB and stops the
+// keyboard until you reset it. Nothing else lives on 30 or 32, so there is
+// nothing to slip *from*, and reaching them means a deliberate second thumb
+// while the first still holds the layer.
+//
+// Note this only ever reaches the dongle -- the halves do not run the keymap,
+// so their bootloader is still the button.
+                                                        &bootloader      &tog 5           &sys_reset               &trans             &trans           &bt BT_CLR
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯           
 // The two trackballs. Drawer-only; see the header comment at the top of
 // this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.

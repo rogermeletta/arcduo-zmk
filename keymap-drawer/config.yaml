@@ -82,11 +82,7 @@ parse_config:
     "&caps_word": Caps Word
     "&studio_unlock": ZMK Studio
     "&bootloader": Bootloader
-    "&shrug": '¯\_(ツ)_/¯'
-    "&lgtm": LGTM
-    "&gcm": git commit
-    "&sudo": sudo !!
-    "&new_dir": New Dir
+    "&sys_reset": Reset
     "&mkp LCLK": L Click
     "&mkp RCLK": R Click
     "&mkp MCLK": M Click
@@ -286,7 +282,6 @@ parse_config:
     LG(E): "WINDOW"
     LC(LA(LEFT_SHIFT)): "MEH"
     LA(LC(LG(LEFT_SHIFT))): "HYPER"
-    LC(F10): "ALL WIN"
     LS(LC(H)): "PANE ◀"
     LS(LC(J)): "PANE ▲"
     LS(LC(K)): "PANE ▼"
@@ -311,7 +306,13 @@ parse_config:
     LA(KP_N1): "REJECT"
     LA(KP_N2): "PENDING"
     LA(KP_N3): "ACCEPT"
-    F12: "DEV TOOLS"
+    # F13-F21 on EXTRAS are deliberately left to render as themselves --
+    # what they do lives in Raycast/Karabiner, not here. F12 used to be
+    # relabelled "DEV TOOLS" and LC(F10) "ALL WIN", both leftovers from the
+    # vendored config this file replaced; F12 is really bound (NUM, hold on
+    # `/`) and was being mislabelled. Several neighbours below are dead too
+    # -- SHELL, PANE, TAG, REJECT/PENDING/ACCEPT reference bindings this
+    # keymap does not have -- but they are harmless and left alone.
     BRIGHTNESS INC: "BRIGHT ▲"
     BRIGHTNESS DEC: "BRIGHT ▼"
   zmk_combos: {}
