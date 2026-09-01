@@ -87,6 +87,7 @@ parse_config:
     "&studio_unlock": ZMK Studio
     "&bootloader": Bootloader
     "&sys_reset": Reset
+    "&soft_off": Soft Off
     "&mkp LCLK": L Click
     "&mkp RCLK": R Click
     "&mkp MCLK": M Click

@@ -18,6 +18,10 @@ on:
       - "config/*.keymap"
       - "config/*.dtsi"
       - "config/*.json"
+      # config/arcduo_layers.h — the drawer runs the preprocessor, so the layer
+      # numbers it resolves (and therefore which keys it marks as layer
+      # activators) come from here.
+      - "config/*.h"
       - "keymap-drawer/config.yaml"
       - ".github/workflows/draw-keymap.yml"
   workflow_dispatch:

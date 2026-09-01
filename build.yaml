@@ -26,11 +26,16 @@ include:
   # Same dongle, plus ZMK Studio for live keymap editing over USB.
   #
   # Kept as a separate, opt-in artifact rather than folded into the dongle
-  # above: it links, but takes RAM from 90.0% to 95.5% on top of LVGL and
-  # two BLE peripheral connections, leaving only ~5.7 KB spare. That is
-  # enough to link and not obviously enough to survive every runtime
-  # allocation, so flash this one only if you want Studio and are willing
-  # to fall back to arcduo_dongle.
+  # above: it takes RAM from 89.68% to 94.90% on top of LVGL and two BLE
+  # peripheral connections, leaving ~13.1 KB spare. That is enough to link
+  # and not obviously enough to survive every runtime allocation, so flash
+  # this one only if you want Studio and are willing to fall back to
+  # arcduo_dongle.
+  #
+  # Those figures read 90.0% / 95.5% / ~5.7 KB before, measured against an
+  # earlier ZMK pin. Re-measured against the pin now in config/west.yml the
+  # artifact has roughly twice that headroom -- still tight, less tight than
+  # it read. Both numbers are from a local build of this commit.
   - board: xiao_ble/nrf52840/zmk
     shield: arcduo_dongle dongle_screen
     snippet: studio-rpc-usb-uart

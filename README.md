@@ -37,6 +37,20 @@ cluster and right trackball are configured `navigationModeModLayer = Cursor` and
 effective speed as each other — ~800 CPI for the pointer, one scroll tick per
 2 mm of travel.
 
+Both scroll chains are **axis-locked**, via `&zip_scroll_snap` from
+[kot149/zmk-scroll-snap](https://github.com/kot149/zmk-scroll-snap). A ball
+rolled "down" always carries some sideways component, and the scroll mapper
+turns that into horizontal wheel — which drifts in wide views and, in Chrome on
+macOS, is history navigation, so a scroll could send you back a page. Snapping
+locks each gesture to whichever axis dominates.
+
+Scrolling is also **high-resolution** (`CONFIG_ZMK_POINTING_SMOOTH_SCROLLING` on
+the dongle), so the wheel is not quantised to whole notches. ZMK's docs do not
+state the resolution multiplier this uses, so its effect on the existing `1/16`
+and `1/96` divisors was not predictable on paper — if scrolling feels too slow
+or too fast after flashing, those two divisors in
+`boards/shields/arcduo/arcduo.dtsi` are the dial.
+
 MOUSE is a **toggle**, not a hold: hold Extras (right inner thumb) and tap the
 left-click thumb to lock it on, then tap that same inner thumb to leave. Both
 inner thumbs are Nav, which is what displaced it — and a toggle suits snipe
@@ -100,8 +114,18 @@ byte-identical half firmware — verified by building both halves either side of
 such a change and comparing the `.uf2`.
 
 Flash the halves when something they actually compile changes: the shield
-overlays under `boards/shields/arcduo/`, `config/arcduo_{left,right}.conf`, or
-a `config/west.yml` bump that moves the PMW3610 driver or ZMK itself.
+overlays under `boards/shields/arcduo/`, `config/arcduo_{left,right}.conf`,
+`config/arcduo.conf` (shared by all three units), `config/arcduo_layers.h` (the
+shield's input listeners include it), or a `config/west.yml` bump that moves the
+PMW3610 driver or ZMK itself.
+
+**After any change to the layer *structure*** — inserting a layer, reordering
+them, changing `config/arcduo_layers.h` — reflash, then open ZMK Studio and use
+**Restore Stock Settings**, then reset the unit. Studio persists a layer-order
+table in flash and every index-to-id lookup goes through it, so state stored
+under the old structure misdirects lookups under the new one. Inserting a layer
+is the case that bites; appending one preserves existing ids. Restore Stock
+Settings does not touch Bluetooth bonds.
 
 If the halves and dongle will not pair, flash `firmware_reset_*.uf2` to each
 first to clear stored bonds, then reflash — pairing the **left** half before
@@ -117,11 +141,15 @@ in logs.
 
 There are **five host profiles**, not four. ZMK derives them as
 `BT_MAX_PAIRED - ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS` = 7 − 2, which is why
-`BT_MAX_PAIRED` is bumped to 7. Extra binds profiles 0–3; the fifth has no key.
+`BT_MAX_PAIRED` is bumped to 7. All five are now bound: `BT0`–`BT4` sit on
+`Y U I O P`, the whole top row of Extra's right hand. The fifth used to have no
+key at all, so a fifth paired host could not be selected without a reflash.
+`USB/BLE` moved down one row to `H` to make room — it is pressed about once per
+pairing, so it is the one that gives way.
 
 To pair a host, hold **Extra** and:
 
-1. Tap `BT0`–`BT3` (`Y U I O`) to select a profile. The dongle advertises
+1. Tap `BT0`–`BT4` (`Y U I O P`) to select a profile. The dongle advertises
    whenever the selected profile is not *connected*, so an unused profile is
    immediately discoverable.
 2. If the profile is already bonded to something else, tap `BT CLR` (right
@@ -129,10 +157,10 @@ To pair a host, hold **Extra** and:
    `zmk_ble_clear_bonds()` calls `clear_profile_bond(active_profile)` and does
    not touch the split bonds, so the halves stay paired.
 3. Pair from the host's Bluetooth settings.
-4. Tap `USB/BLE` (`P`) to send over BLE. **This step is easy to miss:** the
-   dongle is plugged into USB, and ZMK prefers USB output when it is connected,
-   so the host can be paired and connected while every keystroke still goes
-   down the cable. The setting persists.
+4. Tap `USB/BLE` (`H`, right index home) to send over BLE. **This step is easy
+   to miss:** the dongle is plugged into USB, and ZMK prefers USB output when it
+   is connected, so the host can be paired and connected while every keystroke
+   still goes down the cable. The setting persists.
 
 If a host shows a stale name, that is the host caching it — macOS in particular
 keeps the name from first pairing and never refreshes. Remove the device and
@@ -140,6 +168,24 @@ pair again.
 
 `firmware_reset_*.uf2` is the nuclear option: it clears *all* bonds including
 the split ones, so the halves have to be re-paired to the dongle afterwards.
+
+## Power
+
+Hold **Extra** + `N` (right index, bottom row) for two seconds to power the
+board down — dongle and both halves. The central notifies the peripherals, and
+ZMK powers a peripheral off *immediately* on press regardless of the hold time,
+deliberately, so the central cannot shut down before telling them. Waking is a
+tap of each unit's own reset button; there is no key for it, which is the point
+when the board is in a bag.
+
+This exists because idle sleep cannot do the job here. Both halves run
+`CONFIG_ZMK_SLEEP=y`, but their sensors carry `force-awake` and are wakeup
+sources — so a bag jostling a sleeping half wakes it into a full active window
+with the sensor pinned at 8 ms sampling. Soft off is a real power-down.
+
+The two-second hold is what makes the key safe next to Mute: a slipped finger
+produces a tap, and a tap does nothing. That is the protection `&bootloader`
+cannot have, which is why *that* one sits on a dead left thumb instead.
 
 ## Layers
 
@@ -166,7 +212,8 @@ nothing, which is what Raycast, Karabiner, BetterTouchTool and Hammerspoon
 want as triggers. They replaced five text macros. `&bootloader` and
 `&sys_reset` sit on Extra's two left thumbs; before that neither was bound
 anywhere, so the bootloader meant finding the physical reset button. Note it
-only reaches the dongle — the halves do not run the keymap.
+only reaches the dongle — the halves do not run the keymap. `&soft_off` is on
+`N`, and unlike those two it *does* reach the halves; see [Power](#power).
 
 Symbols is mirrored: the same symbol sits on the mirrored finger of both halves,
 so there is one set to learn and it is always typeable by whichever hand is not

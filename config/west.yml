@@ -6,6 +6,8 @@ manifest:
       url-base: https://github.com/badjeff
     - name: janpfischer
       url-base: https://github.com/janpfischer
+    - name: kot149
+      url-base: https://github.com/kot149
 
   # Revisions are pinned to exact commits on purpose.
   #
@@ -35,5 +37,21 @@ manifest:
       # upgrade-4.1 @ 2026-03-12 — YADS's Zephyr 4.1 branch. Its `main` still
       # targets ZMK v0.3 only. Tracked in janpfischer/zmk-dongle-screen#29.
       revision: a8cec2626b8ea94e9a047eac1e53792980369c93
+    - name: zmk-scroll-snap
+      remote: kot149
+      # Axis-locked scrolling for both trackballs; provides &zip_scroll_snap.
+      #
+      # v1 @ dd21a0f. The README says `revision: v1`, but v1 is a BRANCH -- the
+      # repo publishes no tags -- so it is pinned to that branch's head here
+      # like everything else in this file. There is also a v1-optimize-scroll-
+      # snap branch; it is not this one.
+      #
+      # Unlike the three projects above, this module states no ZMK or Zephyr
+      # version requirement anywhere, so its compatibility with the Zephyr 4.1
+      # ZMK pinned above is untested rather than documented. It is a leaf
+      # module -- one input processor, referenced only from the two scroll
+      # chains in boards/shields/arcduo/arcduo.dtsi -- so if it does not build,
+      # dropping this project and the two &zip_scroll_snap lines reverts it.
+      revision: dd21a0f71df7f0d2a55017000c6dd0ff0ebd8d6f
   self:
     path: config
