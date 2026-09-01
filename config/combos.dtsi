@@ -49,21 +49,47 @@
         // click. Middle click moved off V (23) onto D (12) on request, which
         // makes the pair a mnemonic rather than two arbitrary letters.
         //
-        // The cost, and it is real: D is the LCTRL home-row mod, and a
-        // position that takes part in a combo cannot resolve its hold until
-        // the combo window closes (see the caveat on `hmr` in behaviors.dtsi).
-        // So Ctrl-hold on D now carries the combo timeout, the same way Shift
-        // on F already does because of RightClick below.
+        // timeout-ms is widened from ZMK's default 50, because at 50 neither of
+        // these fired in practice. 50 ms is measured from the FIRST key press
+        // of the combo (app/src/combo.c:237), so the finger and the thumb have
+        // to land within a twentieth of a second of each other; reaching for a
+        // deliberate chord does not hit that.
+        //
+        // It is close to free, which is not obvious and is why the default was
+        // left alone for so long. Two mechanisms pay for it:
+        //
+        //   Taps are not delayed. Releasing a key that is part of a candidate
+        //   combo runs cleanup() before anything else (combo.c:459), which
+        //   releases the captured press immediately. So an ordinary `d` or `f`
+        //   is emitted on key-up as usual and never waits out the window.
+        //
+        //   Mod holds are not delayed either. D and F are the LCTRL and LSHIFT
+        //   home-row mods, and a position in a combo cannot resolve its hold
+        //   until the window closes -- but hold-tap schedules its timer for the
+        //   time REMAINING from the original event timestamp
+        //   (behavior_hold_tap.c:637), so the hold still lands 190 ms after the
+        //   physical press regardless of how long the combo held the event.
+        //
+        // False positives stay unlikely for a structural reason: releasing the
+        // thumb ends the window (same cleanup() path), so "click, then type d"
+        // cannot become a middle click. Only holding the thumb down and then
+        // pressing D can, which is the gesture itself.
+        //
+        // 100 rather than the 80 used for Raycast below. Raycast is thumb plus
+        // thumb; these are finger plus same-hand thumb, and they were the ones
+        // actually missing. Dial back if a chord ever fires unintentionally.
         MiddleClick {
             bindings = <&mkp MCLK>;
             key-positions = <12 31>;   // D + left click thumb
             layers = <L_BASE L_MOUSE>;
+            timeout-ms = <100>;
         };
 
         RightClick {
             bindings = <&mkp RCLK>;
             key-positions = <13 31>;   // F + left click thumb
             layers = <L_BASE L_MOUSE>;
+            timeout-ms = <100>;
         };
 
         LeftParen {
