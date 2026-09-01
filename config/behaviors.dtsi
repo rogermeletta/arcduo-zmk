@@ -132,27 +132,26 @@
             bindings = <&nav_hold>, <&kp>;
         };
 
-        // Left click, or NAV on a long press. Called as `&lclk_nav L_NAV LCLK`.
+        // lclk_nav was here: `&lclk_nav L_NAV LCLK` on position 31, tap to
+        // click and long-press for NAV. Removed, and worth knowing why before
+        // anything like it is tried again.
         //
-        // Dragging still works, via quick-tap: click once and press again
-        // within quick-tap-ms and the hold-tap is forced to the TAP branch
-        // (behavior_hold_tap.c:629 decides HT_QUICK_TAP on key-down), which
-        // presses `&mkp LCLK` and holds it until the key is released. So
-        // tap-then-hold is a click-and-drag, and a plain long hold is NAV.
-        // That is the only way to get both out of one key: a hold-tap decides
-        // from timing and key positions alone and cannot see the ball moving.
+        // A hold-tap cannot hold a mouse button. The hold branch was `&mo`, so
+        // holding the key raised a layer and never pressed a button -- which
+        // took click-and-drag, and therefore selecting text with a trackball,
+        // off the board entirely. Worse than a plain miss: NAV is the layer
+        // that swaps the right ball to scrolling, so the drag gesture scrolled.
         //
-        // 250 ms rather than the 190 ms used for the home-row mods, on both
-        // counts: a slow deliberate click should not turn into a layer, and
-        // the double-press for a drag should not need to be hurried.
-        lclk_nav: left_click_or_nav {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            flavor = "balanced";
-            tapping-term-ms = <250>;
-            quick-tap-ms = <250>;
-            bindings = <&mo>, <&mkp>;
-        };
+        // The quick-tap escape hatch that justified the design does not hold up
+        // either. Clicking and then pressing again inside quick-tap-ms does
+        // force the tap branch and hold the button (behavior_hold_tap.c:629
+        // decides HT_QUICK_TAP on key-down), but that gesture IS a
+        // double-click-and-drag, and macOS selects by word on one of those, not
+        // by character. The workaround supports every drag except the one that
+        // motivated it.
+        //
+        // Position 31 is now a plain `&mkp LCLK`. NAV keeps positions 32 and
+        // 34, which were always its real homes.
 
         // `hml`, but the tap is the cmd_tab macro instead of a keycode, so
         // NAV's D can be the app switcher and still hold Ctrl -- which is what

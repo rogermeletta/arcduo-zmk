@@ -56,7 +56,7 @@ actually sends.
 | UHK layer | ArcDuo layer | Reached by |
 | --- | --- | --- |
 | base | `BASE` (0) | default |
-| mod | `NAV` (2) | hold **left inner** thumb, right **Space** thumb, or long-press **left click** |
+| mod | `NAV` (2) | hold **left inner** thumb or right **Space** thumb |
 | fn | `NUM` (1) | hold **left outer** thumb (Tab), or right outer thumb (Bspc) |
 | mouse | `MOUSE` (5) | **toggle**: hold `EXTRAS` (right inner), tap the left-click thumb |
 | — | `EXTRAS` (4) | hold right **inner** thumb — F13–F21 pad, radios, screen, transport |

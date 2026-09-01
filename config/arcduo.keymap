@@ -98,7 +98,25 @@
 //
 // If the hold is missed, `&lt L_MOUSE B` on position 24 restores it for the
 // cost of making one more letter a hold-tap. One line, either way.
-                                                        &lt L_NUM TAB        &lclk_nav L_NAV LCLK &nav_lt L_NAV RETURN      &lt L_EXTRAS RETURN  &nav_lt L_NAV SPACE  &lt L_NUM BACKSPACE
+//
+// Position 31 is a PLAIN `&mkp LCLK`, not a hold-tap. It was `&lclk_nav L_NAV
+// LCLK` -- tap to click, long-press for NAV -- and that made click-and-drag
+// impossible, which is how text gets selected with a trackball. Holding the
+// key gave the hold branch, `&mo L_NAV`, so no button was ever held down; and
+// NAV is the layer on which the right ball swaps to scrolling, so the gesture
+// scrolled the page instead of selecting.
+//
+// The documented way out, quick-tap (click, then press again inside 250 ms,
+// which forces the tap branch and holds the button), does not rescue it
+// either: that is a double-click-and-drag, and macOS selects by WORD on a
+// double-click drag, not by character. So the one gesture the workaround
+// supports is the one text selection cannot use.
+//
+// NAV is unaffected in practice. It is still held from position 32 (left inner
+// thumb) and 34 (right Space thumb), which the layer comment above describes
+// as the two real ways in; 31 was a third convenience, added in 621545e, and
+// it is the one that collided with the button.
+                                                        &lt L_NUM TAB        &mkp LCLK            &nav_lt L_NAV RETURN      &lt L_EXTRAS RETURN  &nav_lt L_NAV SPACE  &lt L_NUM BACKSPACE
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
 // The two trackballs. Drawer-only; see the header comment at the top of
 // this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.

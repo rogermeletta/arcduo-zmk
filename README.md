@@ -45,15 +45,14 @@ macOS, is history navigation, so a scroll could send you back a page. Snapping
 locks each gesture to whichever axis dominates.
 
 Scrolling is **not** high-resolution. `CONFIG_ZMK_POINTING_SMOOTH_SCROLLING` was
-enabled on the dongle and reverted, because it broke click-and-drag — holding
-left click and moving the cursor ball stopped selecting text, while clicking and
-moving each still worked on their own. It is not a keymap problem and not a
-firmware one: the multiplier only ever reaches the wheel values. It changes the
-mouse HID report descriptor and adds a characteristic to the BLE HID service,
-both of which macOS caches per bond, so reflashing moves them under a host still
-using what it cached at pairing time. The reasoning is written out in
-`boards/shields/arcduo/arcduo_dongle.conf`; if you ever want it, enable it and
-then re-pair the host rather than just reflashing.
+enabled on the dongle and then reverted on the suspicion that it had broken
+click-and-drag — which it had not; that was `lclk_nav`, and it is fixed in the
+keymap. Smooth scrolling stays off only because nobody has asked for it and
+because turning it on is a **re-pair event**: it rewrites the mouse HID report
+descriptor and adds a characteristic to the BLE HID service, both of which macOS
+caches per bond. If you want it, enable it, reflash, then remove and re-pair the
+host to force fresh service discovery — and expect to retune the scroll
+divisors. The detail is in `boards/shields/arcduo/arcduo_dongle.conf`.
 
 MOUSE is a **toggle**, not a hold: hold Extras (right inner thumb) and tap the
 left-click thumb to lock it on, then tap that same inner thumb to leave. Both
@@ -197,7 +196,7 @@ cannot have, which is why *that* one sits on a dead left thumb instead.
 | --- | --- | --- | --- |
 | 0 | Base | default | |
 | 1 | Num | hold left outer (Tab) or right outer (Bspc) thumb | the UHK's Fn layer |
-| 2 | Nav | hold left inner thumb, right Space thumb, or long-press left click | the UHK's Mod layer |
+| 2 | Nav | hold left inner thumb or right Space thumb | the UHK's Mod layer |
 | 3 | Symbols | hold `G` (type right) or `H` (type left) | mirrored — same symbol, mirrored finger |
 | 4 | Extra | hold right inner thumb | F13–F21 pad, radios, screen, transport |
 | 5 | Mouse | toggle: hold Extra, tap the left-click thumb | the UHK's Mouse layer |
