@@ -58,6 +58,37 @@
                 ;
         };
 
+        // Left click that also holds NAV, on position 31. Press holds the
+        // button and raises the layer; release drops both.
+        //
+        // A hold-tap cannot do this, which is why position 31 went through two
+        // wrong shapes first. Its hold and tap branches are alternatives: pick
+        // `&mo` and no button is ever held, so click-and-drag does not exist;
+        // pick `&mkp` and no layer is raised. A macro has no branches, so it
+        // presses both and holds them until the key comes up.
+        //
+        // This only works because NAV no longer reassigns the trackballs. While
+        // it did, holding the button raised the layer that turned the cursor
+        // ball into a scroll wheel, so the drag scrolled the page -- see the
+        // listeners in boards/shields/arcduo/arcduo.dtsi.
+        //
+        // A quick tap is still just a click: the layer goes up and down in
+        // passing with no key struck while it is there.
+        //
+        // &mkp is pressed first and released last, so the button is down for
+        // the whole gesture and cannot clip the start or end of a drag.
+        lclk_nav: lclk_nav {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings
+                = <&macro_press &mkp LCLK>
+                , <&macro_press &mo L_NAV>
+                , <&macro_pause_for_release>
+                , <&macro_release &mo L_NAV>
+                , <&macro_release &mkp LCLK>
+                ;
+        };
+
         grave_macro: grave_macro {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;

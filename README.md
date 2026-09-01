@@ -28,14 +28,23 @@ images, balls included.
 | Function | Scroll | Cursor |
 | Sensor | PMW3610 @ 200 CPI | PMW3610 @ 1200 CPI |
 | Every layer | scrolls, scaled 1/16 | moves the pointer, scaled 2/3 → ~800 CPI |
-| On **Nav** | **moves the pointer**, scaled 4× → ~800 CPI | **scrolls**, scaled 1/96 |
 | On **Mouse** | unchanged | **snipe**: a further 1/4 → ~200 CPI for pixel work |
 
-The two balls swapping roles on Nav is carried over from the UHK, whose left key
-cluster and right trackball are configured `navigationModeModLayer = Cursor` and
-`= Scroll` respectively. Both scaling factors put the two balls at the same
-effective speed as each other — ~800 CPI for the pointer, one scroll tick per
-2 mm of travel.
+Each ball does one job on every layer, and **Mouse** carries the only
+exception — snipe slows the pointer rather than repurposing it. That is what
+makes click-and-drag work: holding the left-click thumb presses the button and
+raises Nav, so the Nav keys are there mid-drag while the ball you are dragging
+with keeps pointing.
+
+It used to be busier. Nav **swapped** the two balls — left became the pointer,
+right became a scroll wheel — carried over from the UHK, whose left key cluster
+and right trackball are configured `navigationModeModLayer = Cursor` and
+`= Scroll`. That was parity for its own sake and it cost real function: it added
+no capability, since Base already gives scroll and pointer at the same time, one
+on each ball, and it made dragging impossible, because holding the click raises
+Nav and the ball turned into a scroll wheel mid-gesture. The swap is gone; git
+history has it. The one thing lost with it is that with your left hand off the
+board, the right hand alone can point but not scroll.
 
 Both scroll chains are **axis-locked**, via `&zip_scroll_snap` from
 [kot149/zmk-scroll-snap](https://github.com/kot149/zmk-scroll-snap). A ball
@@ -196,7 +205,7 @@ cannot have, which is why *that* one sits on a dead left thumb instead.
 | --- | --- | --- | --- |
 | 0 | Base | default | |
 | 1 | Num | hold left outer (Tab) or right outer (Bspc) thumb | the UHK's Fn layer |
-| 2 | Nav | hold left inner thumb or right Space thumb | the UHK's Mod layer |
+| 2 | Nav | hold left inner thumb, right Space thumb, or the left-click thumb | the UHK's Mod layer |
 | 3 | Symbols | hold `G` (type right) or `H` (type left) | mirrored — same symbol, mirrored finger |
 | 4 | Extra | hold right inner thumb | F13–F21 pad, radios, screen, transport |
 | 5 | Mouse | toggle: hold Extra, tap the left-click thumb | the UHK's Mouse layer |

@@ -151,36 +151,27 @@ RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,10) RC(2,9) RC(2,8) RC(2,7) RC(2,6
       process-next;
     };
 
-    // Scroll while the NAV layer is held, mirroring the UHK, whose
-    // TrackballRight module is configured navigationModeModLayer = "Scroll"
-    // (and NAV is this keymap's Mod layer -- see config/arcduo.keymap).
+    // There is deliberately no NAV override on this ball any more.
     //
-    // No `process-next` here, deliberately: this REPLACES the chain rather
-    // than adding to it. The transform has to be repeated because of that,
-    // and the base `zip_xy_scaler 2 3` must not run -- after the mapper the
-    // events are WHEEL/HWHEEL, which that scaler does not match anyway.
+    // A `scroll` child used to sit here, turning the cursor ball into a scroll
+    // wheel whenever NAV was held, mirroring the UHK's TrackballRight
+    // (navigationModeModLayer = "Scroll"). Its twin on the other listener made
+    // the left ball the pointer, so the two swapped roles on NAV exactly as the
+    // UHK does on its Mod layer.
     //
-    // 1/96 is chosen to feel identical to the left ball, not copied from the
-    // UHK's scrollSpeedDivisor of 8. The left ball scrolls at 200 CPI / 16,
-    // which is one tick per 16/7.9 = 2.0 mm of ball travel. This sensor runs
-    // at 1200 CPI = 47.2 counts/mm, so the same 2 mm needs 96 counts.
+    // Removed, because it was parity for its own sake and it cost real
+    // function. It added no capability: BASE already gives scroll and pointer
+    // at the same time, one on each ball, so the swap only exchanged which hand
+    // did which. What it did do was make click-and-drag impossible -- holding
+    // the left-click thumb raises NAV, so the ball you were dragging with
+    // turned into a scroll wheel mid-gesture.
     //
-    // INPUT_TRANSFORM_Y_INVERT is deliberately absent: it was there, and the
-    // vertical scroll came out the wrong way round. Note the flags are not
-    // independent -- input_processor_transform.c applies XY_SWAP first and
-    // then tests the INVERT flags against the *post-swap* code, so Y_INVERT
-    // here acts on whatever the swap turned into REL_Y, which is what
-    // zip_xy_to_scroll_mapper feeds to the vertical wheel. Flipping this one
-    // flag is the whole of "invert vertical scroll"; X_INVERT still controls
-    // horizontal.
-    scroll {
-      layers = <L_NAV>;
-      input-processors =
-          <&zip_xy_transform (INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_XY_SWAP)>,
-          <&zip_xy_to_scroll_mapper>,
-          <&zip_scroll_snap>,
-          <&zip_scroll_scaler 1 96>;
-    };
+    // Keeping both was possible: a flag layer raised alongside NAV, given
+    // priority over the swap by declaration order. It worked and was dropped as
+    // not worth a whole layer plus two listener children to preserve a
+    // behaviour nobody used. Git history has it if the swap is ever wanted
+    // back; the honest cost of not having it is that with the left hand off the
+    // board the right hand alone can point but not scroll.
   };
 
   trackball_listener2: trackball_listener2 {
@@ -203,30 +194,13 @@ RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,10) RC(2,9) RC(2,8) RC(2,7) RC(2,6
         <&zip_scroll_snap>,
         <&zip_scroll_scaler 1 16>;
 
-    // Cursor while the NAV layer is held, mirroring the UHK, whose
-    // KeyClusterLeft module is configured navigationModeModLayer = "Cursor".
-    // Together with the `scroll` override on the other ball this swaps both
-    // balls' roles on NAV, exactly as the UHK does on its Mod layer.
+    // No NAV override on this ball either, for the same reason as the other
+    // listener: a `cursor` child used to make the left ball the pointer while
+    // NAV was held, the other half of the UHK's Mod-layer ball swap. It went
+    // with its twin.
     //
-    // 4/1 scales UP: this sensor runs at 200 CPI, and 200 * 4 = 800 matches
-    // the effective 1200 * 2/3 = 800 CPI of the cursor ball, so both balls
-    // move the pointer at the same speed. The scaler multiplies before it
-    // divides (app/src/pointing/input_processor_scaler.c), so a multiplier
-    // larger than the divisor is legitimate.
-    //
-    // AXIS CAVEAT, worth reading before you file a bug: this transform is
-    // derived, not measured. The two sensors are mounted mirrored and their
-    // drivers already differ -- the right one sets `invert-x` and `invert-y`,
-    // the left one only `invert-y` (see boards/arcduo_*/…overlay). Applying
-    // the cursor ball's own transform here would leave the vertical axis
-    // reversed relative to it, so X_INVERT is used without Y_INVERT. If the
-    // pointer moves mirrored on this ball, add or drop one INPUT_TRANSFORM_*
-    // flag on the line below; nothing else needs to change.
-    cursor {
-      layers = <L_NAV>;
-      input-processors =
-          <&zip_xy_transform (INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_XY_SWAP)>,
-          <&zip_xy_scaler 4 1>;
-    };
+    // So both balls now keep one job on every layer -- this one scrolls, the
+    // right one points -- and the only per-layer override left is `precision`
+    // on MOUSE, which slows the pointer for sniping rather than repurposing it.
   };
 };

@@ -56,7 +56,7 @@ actually sends.
 | UHK layer | ArcDuo layer | Reached by |
 | --- | --- | --- |
 | base | `BASE` (0) | default |
-| mod | `NAV` (2) | hold **left inner** thumb or right **Space** thumb |
+| mod | `NAV` (2) | hold **left inner** thumb, right **Space** thumb, or the **left-click** thumb |
 | fn | `NUM` (1) | hold **left outer** thumb (Tab), or right outer thumb (Bspc) |
 | mouse | `MOUSE` (5) | **toggle**: hold `EXTRAS` (right inner), tap the left-click thumb |
 | — | `EXTRAS` (4) | hold right **inner** thumb — F13–F21 pad, radios, screen, transport |
@@ -226,13 +226,20 @@ config:
 | Right trackball | Cursor | Scroll | Caret |
 
 The first two columns map directly onto ZMK's per-layer input-processor
-overrides, and now do: on `NAV` **both balls swap roles**, left becomes the
-cursor and right becomes scroll, exactly as on the UHK.
+overrides, and for a while did: on `NAV` both balls swapped roles, left becoming
+the cursor and right becoming scroll, exactly as on the UHK.
 
-The scroll rate on the right ball is `1/96`, not the UHK's `scrollSpeedDivisor`
-of 8. The divisor is meaningless across different hardware; what was matched
-instead is the *feel* of the left ball, which scrolls one tick per 2.0 mm of
-travel (200 CPI ÷ 16). At 1200 CPI the same 2 mm is 96 counts.
+**This is parity that was deliberately given up.** The swap added no capability
+here — the UHK needs it because its left cluster is not a full trackball, while
+this board already offers scroll and pointer simultaneously, one on each ball,
+so swapping only exchanged which hand did which. And it cost something real:
+holding the left-click thumb raises `NAV`, so the ball being dragged with turned
+into a scroll wheel mid-gesture and click-and-drag — selecting text — was
+impossible. Each ball now keeps one job on every layer.
+
+What that costs, stated plainly: with the left hand off the board, the right
+hand alone can point but not scroll. Git history has the overrides if the swap
+is ever wanted back.
 
 ### Caret mode needs an out-of-tree module
 
@@ -284,16 +291,12 @@ to be missed.
 
 ## Things to check on hardware
 
-1. **Left-ball cursor direction on NAV.** The transform there is derived, not
-   measured — the two sensors are mounted mirrored and their drivers already
-   differ (`invert-x` is set on the right sensor only). If the pointer moves
-   mirrored, add or drop one `INPUT_TRANSFORM_*` flag on the `cursor` node in
-   `boards/shields/arcduo/arcduo.dtsi`; nothing else changes.
-2. **Right-ball scroll rate on NAV.** `1/96` is calculated, not felt. Adjust the
-   divisor on the `scroll` node in the same file. Its *direction* is settled —
-   `INPUT_TRANSFORM_Y_INVERT` was dropped from that node because vertical scroll
-   came out the wrong way round. Horizontal is still `X_INVERT`; the two flags
-   are independent, but note both are evaluated *after* `XY_SWAP`.
+1. **Click-and-drag with Nav.** Holding the left-click thumb should press the
+   button *and* raise `NAV`, releasing both on key-up, while the right ball
+   keeps pointing so a selection tracks. The two overrides that used to break
+   this — the `cursor` and `scroll` nodes on `NAV` — are gone.
+2. **Middle and right click** (`D`/`F` + left-click thumb). Both combos are on a
+   100 ms window rather than ZMK's 50 ms default, which was too tight to fire.
 3. **The Raycast combo** (thumbs 31+34 — left click and right Space). Thumb
    combos can be awkward; if it misfires or is hard to hit, it can move to any
    free position. Note a miss is not a no-op: position 31 is left click, so a

@@ -89,6 +89,8 @@ parse_config:
     "&sys_reset": Reset
     "&soft_off": Soft Off
     "&mkp LCLK": L Click
+    # Position 31: holds the button and Nav together, releases both.
+    "&lclk_nav": {t: L Click, h: Nav}
     "&mkp RCLK": R Click
     "&mkp MCLK": M Click
     "&mkp MB4": Back
