@@ -32,7 +32,7 @@ layers:
   - .
   - /
   - {t: TAB, h: Num}
-  - L Click
+  - {t: L Click, h: Nav}
   - {t: RETURN, h: Nav}
   - {t: RETURN, h: Extra}
   - {t: SPACE, h: Nav}
