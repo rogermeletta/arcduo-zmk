@@ -44,12 +44,16 @@ turns that into horizontal wheel — which drifts in wide views and, in Chrome o
 macOS, is history navigation, so a scroll could send you back a page. Snapping
 locks each gesture to whichever axis dominates.
 
-Scrolling is also **high-resolution** (`CONFIG_ZMK_POINTING_SMOOTH_SCROLLING` on
-the dongle), so the wheel is not quantised to whole notches. ZMK's docs do not
-state the resolution multiplier this uses, so its effect on the existing `1/16`
-and `1/96` divisors was not predictable on paper — if scrolling feels too slow
-or too fast after flashing, those two divisors in
-`boards/shields/arcduo/arcduo.dtsi` are the dial.
+Scrolling is **not** high-resolution. `CONFIG_ZMK_POINTING_SMOOTH_SCROLLING` was
+enabled on the dongle and reverted, because it broke click-and-drag — holding
+left click and moving the cursor ball stopped selecting text, while clicking and
+moving each still worked on their own. It is not a keymap problem and not a
+firmware one: the multiplier only ever reaches the wheel values. It changes the
+mouse HID report descriptor and adds a characteristic to the BLE HID service,
+both of which macOS caches per bond, so reflashing moves them under a host still
+using what it cached at pairing time. The reasoning is written out in
+`boards/shields/arcduo/arcduo_dongle.conf`; if you ever want it, enable it and
+then re-pair the host rather than just reflashing.
 
 MOUSE is a **toggle**, not a hold: hold Extras (right inner thumb) and tap the
 left-click thumb to lock it on, then tap that same inner thumb to leave. Both
