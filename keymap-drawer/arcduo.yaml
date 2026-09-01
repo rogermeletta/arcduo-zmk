@@ -66,9 +66,9 @@ layers:
   - Sft+Cmd+V
   - Cmd+Opt+V
   - '='
-  - {t: '1', h: F1}
-  - {t: '2', h: F2}
-  - {t: '3', h: F3}
+  - '1'
+  - '2'
+  - '3'
   - {t: /, h: F12}
   - {type: held}
   - F11
@@ -166,13 +166,13 @@ layers:
   - BT(1)
   - BT(2)
   - BT(3)
-  - OUT TOG
+  - BT(4)
   - F16
   - F17
   - F18
   - F23
   - BRI DEC
-  - ''
+  - OUT TOG
   - PREV
   - PP
   - NEXT
@@ -181,8 +181,8 @@ layers:
   - F20
   - F21
   - F24
-  - Opt+Cmd+EJECT
-  - ''
+  - Ctl+Sft+EJECT
+  - Soft Off
   - MUTE
   - VOL DN
   - VOL UP
@@ -214,8 +214,8 @@ layers:
   - ''
   - RSHIFT
   - RCTRL
-  - LALT
-  - LCMD
+  - RALT
+  - RCMD
   - UNDO
   - CUT
   - COPY

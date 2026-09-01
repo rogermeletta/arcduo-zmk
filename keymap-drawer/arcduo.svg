@@ -528,19 +528,16 @@ g[class^="layer-combopos"] g.keypos-38 rect.key { fill: #3d5674; }
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
 <rect rx="4" ry="4" x="-20" y="-24" width="40" height="40" class="key"/>
 <text x="0" y="-4" class="key tap">1</text>
-<text x="0" y="24" class="key hold">F1</text>
 </g>
 <g transform="translate(644, 140)" class="key keypos-27">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
 <rect rx="4" ry="4" x="-20" y="-24" width="40" height="40" class="key"/>
 <text x="0" y="-4" class="key tap">2</text>
-<text x="0" y="24" class="key hold">F2</text>
 </g>
 <g transform="translate(700, 147)" class="key keypos-28">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
 <rect rx="4" ry="4" x="-20" y="-24" width="40" height="40" class="key"/>
 <text x="0" y="-4" class="key tap">3</text>
-<text x="0" y="24" class="key hold">F3</text>
 </g>
 <g transform="translate(756, 172)" class="key keypos-29">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
@@ -1071,9 +1068,7 @@ g[class^="layer-combopos"] g.keypos-38 rect.key { fill: #3d5674; }
 <g transform="translate(756, 60)" class="key keypos-9">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
 <rect rx="4" ry="4" x="-20" y="-24" width="40" height="40" class="key"/>
-<text x="0" y="-4" class="key tap">
-<tspan x="0" dy="-0.6em">OUT</tspan><tspan x="0" dy="1.2em">TOG</tspan>
-</text>
+<text x="0" y="-4" class="key tap">BT(4)</text>
 </g>
 <g transform="translate(28, 116)" class="key keypos-10">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
@@ -1105,6 +1100,9 @@ g[class^="layer-combopos"] g.keypos-38 rect.key { fill: #3d5674; }
 <g transform="translate(532, 91)" class="key keypos-15">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
 <rect rx="4" ry="4" x="-20" y="-24" width="40" height="40" class="key"/>
+<text x="0" y="-4" class="key tap">
+<tspan x="0" dy="-0.6em">OUT</tspan><tspan x="0" dy="1.2em">TOG</tspan>
+</text>
 </g>
 <g transform="translate(588, 91)" class="key keypos-16">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
@@ -1152,12 +1150,15 @@ g[class^="layer-combopos"] g.keypos-38 rect.key { fill: #3d5674; }
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
 <rect rx="4" ry="4" x="-20" y="-24" width="40" height="40" class="key"/>
 <text x="0" y="-4" class="key tap">
-<tspan x="0" dy="-0.6em">Opt+Cmd</tspan><tspan x="0" dy="1.2em">+EJECT</tspan>
+<tspan x="0" dy="-0.6em">Ctl+Sft</tspan><tspan x="0" dy="1.2em">+EJECT</tspan>
 </text>
 </g>
 <g transform="translate(532, 147)" class="key keypos-25">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
 <rect rx="4" ry="4" x="-20" y="-24" width="40" height="40" class="key"/>
+<text x="0" y="-4" class="key tap">
+<tspan x="0" dy="-0.6em">Soft</tspan><tspan x="0" dy="1.2em">Off</tspan>
+</text>
 </g>
 <g transform="translate(588, 147)" class="key keypos-26">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
@@ -1333,12 +1334,12 @@ g[class^="layer-combopos"] g.keypos-38 rect.key { fill: #3d5674; }
 <g transform="translate(700, 91)" class="key keypos-18">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
 <rect rx="4" ry="4" x="-20" y="-24" width="40" height="40" class="key"/>
-<text x="0" y="-4" class="key tap">LALT</text>
+<text x="0" y="-4" class="key tap">RALT</text>
 </g>
 <g transform="translate(756, 116)" class="key keypos-19">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
 <rect rx="4" ry="4" x="-20" y="-24" width="40" height="40" class="key"/>
-<text x="0" y="-4" class="key tap">LCMD</text>
+<text x="0" y="-4" class="key tap">RCMD</text>
 </g>
 <g transform="translate(28, 172)" class="key keypos-20">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key side"/>
