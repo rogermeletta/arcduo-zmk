@@ -30,19 +30,47 @@
             bindings = <&kp>, <&kp>;  // hold, tap
         };
 
-        // Home-row modifiers.
+        // Home-row modifiers: balanced flavor, positional hold-trigger,
+        // require-prior-idle, hold-trigger-on-release so mods stack on one
+        // hand. That is urob's "timeless" recipe, and it is deliberately all
+        // of it -- hold-while-undecided is NOT set here, and was removed
+        // rather than never added, so the reason is worth keeping.
         //
-        // hold-while-undecided presses the modifier immediately on key-down
-        // and releases it again if the key resolves into a tap. Without it,
-        // the modifier is only sent once the hold is decided -- which never
-        // happens for a mouse click, because a click is not a key event. On
-        // a keyboard with two integrated trackballs that meant Cmd-click and
-        // Shift-click simply did not work.
+        // What it did: press the modifier immediately on key-down, releasing
+        // it again if the key resolved into a tap. ZMK documents the use case
+        // as "useful for using modifiers with the mouse", which is exactly
+        // this board -- two trackballs, and a click is not a key event, so a
+        // click alone can never resolve a hold-tap.
         //
-        // Caveat: for a position that also participates in a combo, the hold
-        // is delayed until the combo timeout expires. That applies to F (13)
-        // and J (16), which are in the CapsWord/paren/click combos. A (10)
-        // and ; (19) -- the Cmd mods -- are combo-free and so are immediate.
+        // Why it had to go: it sends a real modifier press AND release to the
+        // host on every home-row tap that require-prior-idle-ms does not
+        // suppress -- every word-initial a, s, d, f, j, k, l and `;`. Native
+        // macOS ignores a stray bare modifier. A remote-desktop client does
+        // not: it forwards raw key input into the session, and on Windows a
+        // bare Alt tap opens the menu bar, so those letters armed the menu and
+        // whatever was typed next went into it. Systematic rather than
+        // occasional, because it fires on every single tap.
+        //
+        // What it costs, which is less than the comment this replaces claimed:
+        // modifier-clicking still works. behavior_hold_tap.c maps
+        // HT_TIMER_EVENT to STATUS_HOLD_TIMER (line 291), so for the balanced
+        // flavor the tapping term expiring resolves a hold on its own, with no
+        // second key involved. Cmd-click becomes hold A past 190 ms and then
+        // click, instead of hold-and-click instantly. Slower, not gone.
+        //
+        // Counter-argument, recorded so it is not rediscovered the hard way:
+        // zmkfirmware/zmk#759 reports RDP-style clients DROPPING modifiers out
+        // of chords, because ZMK emits the mod press and the key press too
+        // close together, and hold-while-undecided helps there by sending the
+        // mod earlier. That is the opposite failure to the one above. If
+        // Cmd+C inside a remote session turns out unreliable, that issue is
+        // the explanation -- and the fix is a passthrough layer binding plain
+        // &kp across the home row, not turning this property back on, which
+        // would just restore the menu-bar problem.
+        //
+        // Separately, and still true: a position that also takes part in a
+        // combo cannot resolve its hold until the combo timeout expires. That
+        // applies to F (13) and J (16).
         hmr: homerow_mod_right {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
@@ -53,7 +81,6 @@
             bindings = <&kp>, <&kp>;
             hold-trigger-key-positions = <0 1 2 3 4 10 11 12 13 14 20 21 22 23 24 30 31 32>;
             hold-trigger-on-release;
-            hold-while-undecided;
         };
 
         hml: homerow_mod_left {
@@ -66,7 +93,6 @@
             bindings = <&kp>, <&kp>;
             hold-trigger-key-positions = <5 6 7 8 9 15 16 17 18 19 25 26 27 28 29 33 34 35>;
             hold-trigger-on-release;
-            hold-while-undecided;
         };
 
         // Hold gives EXTRAS, not NAV. NAV moved to the left inner thumb
@@ -142,7 +168,6 @@
             bindings = <&kp>, <&cmd_tab>;
             hold-trigger-key-positions = <5 6 7 8 9 15 16 17 18 19 25 26 27 28 29 33 34 35>;
             hold-trigger-on-release;
-            hold-while-undecided;
         };
 
         td_bore: BASE_or_EXTRA {
