@@ -32,7 +32,7 @@ layers:
   - .
   - /
   - {t: TAB, h: Num}
-  - {t: L Click, h: Nav}
+  - L Click
   - {t: RETURN, h: Nav}
   - {t: RETURN, h: Extra}
   - {t: SPACE, h: Nav}
@@ -110,7 +110,7 @@ layers:
   - Ctl+Opt+Cmd+4
   - Ctl+Opt+Cmd+5
   - {t: ▽, type: trans}
-  - {type: held}
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - Sft+Cmd+SPACE
   - {t: ▽, type: trans}
