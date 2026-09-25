@@ -1,164 +1,91 @@
+// The tmux macros that used to live here (v_split, h_split, detach_session,
+// sync_panes, next_pane, show_sessions, create_or_attach) and clip_hist were
+// never bound to any key. They have been removed rather than left compiled
+// into every build; git history has them if you want them back.
+
 / {
     macros {
-        v_split: v_split {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp LC(B) &kp PRCNT>;
-        };
+        // shrug, gcm ("git commit -am WIP"), lgtm, sudo ("sudo !!") and
+        // new_dir (Ctrl+Shift+N) were removed on request -- five text macros
+        // that were never worth a key. Their EXTRAS slots became the F13-F21
+        // pad. git history has all five if any are wanted back.
 
-        h_split: h_split {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp LC(B) &kp DQT>;
-        };
-
-        detach_session: detach_session {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp LC(B) &kp D>;
-        };
-
-        sync_panes: sync_panes {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp LC(B) &kp SPACE>;
-        };
-
-        next_pane: next_pane {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp LC(B) &kp O>;
-        };
-
-        show_sessions: show_sessions {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp LC(B) &kp S>;
-        };
-
-        create_or_attach: create_or_attach {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
+        // The UHK's app switcher. On the UHK you hold Mod, tap D repeatedly,
+        // and the switcher stays open until you let Mod go. `&kp LG(TAB)`
+        // cannot do that: it releases Cmd on key release, and releasing Cmd is
+        // what *commits* the switch, so every tap picks the previous app.
+        //
+        // So this presses Cmd and never releases it -- there is deliberately
+        // no &macro_pause_for_release, so the macro is over after the Tab and
+        // the key release does nothing. Cmd stays down, the switcher stays
+        // open, and each further tap steps one app along. `nav_hold` below is
+        // the other half: it drops Cmd when the NAV layer is released.
+        //
+        // Parameterised so it can be the *tap* half of a hold-tap and keep the
+        // Ctrl hold on that key. Called as `&cmd_tab LGUI`.
+        cmd_tab: cmd_tab {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
             bindings
-                = <&macro_tap &kp T>
-                , <&macro_tap &kp M>
-                , <&macro_tap &kp U>
-                , <&macro_tap &kp X>
-                , <&macro_tap &kp SPC>
-                , <&macro_tap &kp N>
-                , <&macro_tap &kp E>
-                , <&macro_tap &kp W>
-                , <&macro_tap &kp MINUS>
-                , <&macro_tap &kp S>
-                , <&macro_tap &kp E>
-                , <&macro_tap &kp S>
-                , <&macro_tap &kp S>
-                , <&macro_tap &kp I>
-                , <&macro_tap &kp O>
-                , <&macro_tap &kp N>
-                , <&macro_tap &kp SPC>
-                , <&macro_tap &kp MINUS>
-                , <&macro_tap &kp A>
-                , <&macro_tap &kp SPC>
-                , <&macro_tap &kp MINUS>
-                , <&macro_tap &kp S>
-                , <&macro_tap &kp SPC>
-            ;
-        };
-
-        shrug: shrug { // shrug emoji ¯\_(ツ)_/¯
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <10>;
-            tap-ms = <20>;
-            bindings
-                // ¯ (Macros)
-                = <&macro_press &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp U>
-                , <&macro_release &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp N0 &kp N0 &kp A &kp F &kp SPC>
-                // \
-                , <&macro_tap &kp BACKSLASH>
-                , <&macro_tap &kp BACKSLASH>
-                // _
-                , <&macro_tap &kp UNDER>
-                // (
-                , <&macro_tap &kp LPAR>
-                // ツ (Katakana Letter Tu)
-                , <&macro_press &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp U>
-                , <&macro_release &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp N3 &kp N0 &kp C &kp N4 &kp SPC>
-                // )
-                , <&macro_tap &kp RPAR>
-                // _
-                , <&macro_tap &kp UNDER>
-                // /
-                , <&macro_tap &kp FSLH>
-                // ¯ (Macron)
-                , <&macro_press &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp U>
-                , <&macro_release &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp N0 &kp N0 &kp A &kp F &kp SPC>
+                = <&macro_param_1to1>
+                , <&macro_press &kp MACRO_PLACEHOLDER>
+                , <&macro_tap &kp TAB>
                 ;
         };
 
-        gcm: gcm { // git commit WIP
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <10>;
-            tap-ms = <20>;
-            bindings = <
-                &macro_tap &kp G &kp I &kp T &kp SPACE
-                &kp C &kp O &kp M &kp M &kp I &kp T &kp SPACE
-                &kp MINUS &kp A &kp M &kp SPACE
-                &kp DQT &kp LS(W) &kp LS(I) &kp LS(P) &kp DQT
-            >;
-        };
-
-        lgtm: lgtm { // LGTM Approval
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <10>;
-            tap-ms = <20>;
-            bindings = <
-                &macro_tap
-                &kp LS(L) &kp LS(G) &kp LS(T) &kp LS(M)
-                &kp SPACE &kp MINUS &kp SPACE
-                &kp LS(A) &kp P &kp P &kp R &kp O &kp V &kp E &kp D &kp EXCL
-            >;
-        };
-
-        sudo: sudo { // SUDO_BANG_BANG
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <10>;
-            tap-ms = <20>;
+        // Holds a layer, and releases Cmd on the way out.
+        //
+        // This is the hold half of `nav_lt` in behaviors.dtsi, and it exists
+        // only to close what `cmd_tab` opens: ZMK has no layer-exit hook, so
+        // the release has to hang off the layer key itself.
+        //
+        // The Cmd release is unconditional, which is safe rather than sloppy:
+        // zmk_hid_unregister_mod() reference-counts explicit modifiers and
+        // returns -EINVAL without underflowing when the count is already zero
+        // (app/src/hid.c:62). So releasing NAV without having used cmd_tab is
+        // a no-op, and doing it while the LCMD home-row mod is also held just
+        // decrements 2 to 1 and leaves Cmd down.
+        nav_hold: nav_hold {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
             bindings
-                = <&macro_tap &kp S &kp U &kp D &kp O>  // "sudo"
-                , <&macro_tap &kp SPACE>                // space
-                , <&macro_tap &kp EXCL &kp EXCL>        // "!!"
-                , <&macro_tap &kp RET>                  // Enter key
-                ;
-        };
-        
-        clip_hist: clip_hist { // CLIPBOARD_HISTORY
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings 
-                = <&macro_press &kp LGUI>
-                , <&macro_tap &kp V>
+                = <&macro_param_1to1>
+                , <&macro_press &mo MACRO_PLACEHOLDER>
+                , <&macro_pause_for_release>
+                , <&macro_param_1to1>
+                , <&macro_release &mo MACRO_PLACEHOLDER>
                 , <&macro_release &kp LGUI>
                 ;
         };
-        
-        new_dir: new_dir {
+
+        // Left click that also holds NAV, on position 31. Press holds the
+        // button and raises the layer; release drops both.
+        //
+        // A hold-tap cannot do this, which is why position 31 went through two
+        // wrong shapes first. Its hold and tap branches are alternatives: pick
+        // `&mo` and no button is ever held, so click-and-drag does not exist;
+        // pick `&mkp` and no layer is raised. A macro has no branches, so it
+        // presses both and holds them until the key comes up.
+        //
+        // This only works because NAV no longer reassigns the trackballs. While
+        // it did, holding the button raised the layer that turned the cursor
+        // ball into a scroll wheel, so the drag scrolled the page -- see the
+        // listeners in boards/shields/arcduo/arcduo.dtsi.
+        //
+        // A quick tap is still just a click: the layer goes up and down in
+        // passing with no key struck while it is there.
+        //
+        // &mkp is pressed first and released last, so the button is down for
+        // the whole gesture and cannot clip the start or end of a drag.
+        lclk_nav: lclk_nav {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings
-                = <&macro_press &kp LCTRL &kp LSHFT>
-                , <&macro_tap &kp N>
-                , <&macro_release &kp LCTRL &kp LSHFT>
+                = <&macro_press &mkp LCLK>
+                , <&macro_press &mo L_NAV>
+                , <&macro_pause_for_release>
+                , <&macro_release &mo L_NAV>
+                , <&macro_release &mkp LCLK>
                 ;
         };
 
@@ -192,13 +119,45 @@
                 ;
         };
 
-        home_macro: home_macro {
+        // Umlauts, carried over from the UHK keymap, where they sat on the Fn
+        // layer as three separate macros.
+        //
+        // macOS composes these with the Option+U dead key: Option+U arms the
+        // diaeresis, the next vowel receives it. So each macro is two taps and
+        // needs no explicit press/release pair -- `&kp LA(U)` already sends
+        // Option+U as one keystroke.
+        //
+        // These are macOS-only. On Linux or Windows the same output needs the
+        // Unicode input dance the shrug macro uses (Ctrl+Shift+U, hex, space),
+        // which is why the UHK config kept separate Mac and PC keymaps.
+        ae_macro: ae_macro { // ä
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings
-                = <&macro_tap &kp TILDE>
-                , <&macro_tap &kp FSLH>
+                = <&macro_tap &kp LA(U)>
+                , <&macro_tap &kp A>
                 ;
         };
+
+        oe_macro: oe_macro { // ö
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings
+                = <&macro_tap &kp LA(U)>
+                , <&macro_tap &kp O>
+                ;
+        };
+
+        ue_macro: ue_macro { // ü
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings
+                = <&macro_tap &kp LA(U)>
+                , <&macro_tap &kp U>
+                ;
+        };
+
+        // home_macro was removed together with td_home, the only thing that
+        // referenced it. See config/behaviors.dtsi.
     };
 };

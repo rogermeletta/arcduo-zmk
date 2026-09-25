@@ -1,0 +1,20 @@
+// vim: set ft=dts:
+//
+// Left half sensor tuning. Zephyr picks this up because the directory is
+// named after the shield (cmake/modules/shields.cmake looks in
+// <shield_dir>/boards/<shield>/ as well as <shield_dir>/boards/).
+//
+// The left ball is the scroll ball: the input listener maps its X/Y onto the
+// scroll wheel, so it runs at a deliberately low CPI.
+
+&trackball {
+    // Was cpi = <300>, but the sensor's resolution step is 200, so 300 was
+    // already being truncated to 200 in hardware. Stating 200 keeps the
+    // existing feel and stops the value from lying.
+    cpi = <200>;
+
+    // Replaces CONFIG_PMW3610_INVERT_Y=y from config/arcduo_left.conf.
+    // Orientation is a property of how the sensor is mounted, so it belongs
+    // in devicetree next to the node, not in a global Kconfig fragment.
+    invert-y;
+};

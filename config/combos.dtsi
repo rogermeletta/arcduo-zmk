@@ -7,6 +7,23 @@
 // ╰──────┴──────┴──────┼──────┼──────┼──────╮  ╭──────┼──────┼──────┴──────┴──────┴──────╯
 //                         30     31     32        33     34     35
 //                      ╰──────┴──────┴──────╯  ╰──────┴──────┴──────╯
+//
+// Every combo here is a BASE-layer convenience, so every combo is scoped
+// with `layers = <L_BASE>`. (L_* come from config/arcduo_layers.h, which
+// config/arcduo.keymap includes before this file.)
+//
+// Commit 25cf586 ("Remove layer restriction for combos") dropped the `layers`
+// property from all of them, which made them global. Because ZMK matches
+// combos on key *position*, not on what those positions produce, that meant
+// e.g. Escape (positions 0+1) also fired when typing "12" on the number
+// layer, and the bracket combos fired on top of the symbol layer's own
+// brackets. Scoping to layer 0 keeps them reachable from the base layer,
+// which is what that commit was after, without the cross-layer misfires.
+//
+// The letter-position combos additionally set `require-prior-idle-ms` so they
+// cannot be triggered by a fast rollover while typing — the problem commit
+// ecb38a4 ("Shift combos from most used rollover keys") tried to solve by
+// moving positions around.
 
 / {
     combos {
@@ -14,62 +31,160 @@
 
         CapsWord {
             bindings = <&caps_word>;
-            key-positions = <13 16>;
+            key-positions = <13 16>;   // F + J
+            layers = <L_BASE>;
+            require-prior-idle-ms = <100>;
         };
 
+        // Scoped to BASE *and* MOUSE. `&mkp RCLK` is bound nowhere else in the
+        // whole config, so without layer 5 here there was no right click at
+        // all while the MOUSE layer was held -- which is exactly when you want
+        // one, since that layer is where snipe mode lives.
+        //
+        // Note the combo layer filter tests zmk_keymap_highest_layer_active()
+        // (app/src/combo.c:169), not "any active layer", so listing 5 is what
+        // arms these while MOUSE is on top.
+        //
+        // Thumb plus middle finger is middle click, thumb plus index is right
+        // click. Middle click moved off V (23) onto D (12) on request, which
+        // makes the pair a mnemonic rather than two arbitrary letters.
+        //
+        // timeout-ms is widened from ZMK's default 50, because at 50 neither of
+        // these fired in practice. 50 ms is measured from the FIRST key press
+        // of the combo (app/src/combo.c:237), so the finger and the thumb have
+        // to land within a twentieth of a second of each other; reaching for a
+        // deliberate chord does not hit that.
+        //
+        // It is close to free, which is not obvious and is why the default was
+        // left alone for so long. Two mechanisms pay for it:
+        //
+        //   Taps are not delayed. Releasing a key that is part of a candidate
+        //   combo runs cleanup() before anything else (combo.c:459), which
+        //   releases the captured press immediately. So an ordinary `d` or `f`
+        //   is emitted on key-up as usual and never waits out the window.
+        //
+        //   Mod holds are not delayed either. D and F are the LCTRL and LSHIFT
+        //   home-row mods, and a position in a combo cannot resolve its hold
+        //   until the window closes -- but hold-tap schedules its timer for the
+        //   time REMAINING from the original event timestamp
+        //   (behavior_hold_tap.c:637), so the hold still lands 190 ms after the
+        //   physical press regardless of how long the combo held the event.
+        //
+        // False positives stay unlikely for a structural reason: releasing the
+        // thumb ends the window (same cleanup() path), so "click, then type d"
+        // cannot become a middle click. Only holding the thumb down and then
+        // pressing D can, which is the gesture itself.
+        //
+        // 100 rather than the 80 used for Raycast below. Raycast is thumb plus
+        // thumb; these are finger plus same-hand thumb, and they were the ones
+        // actually missing. Dial back if a chord ever fires unintentionally.
         MiddleClick {
             bindings = <&mkp MCLK>;
-            key-positions = <23 31>;
+            key-positions = <12 31>;   // D + left click thumb
+            layers = <L_BASE L_MOUSE>;
+            timeout-ms = <100>;
         };
 
         RightClick {
             bindings = <&mkp RCLK>;
-            key-positions = <13 31>;
+            key-positions = <13 31>;   // F + left click thumb
+            layers = <L_BASE L_MOUSE>;
+            timeout-ms = <100>;
         };
 
         LeftParen {
             bindings = <&kp LEFT_PARENTHESIS>;
-            key-positions = <13 14>;
+            key-positions = <13 14>;   // F + G
+            layers = <L_BASE>;
+            require-prior-idle-ms = <100>;
         };
 
         RightParen {
             bindings = <&kp RIGHT_PARENTHESIS>;
-            key-positions = <15 16>;
+            key-positions = <15 16>;   // H + J
+            layers = <L_BASE>;
+            require-prior-idle-ms = <100>;
         };
 
         LeftBracket {
             bindings = <&kp LEFT_BRACKET>;
-            key-positions = <3 4>;
+            key-positions = <3 4>;     // R + T
+            layers = <L_BASE>;
+            require-prior-idle-ms = <100>;
         };
 
         RightBracket {
             bindings = <&kp RIGHT_BRACKET>;
-            key-positions = <5 6>;
+            key-positions = <5 6>;     // Y + U
+            layers = <L_BASE>;
+            require-prior-idle-ms = <100>;
         };
 
         LeftBrace {
             bindings = <&kp LEFT_BRACE>;
-            key-positions = <23 24>;
+            key-positions = <23 24>;   // V + B
+            layers = <L_BASE>;
+            require-prior-idle-ms = <100>;
         };
 
         RightBrace {
             bindings = <&kp RIGHT_BRACE>;
-            key-positions = <25 26>;
+            key-positions = <25 26>;   // N + M
+            layers = <L_BASE>;
+            require-prior-idle-ms = <100>;
         };
 
+        // BASE only. This was briefly scoped to <0 2> as well, because the UHK
+        // has an Escape on its Mod layer -- but the UHK puts it on the *Q* key,
+        // and NAV now carries `&kp ESC` on position 0 directly. Leaving the
+        // combo armed on NAV would be a second, worse Escape stacked on the
+        // real one, and it would misfire on Esc-then-Opt+Cmd+Left: Escape
+        // followed by the very next key over, while switching tabs.
+        //
+        // Still deliberately NOT on NUM: positions 0 and 1 are the digits 1
+        // and 2 there, so typing "12" would fire it.
         Escape {
             bindings = <&kp ESC>;
-            key-positions = <0 1>;
+            key-positions = <0 1>;     // Q + W
+            layers = <L_BASE>;
+            require-prior-idle-ms = <100>;
         };
 
+        // Raycast. On the UHK this is the key immediately right of the right
+        // space bar (LGUI+SPACE at right-half position 29); all six thumbs
+        // here are already spoken for, so it becomes a two-thumb chord --
+        // left click and space, one thumb each, mirroring how it sits beside
+        // the space bar on the UHK.
+        //
+        // No require-prior-idle-ms, deliberately, unlike the letter combos:
+        // the whole point is to reach for this straight after typing, and an
+        // idle guard would swallow exactly that. Both keys are thumb keys, so
+        // a simultaneous press inside the combo window is not something
+        // ordinary typing produces.
+        //
+        // timeout-ms is widened from ZMK's default 50 ms because of what a
+        // MISS costs here: position 31 is `&mkp LCLK`, so failing the combo
+        // does not do nothing, it left-clicks wherever the pointer happens to
+        // be, and then types a space. For a shortcut reached dozens of times a
+        // day, making it easier to hit is worth the slightly larger window in
+        // which a genuine click-then-space could be mistaken for it.
+        Raycast {
+            bindings = <&kp LG(SPACE)>;
+            key-positions = <31 34>;   // left click + space thumbs
+            layers = <L_BASE>;
+            timeout-ms = <80>;
+        };
+
+        // Hold for EXTRAS, tap to return to BASE. Both inner thumb keys.
+        //
+        // A second combo, BASE_or_SLOW, used to fire the same &td_bore from
+        // positions 32+10. Position 10 is the LCMD home-row mod, so that
+        // combo could hijack a modifier hold, and it was a duplicate of this
+        // one. Removed.
         BASE_or_EXTRAS {
             bindings = <&td_bore>;
             key-positions = <32 33>;
-        };
-
-        BASE_or_SLOW {
-            bindings = <&td_bore>;
-            key-positions = <32 10>;
+            layers = <L_BASE>;
         };
     };
 };

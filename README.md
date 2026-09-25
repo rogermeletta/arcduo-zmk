@@ -1,20 +1,270 @@
 # ArcDuo
 
-A wireless, split keyboard with integrated trackballs.
+A wireless, split, 36-key column-staggered keyboard with an integrated
+trackball in **each** half, driven by a dongle.
 
 ![ArcDuo](https://github.com/user-attachments/assets/2eb6655a-ef4d-4e0f-bca6-efd063d21898)
 
+## Hardware
 
-# Keymap
+| Part | Board | Notes |
+| --- | --- | --- |
+| Left half | nice!nano v2 | 5x3 matrix + 3 thumb keys, PMW3610 trackball (scroll) |
+| Right half | nice!nano v2 | 5x3 matrix + 3 thumb keys, PMW3610 trackball (cursor) |
+| Dongle | Seeed XIAO nRF52840 | Split central, ST7789V screen + APDS9960 light sensor |
+
+Both halves are BLE **peripherals**; the dongle is the split **central**. The
+dongle is therefore required — it is the part that runs the keymap, and the
+halves will not act as a keyboard without it.
+
+## Trackballs
+
+Both balls appear on the keymap diagram below as the two circles facing each
+other across the split, at the inner edge of each half. The halves are mirror
+images, balls included.
+
+| | Left ball | Right ball |
+| --- | --- | --- |
+| Function | Scroll | Cursor |
+| Sensor | PMW3610 @ 200 CPI | PMW3610 @ 1200 CPI |
+| Every layer | scrolls, scaled 1/16 | moves the pointer, scaled 2/3 → ~800 CPI |
+| On **Mouse** | unchanged | **snipe**: a further 1/4 → ~200 CPI for pixel work |
+
+Each ball does one job on every layer, and **Mouse** carries the only
+exception — snipe slows the pointer rather than repurposing it. That is what
+makes click-and-drag work: holding the left-click thumb presses the button and
+raises Nav, so the Nav keys are there mid-drag while the ball you are dragging
+with keeps pointing.
+
+It used to be busier. Nav **swapped** the two balls — left became the pointer,
+right became a scroll wheel — carried over from the UHK, whose left key cluster
+and right trackball are configured `navigationModeModLayer = Cursor` and
+`= Scroll`. That was parity for its own sake and it cost real function: it added
+no capability, since Base already gives scroll and pointer at the same time, one
+on each ball, and it made dragging impossible, because holding the click raises
+Nav and the ball turned into a scroll wheel mid-gesture. The swap is gone; git
+history has it. The one thing lost with it is that with your left hand off the
+board, the right hand alone can point but not scroll.
+
+Both scroll chains are **axis-locked**, via `&zip_scroll_snap` from
+[kot149/zmk-scroll-snap](https://github.com/kot149/zmk-scroll-snap). A ball
+rolled "down" always carries some sideways component, and the scroll mapper
+turns that into horizontal wheel — which drifts in wide views and, in Chrome on
+macOS, is history navigation, so a scroll could send you back a page. Snapping
+locks each gesture to whichever axis dominates.
+
+Scrolling is **not** high-resolution. `CONFIG_ZMK_POINTING_SMOOTH_SCROLLING` was
+enabled on the dongle and then reverted on the suspicion that it had broken
+click-and-drag — which it had not; that was `lclk_nav`, and it is fixed in the
+keymap. Smooth scrolling stays off only because nobody has asked for it and
+because turning it on is a **re-pair event**: it rewrites the mouse HID report
+descriptor and adds a characteristic to the BLE HID service, both of which macOS
+caches per bond. If you want it, enable it, reflash, then remove and re-pair the
+host to force fresh service discovery — and expect to retune the scroll
+divisors. The detail is in `boards/shields/arcduo/arcduo_dongle.conf`.
+
+MOUSE is a **toggle**, not a hold: hold Extras (right inner thumb) and tap the
+left-click thumb to lock it on, then tap that same inner thumb to leave. Both
+inner thumbs are Nav, which is what displaced it — and a toggle suits snipe
+mode better anyway, since it leaves every thumb free to click while you are
+lining up a pixel.
+
+There is **no auto-mouse layer**. A `zip_temp_layer` used to switch to MOUSE on
+any ball motion, but it fires on any input event at all — including the
+single-count jitter a sensitive sensor picks up from desk vibration — so the
+layer changed at random. It was removed rather than desensitising the sensor;
+jitter is now harmless sub-pixel cursor noise.
+
+Neither ball does anything by itself: the halves only publish raw sensor data
+over `zmk,input-split`, and every processor above runs on the **dongle**. That
+is why a change to a ball's behaviour means reflashing the dongle, and a change
+to the sensor itself means reflashing the halves.
+
+## Building
+
+Firmware is built by GitHub Actions on every push; download the artifact from
+the **Actions** tab. To build locally you need Docker and nothing else:
+
+```bash
+git clone https://github.com/rogermeletta/arcduo-zmk && cd arcduo-zmk
+mkdir -p /tmp/arcduo-ws && cp -R config /tmp/arcduo-ws/config
+docker run --rm -v /tmp/arcduo-ws:/ws -v "$PWD":/repo -w /ws zmkfirmware/zmk-build-arm:stable bash -c "git config --global --add safe.directory '*' && west init -l /ws/config && west update && west zephyr-export && west build -s zmk/app -d /ws/build -b 'nice_nano/nrf52840/zmk' -- -DZMK_CONFIG=/ws/config -DSHIELD=arcduo_left -DZMK_EXTRA_MODULES=/repo"
+```
+
+The resulting `.uf2` lands in `/tmp/arcduo-ws/build/zephyr/zmk.uf2`.
+
+### Board targets
+
+ZMK moved to Zephyr 4.1 hardware-model-v2 board targets in December 2025, so
+the old names no longer work:
+
+| Old | Current |
+| --- | --- |
+| `nice_nano_v2` | `nice_nano/nrf52840/zmk` |
+| `seeeduino_xiao_ble` | `xiao_ble/nrf52840/zmk` |
+
+### Pinned dependencies
+
+`config/west.yml` pins ZMK and both modules to **exact commits** rather than
+tracking `main`. Tracking `main` is what silently broke this repo for eight
+months when ZMK moved to Zephyr 4.1 and the PMW3610 driver renamed its
+devicetree compatible. Bump one revision at a time and rebuild.
+
+Note there is no tagged ZMK release with Zephyr 4.1 yet — v0.3.0 predates it
+and v0.4.0 is still pending — so ZMK is pinned to a `main` commit.
+
+## Flashing
+
+1. Double-tap the reset button on the board to mount it as a USB drive.
+2. Copy the matching `.uf2` onto it. It reboots automatically.
+
+**Keymap changes need the dongle only.** The dongle is the split central: it
+runs the keymap, the combos, the behaviors and both trackball input-listener
+chains. The halves only scan their matrix and publish raw sensor data. Editing
+`config/*.keymap` or `*.dtsi`, or a per-layer trackball override, produces
+byte-identical half firmware — verified by building both halves either side of
+such a change and comparing the `.uf2`.
+
+Flash the halves when something they actually compile changes: the shield
+overlays under `boards/shields/arcduo/`, `config/arcduo_{left,right}.conf`,
+`config/arcduo.conf` (shared by all three units), `config/arcduo_layers.h` (the
+shield's input listeners include it), or a `config/west.yml` bump that moves the
+PMW3610 driver or ZMK itself.
+
+**After any change to the layer *structure*** — inserting a layer, reordering
+them, changing `config/arcduo_layers.h` — reflash, then open ZMK Studio and use
+**Restore Stock Settings**, then reset the unit. Studio persists a layer-order
+table in flash and every index-to-id lookup goes through it, so state stored
+under the old structure misdirects lookups under the new one. Inserting a layer
+is the case that bites; appending one preserves existing ids. Restore Stock
+Settings does not touch Bluetooth bonds.
+
+If the halves and dongle will not pair, flash `firmware_reset_*.uf2` to each
+first to clear stored bonds, then reflash — pairing the **left** half before
+the right, since the dongle screen orders the battery widgets by pairing order.
+
+## Bluetooth
+
+The dongle plays both BLE roles at once: **central** to the two halves, and
+**peripheral** to the host. It advertises as **`ArcDuo`**, set once in
+`boards/shields/arcduo/Kconfig.defconfig` for all three parts — when that only
+covered the dongle, the halves built with an empty name and showed up nameless
+in logs.
+
+There are **five host profiles**, not four. ZMK derives them as
+`BT_MAX_PAIRED - ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS` = 7 − 2, which is why
+`BT_MAX_PAIRED` is bumped to 7. Four are bound: `BT0`–`BT3` sit on `Y U I O`
+of Extra's right hand, and `BT CLR` takes `P`, where `BT4` used to be. The fifth
+profile has no key, so a fifth paired host cannot be selected without a
+reflash. `USB/BLE` is on `H`.
+
+To pair a host, hold **Extra** and:
+
+1. Tap `BT0`–`BT3` (`Y U I O`) to select a profile. The dongle advertises
+   whenever the selected profile is not *connected*, so an unused profile is
+   immediately discoverable.
+2. If the profile is already bonded to something else, tap `BT CLR` (`P`,
+   right pinky top) first. That clears **only the active host profile** —
+   `zmk_ble_clear_bonds()` calls `clear_profile_bond(active_profile)` and does
+   not touch the split bonds, so the halves stay paired.
+3. Pair from the host's Bluetooth settings.
+4. Tap `USB/BLE` (`H`, right index home) to send over BLE. **This step is easy
+   to miss:** the dongle is plugged into USB, and ZMK prefers USB output when it
+   is connected, so the host can be paired and connected while every keystroke
+   still goes down the cable. The setting persists.
+
+If a host shows a stale name, that is the host caching it — macOS in particular
+keeps the name from first pairing and never refreshes. Remove the device and
+pair again.
+
+`firmware_reset_*.uf2` is the nuclear option: it clears *all* bonds including
+the split ones, so the halves have to be re-paired to the dongle afterwards.
+
+## Power
+
+Hold **Extra** + `N` (right index, bottom row) for two seconds to power the
+board down — dongle and both halves. The central notifies the peripherals, and
+ZMK powers a peripheral off *immediately* on press regardless of the hold time,
+deliberately, so the central cannot shut down before telling them. Waking is a
+tap of each unit's own reset button; there is no key for it, which is the point
+when the board is in a bag.
+
+This exists because idle sleep cannot do the job here. Both halves run
+`CONFIG_ZMK_SLEEP=y`, but their sensors carry `force-awake` and are wakeup
+sources — so a bag jostling a sleeping half wakes it into a full active window
+with the sensor pinned at 8 ms sampling. Soft off is a real power-down.
+
+The two-second hold is what makes the key safe next to Mute: a slipped finger
+produces a tap, and a tap does nothing. That is the protection `&bootloader`
+cannot have, which is why *that* one sits on a dead left thumb instead.
+
+## Layers
+
+| # | Name | Reached by | |
+| --- | --- | --- | --- |
+| 0 | Base | default | |
+| 1 | Num | hold left outer (Tab) or right outer (Bspc) thumb | the UHK's Fn layer |
+| 2 | Nav | hold left inner thumb, right Space thumb, or the left-click thumb | the UHK's Mod layer |
+| 3 | Symbols | hold `G` (type right) or `H` (type left) | mirrored — same symbol, mirrored finger |
+| 4 | Extra | hold right inner thumb | F13–F21 pad, radios, screen, transport |
+| 5 | Mouse | toggle: hold Extra, tap the left-click thumb | the UHK's Mouse layer |
+
+Both layers carried over from the UHK are held with the **left** thumb, matching
+how they are held there — which leaves the right hand free for the arrows on Nav
+and keeps tab and window management under the left fingers.
+
+Nav is on the right Space thumb as well, which is the one place this deliberately
+departs from the UHK. Holding it there puts the layer and the arrows on the same
+hand, so the right hand alone can navigate with the left off the board entirely.
+It has the Space thumb because Nav is reached constantly and Extra almost never.
+
+Extra's left hand is `F13`–`F21` — nine keycodes macOS defines and binds to
+nothing, which is what Raycast, Karabiner, BetterTouchTool and Hammerspoon
+want as triggers. They replaced five text macros. `&bootloader` and
+`&sys_reset` sit on Extra's two left thumbs; before that neither was bound
+anywhere, so the bootloader meant finding the physical reset button. Note it
+only reaches the dongle — the halves do not run the keymap. `&soft_off` is on
+`N`, and unlike those two it *does* reach the halves; see [Power](#power).
+
+Symbols is mirrored: the same symbol sits on the mirrored finger of both halves,
+so there is one set to learn and it is always typeable by whichever hand is not
+on a trackball. It carries only what has no home elsewhere — the six brackets
+are Base combos, `-` `+` `=` are on Num, `;` is on Base — which is what makes
+room for `\ | ' "`, none of which could be typed on this board at all before.
+
+The layer bodies are shaped after Roger's Ultimate Hacking Keyboard v1 "QWERTY
+for Mac" keymap, so that switching between the two boards costs as little as
+possible. [docs/UHK-PARITY.md](docs/UHK-PARITY.md) has the full mapping table,
+including what did not fit and why.
+
 ![keymap images](keymap-drawer/arcduo.svg)
 
+The keymap image is regenerated automatically by
+[keymap-drawer](https://github.com/caksoylar/keymap-drawer) whenever
+`config/arcduo.keymap` changes.
 
-# Credits & Inspiration
+The two round shapes are the trackballs. keymap-drawer only knows about keys,
+so they are faked in three places that have to stay in step: two extra
+positions in `config/arcduo.json`, two bindings per layer guarded by
+`#ifdef KEYMAP_DRAWER` in `config/arcduo.keymap` (a define that only the
+drawer's preprocessor ever sees — the firmware build drops the block), and the
+`&ball_*` legends plus the round styling in `keymap-drawer/config.yaml`. Their
+real behaviour lives in the input listeners in
+`boards/shields/arcduo/arcduo.dtsi`; if you change those, update the legends.
+
+## Credits & Inspiration
 
 This project is inspired by and builds upon the following:
 
--  [levels-zmk firmware](https://github.com/Good-Great-Grand-Wonderful/levels-zmk)
--  [charybdis-wireless-mini-zmk-firmware](https://github.com/280Zo/charybdis-wireless-mini-zmk-firmware)
--  [Skeletyl Low Trackball Mod 3D Model](https://makerworld.com/en/models/802589-skeletyl-low-trackball-mod-for-single-switch-pcbs)
+- [levels-zmk firmware](https://github.com/Good-Great-Grand-Wonderful/levels-zmk)
+- [charybdis-wireless-mini-zmk-firmware](https://github.com/280Zo/charybdis-wireless-mini-zmk-firmware)
+- [Skeletyl Low Trackball Mod 3D Model](https://makerworld.com/en/models/802589-skeletyl-low-trackball-mod-for-single-switch-pcbs)
+- [zmk-pmw3610-driver](https://github.com/badjeff/zmk-pmw3610-driver) by badjeff
+- [YADS — Yet Another Dongle Screen](https://github.com/janpfischer/zmk-dongle-screen) by janpfischer
 
-Special thanks to the authors and contributors of these projects and resources for their valuable work and inspiration.
+Special thanks to the authors and contributors of these projects and resources
+for their valuable work and inspiration.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

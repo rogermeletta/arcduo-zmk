@@ -1,14 +1,29 @@
-#include <behaviors.dtsi>
+// Mouse-key speed for the &mmv / &msc bindings on the MOUSE layer.
+//
+// These must be defined BEFORE <dt-bindings/zmk/pointing.h>, which guards
+// them with #ifndef and otherwise falls back to 600 / 10. They previously
+// sat in config/arcduo_left.conf and arcduo_right.conf, where `#` starts a
+// comment, so they never had any effect and the mouse keys have been running
+// at the stock speed all along.
+#define ZMK_POINTING_DEFAULT_MOVE_VAL 1500
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 20
+
+#include <behaviors.dtsi>                 // ZMK's built-in behaviors
+#include <behaviors/mouse_keys.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/pointing.h>
-#include <dt-bindings/zmk/mouse.h>
 #include <dt-bindings/zmk/outputs.h>
-#include <behaviors/mouse_keys.dtsi>
-#include <dt-bindings/zmk/ext_power.h>
+#include <dt-bindings/zmk/pointing.h>
+
+// Layer names. Must come before the three includes below: behaviors.dtsi and
+// combos.dtsi both name layers.
+#include "arcduo_layers.h"
+
+// Note: quoted, so this is config/behaviors.dtsi -- our own hold-taps and
+// tap-dances -- not the <behaviors.dtsi> above. Both are required.
+#include "behaviors.dtsi"
 #include "combos.dtsi"
 #include "macros.dtsi"
-#include "behaviors.dtsi"
 
 / {
 
@@ -21,104 +36,336 @@
 // ╰──────┴──────┴──────┼──────┼──────┼──────╮  ╭──────┼──────┼──────┴──────┴──────┴──────╯
 //                         30     31     32        33     34     35
 //                      ╰──────┴──────┴──────╯  ╰──────┴──────┴──────╯
-// #define BASE    0
-// #define NUM     1
-// #define NAV     2
-// #define SYM     3
-// #define EXTRAS  4
-// #define MOUSE   5
+// Layer indices are L_BASE, L_NUM, L_NAV, L_SYM, L_EXTRAS and L_MOUSE, defined
+// in config/arcduo_layers.h. They used to sit here, commented out, because a
+// bare `#define BASE 0` also rewrites the `BASE { ... }` node below into
+// `0 { ... }`; the L_ prefix is what makes them usable. The header is shared
+// with boards/shields/arcduo/arcduo.dtsi, which names layers too.
+//
+// The layer bodies are shaped after the user's UHK v1 "QWERTY for Mac" keymap
+// so that switching between the two boards costs as little as possible. See
+// docs/UHK-PARITY.md for the full mapping table and for what did not fit.
+//
+// The macOS chords carried over from the UHK are written as chords rather than
+// given names, because several of them drive a third-party window manager
+// rather than macOS itself and their meaning is the user's to know, not this
+// file's to guess.
+//
+// The two trackballs are input devices, not keys, so they have no bindings
+// here -- what they do per layer is decided by the input-listener chains in
+// boards/shields/arcduo/arcduo.dtsi. Each layer below still ends with two
+// extra bindings inside `#ifdef KEYMAP_DRAWER`, purely so keymap-drawer can
+// draw the balls; KEYMAP_DRAWER is defined by parse_config.zmk_preamble in
+// keymap-drawer/config.yaml and never by a firmware build, so the compiled
+// keymap is unaffected. Keep them in sync with the listeners.
+//
+// On EXTRAS, F22/F23/F24 drive the YADS dongle screen: F22 toggles it off and
+// on, F23 dims, F24 brightens. Those are the keycodes YADS listens for by
+// default (CONFIG_DONGLE_SCREEN_* in boards/shields/arcduo/arcduo_dongle.conf).
 
   keymap {
        compatible = "zmk,keymap";
         BASE {
-            display-name = "Base";     
+            display-name = "Base";
             bindings = <
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
      &kp Q            &kp W            &kp E            &kp R            &kp T                                                        &kp Y            &kp U            &kp I            &kp O            &kp P
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &hml LCMD A      &hml LALT S      &hml LCTRL D     &hml LSHIFT F    &lt 3 G                                                      &kp H            &hmr RSHIFT J    &hmr RCTRL K     &hmr RALT L      &hmr RCMD SEMI
+// `G` and `H` both hold SYM -- see that layer for why. Both are `&lt`, whose
+// tap-preferred flavor only resolves to a hold once the 200 ms term expires
+// with no other key pressed, so rolling through "go" or "th" still types the
+// letter. H is three times commoner than G in English, so this doubles the
+// exposure to the one failure mode &lt does have: pausing with the key down.
+     &hml LCMD A      &hml LALT S      &hml LCTRL D     &hml LSHIFT F    &lt L_SYM G                                                  &lt L_SYM H      &hmr RSHIFT J    &hmr RCTRL K     &hmr RALT L      &hmr RCMD SEMI
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
      &kp Z            &kp X            &kp C            &kp V            &kp B                                                        &kp N            &kp M            &kp COMMA        &kp PERIOD       &kp SLASH
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
-                                                        &td_tab          &mkp LCLK        &lt 4 RETURN             &lt 5 RETURN       &td_space        &td_bs                  
+// NAV is on the left INNER thumb and the right SPACE thumb. Holding it on the
+// left drives the arrows with the right hand; holding it on the right puts the
+// layer and the arrows on the same hand, so the right hand alone can navigate
+// while the left is off the board. NAV and EXTRAS swapped sides on the right:
+// NAV is reached constantly and EXTRAS almost never, so NAV gets the larger,
+// better-placed Space thumb and EXTRAS takes the inner key.
+//
+// That displaced MOUSE, which used to own position 33. All six thumbs are
+// spoken for -- NUM on both outer, NAV on left inner and right Space, left
+// click, EXTRAS -- so MOUSE became a toggle: hold EXTRAS (33) and tap the
+// left-click thumb (31) to lock it on, tap 33 again to leave. See the MOUSE
+// and EXTRAS layers below. A toggle rather than a hold is the better fit
+// for the one thing on that layer that a trackball cannot replace, snipe
+// mode, since it frees every thumb for clicking while sniping -- and it is
+// what the UHK does too, whose Mouse key is `holdAndDoubleTapToggle`.
+//
+// If the hold is missed, `&lt L_MOUSE B` on position 24 restores it for the
+// cost of making one more letter a hold-tap. One line, either way.
+//
+// Position 31 is `&lclk_nav`, a macro: press holds the left button AND raises
+// NAV, release drops both. Tap it and it is an ordinary click.
+//
+// It was a hold-tap, `&lclk_nav L_NAV LCLK`, and a hold-tap cannot do this --
+// its halves are alternatives. Hold gave `&mo L_NAV` and no button was ever
+// pressed, so click-and-drag, which is how text gets selected, did not exist.
+// Quick-tap did not rescue it either: click-then-press-again does hold the
+// button, but that gesture is a double-click-drag, and macOS selects by WORD
+// on one of those. It supported every drag except the one that mattered.
+//
+// The macro works because NAV no longer reassigns the balls; see the listener
+// comments in boards/shields/arcduo/arcduo.dtsi. While it did, holding the
+// button raised the layer that turned the cursor ball into a scroll wheel.
+                                                        &lt L_NUM TAB        &lclk_nav            &nav_lt L_NAV RETURN      &lt L_EXTRAS RETURN  &nav_lt L_NAV SPACE  &lt L_NUM BACKSPACE
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
+// The two trackballs. Drawer-only; see the header comment at the top of
+// this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
+#ifdef KEYMAP_DRAWER
+     &ball_scroll     &ball_cursor
+#endif
             >;
         };
 
         NUM {
-            display-name = "Num";     
+            display-name = "Num";
             bindings = <
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
      &hm F1 N1        &hm F2 N2        &hm F3 N3        &hm F4 N4        &hm F5 N5                                                    &hm F6 N6        &hm F7 N7        &hm F8 N8        &hm F9 N9        &hm F10 N0
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &trans           &trans           &trans           &trans           &none                                                        &td_hyphen       &hmr RSHIFT N4   &hmr RCTRL N5    &hmr RALT N6     &hmr RCMD  PLUS
+     &trans           &trans           &trans           &trans           &kp BACKSPACE                                                &td_hyphen       &hmr RSHIFT N4   &hmr RCTRL N5    &hmr RALT N6     &hmr RCMD  PLUS
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &none            &none            &none            &kp BACKSPACE    &kp SPACE                                                    &td_equals       &hm F1 N1        &hm F2 N2        &hm F3 N3        &hm F12 SLASH
+// 26-28 are plain `&kp`, not `&hm F1/F2/F3`. The F-keys they held were already
+// on positions 0-2 of this same layer, so the hold bought a second copy of
+// F1-F3 and cost the numpad a misfire: `hm` is a hold-tap, and two digits
+// rolled quickly resolve the first one as a hold. Typing "12" after a pause
+// therefore fired F1 -- Help, in a lot of applications -- and swallowed the
+// "1". F12 stays a hold on 29 because it has nowhere else to live.
+     &ae_macro        &oe_macro        &ue_macro        &kp LC(LA(LG(V)))&kp LG(LA(V))                                                &td_equals       &kp N1           &kp N2           &kp N3           &hm F12 SLASH
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
-                                                        &none            &none            &trans                   &trans             &kp N0           &kp DOT                          
+                                                        &none            &kp F11          &trans                   &kp SPACE          &kp N0           &kp DOT
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
+// The two trackballs. Drawer-only; see the header comment at the top of
+// this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
+#ifdef KEYMAP_DRAWER
+     &ball_scroll     &ball_cursor
+#endif
             >;
         };
 
         NAV {
-            display-name = "Nav";     
+            display-name = "Nav";
             bindings = <
+// Mapped from the UHK's Mod layer by BASE-LAYER LEGEND, not by physical
+// position: whatever the UHK's Mod layer puts on its Q key is what this
+// layer puts on Q, and so on. That is what actually transfers between two
+// boards with completely different key counts -- the finger already knows
+// "Mod plus C closes the tab", and it does not care that the UHK's C is in a
+// different place. 28 of these 30 positions come straight across that way;
+// the exceptions are Z and X, which the UHK leaves empty, and V and ; (see
+// below).
+//
+// Row 1 uses &hml rather than plain &kp. The UHK's Mod layer keeps LShift,
+// LCtrl, LCmd and LOption on their own dedicated keys in the bottom row, so
+// Shift+Arrow still selects text there. This board has no dedicated
+// modifiers -- they are the home row -- and the UHK also puts Caps, Cmd+Left,
+// Cmd+Tab and Cmd+Right on that same home row. &hml gives both: tap for the
+// UHK function, hold for the modifier. hold-trigger-key-positions on &hml is
+// the right hand only, which is exactly where the arrows are, and
+// hold-trigger-on-release lets several of them chord (Cmd+Shift+Left).
+//
+// Deliberate deviations from the letter rule:
+//   Z, X  The UHK leaves both empty on Mod. They take the two left-hand
+//         functions whose UHK keys have no counterpart here: Shift+Cmd+5
+//         (UHK Tab) and Cmd+` (UHK ISO key, cycle windows of the front app).
+//         Both stay on the left hand, which is where they are on the UHK.
+//   V     Shift+Cmd+V (clipboard history), traded with NUM's V, which now
+//         carries the UHK's Ctrl+Opt+Cmd+V. Swapped on request.
+//   ;     Empty. The UHK has Insert here, which does nothing on macOS. It
+//         held Ctrl+Opt+Cmd+T (AirPods noise cancelling via AirBuddy) until
+//         that moved to EXTRAS ; on request.
+//
+// Dropped with no replacement, all from UHK keys this board does not have:
+// PrtScn ([), Scroll Lock (]), Pause/Break (\) -- none of them do anything on
+// macOS. Ctrl+Enter (AirPods force connect) needs no slot: it is not a UHK
+// binding either, and on BASE it is already hold-D for Ctrl plus the right
+// inner thumb for Return, which &hml's trigger positions allow.
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
-     &kp EXCL         &kp AT           &kp HASH         &kp DOLLAR       &kp PERCENT                                                  &kp CARET        &kp AMPERSAND    &kp UP           &none            &mt RSHIFT INSERT
+     &kp ESC          &kp LA(LG(LEFT))&kp LG(T)        &kp LA(LG(RIGHT))&kp LC(LS(LG(F)))                                            &kp PG_UP        &kp HOME         &kp UP           &kp END          &kp DEL
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &trans           &trans           &trans           &trans           &none                                                        &none            &kp LEFT_ARROW   &kp DOWN         &kp RIGHT_ARROW  &kp RETURN
+     &hml LCMD CAPS   &hml LALT LG(LEFT) &hml_ct LCTRL LGUI &hml LSHIFT LG(RIGHT) &kp LA(LG(N6))                                     &kp PG_DN        &kp LEFT_ARROW   &kp DOWN         &kp RIGHT_ARROW  &none
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &none            &none            &none            &none            &none                                                        &none            &kp HOME         &kp PG_DN        &kp PG_UP        &kp END
+     &kp LS(LG(N5))   &kp LG(GRAVE)    &kp LG(W)        &kp LS(LG(V))    &kp LC(LA(LG(B)))                                            &kp LA(LG(N1))   &kp LA(LG(N2))   &kp LA(LG(N3))   &kp LC(LA(LG(N4)))&kp LC(LA(LG(N5)))
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
-                                                        &none            &none            &trans                   &trans             &trans           &none                          
+                                                        &trans           &trans           &trans                   &kp LS(LG(SPACE))  &trans           &kp LA(BSPC)
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
+// The two trackballs. Drawer-only; see the header comment at the top of
+// this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
+// Both balls swap roles on this layer, as they do on the UHK's Mod layer.
+#ifdef KEYMAP_DRAWER
+     &ball_cursor     &ball_scroll
+#endif
             >;
         };
 
         SYM {
-            display-name = "Symbols";     
+            display-name = "Symbols";
             bindings = <
+// Mirrored, and reachable from either hand. `G` (14) holds the layer for the
+// right hand, `H` (15) holds it for the left, and the same symbol sits on the
+// mirrored finger on both halves -- so there is one set to learn, and it is
+// always typeable by whichever hand is free. On a board with two trackballs
+// that is the common case.
+//
+// The left half used to be entirely &none, because the layer was held by the
+// left index and only the right hand could reach anything.
+//
+// What is NOT here, and why. Brackets are all six BASE combos already
+// (F+G, H+J, R+T, Y+U, V+B, N+M), `;` is on BASE, `-` `+` `=` are on NUM, and
+// `%` is Shift+5. Those took a third of the old layer and had homes elsewhere.
+// The 14 that remain are the ones with nowhere else to go, and four of them --
+// \ | ' " -- could not be typed on this board at ALL before now: `\` existed
+// only inside the shrug macro, and `|` and `"` are shifted forms of `\` and
+// `'`, so they died with them.
+//
+// `^` is the one deliberate omission from that set: 15 slots per hand minus
+// the layer key leaves 14, and it lost to the backtick. It is Shift+6.
+//
+// &td_grave rather than &kp GRAVE: tap for `, double-tap for `` plus Left,
+// which lands the cursor inside an inline code span.
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
-     &none            &none            &none            &none            &none                                                        &kp ASTRK        &kp AMPS         &kp LEFT_BRACE   &kp DLLR         &td_grave
+     &kp GT           &kp TILDE        &kp BSLH         &td_grave        &kp LT                                                       &kp LT           &td_grave        &kp BSLH         &kp TILDE        &kp GT
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &none            &none            &none            &trans           &none                                                        &td_hyphen       &kp SEMI         &kp LPAR         &kp LBKT         &kp PLUS
+     &kp DLLR         &kp DQT          &kp SQT          &kp PIPE         &trans                                                       &trans           &kp PIPE         &kp SQT          &kp DQT          &kp DLLR
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &none            &none            &none            &none            &none                                                        &kp AT_SIGN      &kp UNDERSCORE   &kp LT           &kp HASH         &kp PRCNT
+     &kp AT_SIGN      &kp HASH         &kp UNDERSCORE   &kp ASTRK        &kp AMPS                                                     &kp AMPS         &kp ASTRK        &kp UNDERSCORE   &kp HASH         &kp AT_SIGN
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
-                                                        &trans           &trans           &trans                   &trans             &trans           &none                          
+                                                        &trans           &trans           &trans                   &trans             &trans           &trans
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
+// The two trackballs. Drawer-only; see the header comment at the top of
+// this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
+#ifdef KEYMAP_DRAWER
+     &ball_scroll     &ball_cursor
+#endif
             >;
         };
 
 
         EXTRAS {
-            display-name = "Extra";     
+            display-name = "Extra";
             bindings = <
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
-     &shrug           &lgtm            &gcm             &none            &kp C_BRI_INC                                                &bt BT_SEL(0)    &bt BT_SEL(1)    &bt BT_SEL(2)    &bt BT_SEL(3)    &out OUT_TOG
+// The window-manager chords used to be duplicated here -- Opt+Cmd+1/2/3 and
+// Ctrl+Opt+Cmd+4/5 on 20-24, Ctrl+Opt+Cmd+V/B on the thumbs, Opt+Cmd+6 on 3.
+// They were only ever here because the earlier by-position mapping had them
+// colliding on NAV. Under the by-legend mapping they sit on NAV exactly where
+// the UHK puts them (N M , . / and V B and G), so these were eight bindings
+// kept in two places. Removed rather than left to drift.
+//
+// What is left is the board's own layer, plus a programmable pad.
+//
+// LEFT HAND, columns 0-2: F13-F21. Nine keycodes macOS defines and binds to
+// nothing, which is exactly what Raycast, Karabiner, BetterTouchTool and
+// Hammerspoon want as triggers -- nine more Stream Deck buttons without
+// another box on the desk. They replace five text macros (shrug, gcm, lgtm,
+// sudo, new_dir) that were removed on request.
+//
+// LEFT HAND, column 3: the YADS dongle screen. F22 toggles it, F23 dims, F24
+// brightens; those are the keycodes YADS listens for by default, set by
+// CONFIG_DONGLE_SCREEN_* in boards/shields/arcduo/arcduo_dongle.conf.
+// Column 4 is the *display*: host brightness up/down, and Ctrl+Shift+Eject to
+// sleep the displays -- a UHK *Fn*-layer binding on a key this board does not
+// have (`\`). This was Opt+Cmd+Eject, which is Apple's chord for sleeping the
+// whole *Mac*; Ctrl+Shift+Eject is the one that sleeps only the displays, which
+// is what the rest of this column is about.
+//
+// RIGHT HAND: radios on the top row, transport and volume below.
+//
+// BT profiles 0-3 are on the top row, and BT_CLR closes it at position 9.
+// ZMK derives the profile count as BT_MAX_PAIRED - ZMK_SPLIT_BLE_CENTRAL_
+// PERIPHERALS = 7 - 2 = 5, so a fifth profile exists but has no key: BT_CLR
+// took BT_SEL(4)'s slot on request, to free position 19 for Ctrl+Opt+Cmd+T.
+// OUT_TOG sits on position 15; it is pressed about once per pairing, so the
+// less prominent key is the right home for it.
+//
+// BT_CLR is in the finger block, not on a thumb. It used to be on thumb 35.
+// This layer is HELD with a right thumb, so no other right thumb key can be
+// pressed while it is active: one thumb cannot hold 33 and tap 35. BT_CLR is
+// the key you need to re-pair a host, so having it there meant the pairing
+// flow did not work. Same trap applies to anything else put on 34/35 of this
+// layer.
+//
+// Position 19 is Ctrl+Opt+Cmd+T -- AirPods noise cancelling via AirBuddy,
+// which the UHK has on RShift. It lived on NAV ; until it moved here on
+// request.
+//
+// &soft_off at position 25 powers the board down for travel, halves included --
+// the central notifies the peripherals, and ZMK powers a peripheral off
+// immediately on press regardless of hold-time-ms, deliberately, so the central
+// cannot shut down before telling them. Waking is a reset-button tap on each
+// unit; there is no key for it, which is the point when the board is in a bag.
+//
+// It sits in the finger block, which the &bootloader note below argues against
+// -- but the two are not alike. &bootloader fires the instant it is pressed, so
+// a finger that slips off Prev onto it drops the dongle off USB. &soft_off is
+// overridden to hold-time-ms = 2000 in config/behaviors.dtsi, so a slip is a
+// tap and a tap does nothing.
+// ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
+     &kp F13          &kp F14          &kp F15          &kp F22          &kp C_BRI_INC                                                &bt BT_SEL(0)    &bt BT_SEL(1)    &bt BT_SEL(2)    &bt BT_SEL(3)    &bt BT_CLR
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &sudo            &none            &none            &none            &kp C_BRI_DEC                                                &none            &kp C_PREV       &kp C_PP         &kp C_STOP       &kp C_NEXT
+     &kp F16          &kp F17          &kp F18          &kp F23          &kp C_BRI_DEC                                                &out OUT_TOG     &kp C_PREV       &kp C_PP         &kp C_NEXT       &kp LC(LA(LG(T)))
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &none            &none            &none            &none            &none                                                        &new_dir         &kp K_MUTE       &kp C_VOL_DN     &kp C_VOL_UP     &studio_unlock
+     &kp F19          &kp F20          &kp F21          &kp F24          &kp LC(LS(C_EJECT))                                          &soft_off        &kp K_MUTE       &kp C_VOL_DN     &kp C_VOL_UP     &studio_unlock
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
-                                                        &none            &none            &none                    &none              &none            &bt BT_CLR                         
-                                                   // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯           
+// Position 31 is `&tog L_MOUSE` -- the MOUSE layer's only way in, now that its
+// old thumb key is NAV. The left-click thumb is the mnemonic: hold this layer
+// with the right inner thumb, tap the click key with the left, and MOUSE locks
+// on.
+//
+// `&studio_unlock` at position 29 only does anything on the arcduo_dongle_studio
+// artifact. The plain arcduo_dongle build is compiled without CONFIG_ZMK_STUDIO,
+// so that key is inert there -- expected, not a fault.
+//
+// &bootloader and &sys_reset were bound NOWHERE in this keymap before now, so
+// getting into the bootloader meant finding the physical reset button. They
+// go on the two dead left thumbs rather than in the finger block, which was
+// where they sat when this layer was pitched: `&bootloader` next to Prev
+// means one slipped index finger drops the dongle off USB and stops the
+// keyboard until you reset it. Nothing else lives on 30 or 32, so there is
+// nothing to slip *from*, and reaching them means a deliberate second thumb
+// while the first still holds the layer.
+//
+// Note this only ever reaches the dongle -- the halves do not run the keymap,
+// so their bootloader is still the button.
+                                                        &bootloader      &tog L_MOUSE     &sys_reset               &trans             &trans           &none
+                                                   // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
+// The two trackballs. Drawer-only; see the header comment at the top of
+// this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
+#ifdef KEYMAP_DRAWER
+     &ball_scroll     &ball_cursor
+#endif
             >;
         };
 
         MOUSE {
-            display-name = "Mouse";     
+            display-name = "Mouse";
             bindings = <
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
      &msc SCRL_LEFT   &msc SCRL_UP     &mmv MOVE_UP     &msc SCRL_DOWN   &msc SCRL_RIGHT                                              &none             &none            &none            &none            &none
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &mkp MB4         &mmv MOVE_LEFT   &mmv MOVE_DOWN   &mmv MOVE_RIGHT  &mkp MB5                                                     &none             &kp RSHIFT       &kp RCTRL        &kp LALT         &kp LCMD
+     &mkp MB4         &mmv MOVE_LEFT   &mmv MOVE_DOWN   &mmv MOVE_RIGHT  &mkp MB5                                                     &none             &kp RSHIFT       &kp RCTRL        &kp RALT         &kp RCMD
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
      &kp C_AC_UNDO    &kp C_AC_CUT     &kp C_AC_COPY    &kp C_AC_PASTE   &mkp MCLK                                                    &none             &none            &none            &none            &none
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
-                                                        &trans           &trans           &trans                   &kp RETURN         &trans            &none                          
-                                                   // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯           
+// Position 33 leaves the layer. This is the same thumb that used to *hold*
+// MOUSE, so the finger already goes there; it just means "out" now instead of
+// "in", and it is also the thumb that got you here (hold 33, tap 31).
+// `&to L_BASE` rather than `&tog L_MOUSE` so it cannot leave a stray layer
+// active.
+                                                        &trans           &trans           &trans                   &to L_BASE         &trans            &none
+                                                   // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
+// The two trackballs. Drawer-only; see the header comment at the top of
+// this file and the input listeners in boards/shields/arcduo/arcduo.dtsi.
+#ifdef KEYMAP_DRAWER
+     &ball_scroll     &ball_snipe
+#endif
             >;
         };
+
   };
 };

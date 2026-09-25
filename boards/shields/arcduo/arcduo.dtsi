@@ -3,6 +3,16 @@
 #include <physical_layouts.dtsi>
 #include <input/processors.dtsi>
 
+// Axis-locked scrolling. kot149/zmk-scroll-snap, pinned in config/west.yml.
+#include <scroll-snap.dtsi>
+
+// Layer names for the per-layer listener children below. The path is relative
+// on purpose: this file is a shield, and the shield directory is not
+// necessarily on the devicetree include path, whereas "../../../config/..."
+// resolves the same way in CI, in the Docker recipe in README.md, and when this
+// repo is consumed as a ZMK module.
+#include "../../../config/arcduo_layers.h"
+
 / {
   chosen {
     zmk,kscan = &kscan0;
@@ -67,6 +77,11 @@ RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,10) RC(2,9) RC(2,8) RC(2,7) RC(2,6
 
   kscan0: kscan {
     diode-direction = "row2col";
+
+    // Required for CONFIG_ZMK_SLEEP=y to be usable: without this the matrix
+    // GPIOs are not configured as wakeup sources, so a half that has entered
+    // deep sleep cannot be woken by pressing a key.
+    wakeup-source;
   };
 };
 
@@ -86,28 +101,106 @@ RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,10) RC(2,9) RC(2,8) RC(2,7) RC(2,6
     };
   };
 
+  // No auto-mouse layer.
+  //
+  // A zip_temp_layer instance used to sit at the end of the cursor ball's
+  // processor chain, switching to the MOUSE layer on any motion. It was
+  // removed because zip_temp_layer reacts to *any* input event, including
+  // the single-count jitter a sensitive optical sensor produces from desk
+  // vibration -- so the layer changed under you at random.
+  //
+  // Guarding it with require-prior-idle-ms only covered vibration that
+  // happened just after a keystroke, not while the board sat idle, and the
+  // alternative (desensitising the sensor) cost pointer responsiveness.
+  // Dropping the auto-layer keeps the sensor fast: jitter now shows up as
+  // harmless sub-pixel cursor noise instead of a layer change.
+  //
+  // The MOUSE layer is unchanged. It is now a toggle rather than a hold --
+  // hold EXTRAS on the right inner thumb (33) and tap the left-click thumb
+  // (31) to lock it on, tap 33 to leave -- but nothing in this file depends on
+  // how it is reached, only on whether it is active.
+
   trackball_listener: trackball_listener {
     compatible = "zmk,input-listener";
     status = "disabled";
     device = <&trackball_split>;
-    input-processors = <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_XY_SWAP)>, <&zip_xy_scaler 2 3>;
+    input-processors =
+        <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_XY_SWAP)>,
+        <&zip_xy_scaler 2 3>;
 
-    scroll {
-      layers = <6>;
-      input-processors = <&zip_xy_scaler 1 16>;
+    // Snipe mode: while the MOUSE layer is on (hold 33, tap 31) the cursor
+    // ball slows to a quarter speed for pixel work. The mouse buttons on that
+    // layer sit under the left hand, so you can snipe and click at the same
+    // time -- and because MOUSE is a toggle rather than a hold, no thumb is
+    // tied up holding it.
+    //
+    // `process-next` is required, not cosmetic: without it the base
+    // processors above are skipped entirely (input_listener.c returns early),
+    // which would drop zip_xy_transform and leave the axes inverted/swapped
+    // while sniping. With it, the override runs first and the base chain
+    // still runs, so the ratios multiply:
+    //     1200 CPI * 1/4 (here) * 2/3 (base) = 200 CPI effective
+    //
+    // This was previously dead code gated on layer 6, and used 1/16 -- which
+    // would have compounded to ~50 CPI, far too slow to be usable.
+    // Both scalers track remainders, so slow movement accumulates rather
+    // than being rounded away.
+    precision {
+      layers = <L_MOUSE>;
+      input-processors = <&zip_xy_scaler 1 4>;
       process-next;
     };
+
+    // There is deliberately no NAV override on this ball any more.
+    //
+    // A `scroll` child used to sit here, turning the cursor ball into a scroll
+    // wheel whenever NAV was held, mirroring the UHK's TrackballRight
+    // (navigationModeModLayer = "Scroll"). Its twin on the other listener made
+    // the left ball the pointer, so the two swapped roles on NAV exactly as the
+    // UHK does on its Mod layer.
+    //
+    // Removed, because it was parity for its own sake and it cost real
+    // function. It added no capability: BASE already gives scroll and pointer
+    // at the same time, one on each ball, so the swap only exchanged which hand
+    // did which. What it did do was make click-and-drag impossible -- holding
+    // the left-click thumb raises NAV, so the ball you were dragging with
+    // turned into a scroll wheel mid-gesture.
+    //
+    // Keeping both was possible: a flag layer raised alongside NAV, given
+    // priority over the swap by declaration order. It worked and was dropped as
+    // not worth a whole layer plus two listener children to preserve a
+    // behaviour nobody used. Git history has it if the swap is ever wanted
+    // back; the honest cost of not having it is that with the left hand off the
+    // board the right hand alone can point but not scroll.
   };
 
   trackball_listener2: trackball_listener2 {
     compatible = "zmk,input-listener";
     status = "disabled";
     device = <&trackball_split2>;
-    input-processors = <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP)>, <&zip_xy_to_scroll_mapper>, <&zip_scroll_scaler 1 16>;
+    // &zip_scroll_snap sits between the mapper and the scaler, which is the
+    // order its README requires. Without it a ball rolled "down" also emits the
+    // X component of the roll as horizontal wheel, and there is always some: on
+    // macOS that shows up as sideways drift in wide views, and in Chrome a
+    // horizontal wheel is history navigation, so a scroll occasionally goes back
+    // a page. Snapping locks each gesture to its dominant axis.
+    //
+    // Tunables if it feels wrong -- x-threshold, y-threshold, lock-duration-ms,
+    // idle-reset-timeout-ms -- are properties on the &zip_scroll_snap node and
+    // are left at their defaults here.
+    input-processors =
+        <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP)>,
+        <&zip_xy_to_scroll_mapper>,
+        <&zip_scroll_snap>,
+        <&zip_scroll_scaler 1 16>;
 
-    scroll {
-      layers = <1>;
-      input-processors = <&zip_xy_transform (INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_XY_SWAP)>, <&zip_xy_scaler 1 16>, <&zip_xy_to_scroll_mapper>;
-    };
+    // No NAV override on this ball either, for the same reason as the other
+    // listener: a `cursor` child used to make the left ball the pointer while
+    // NAV was held, the other half of the UHK's Mod-layer ball swap. It went
+    // with its twin.
+    //
+    // So both balls now keep one job on every layer -- this one scrolls, the
+    // right one points -- and the only per-layer override left is `precision`
+    // on MOUSE, which slows the pointer for sniping rather than repurposing it.
   };
 };

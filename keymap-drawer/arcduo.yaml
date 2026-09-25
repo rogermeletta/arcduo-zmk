@@ -16,7 +16,7 @@ layers:
   - {t: D, h: LCTRL}
   - {t: F, h: LSHIFT}
   - {t: G, h: Symbols}
-  - H
+  - {t: H, h: Symbols}
   - {t: J, h: RSHIFT}
   - {t: K, h: RCTRL}
   - {t: L, h: RALT}
@@ -31,12 +31,14 @@ layers:
   - ','
   - .
   - /
-  - '&td_tab'
-  - L CLK
+  - {t: TAB, h: Num}
+  - {t: L Click, h: Nav}
+  - {t: RETURN, h: Nav}
   - {t: RETURN, h: Extra}
-  - {t: RETURN, h: Mouse}
-  - '&td_space'
-  - '&td_bs'
+  - {t: SPACE, h: Nav}
+  - {t: BACK SPACE, h: Num}
+  - {t: Scroll, type: ball}
+  - {t: Cursor, type: ball}
   Num:
   - {t: '1', h: F1}
   - {t: '2', h: F2}
@@ -52,165 +54,173 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - ''
-  - '&td_hyphen'
+  - BACK SPACE
+  - '-'
   - {t: '4', h: RSHIFT}
   - {t: '5', h: RCTRL}
   - {t: '6', h: RALT}
   - {t: +, h: RCMD}
-  - ''
-  - ''
-  - ''
-  - BACK SPACE
-  - SPACE
+  - ä
+  - ö
+  - ü
+  - Ctl+Opt+Cmd+V
+  - Cmd+Opt+V
   - '='
-  - {t: '1', h: F1}
-  - {t: '2', h: F2}
-  - {t: '3', h: F3}
-  - {t: /, h: DEV TOOLS}
-  - ''
-  - ''
+  - '1'
+  - '2'
+  - '3'
+  - {t: /, h: F12}
+  - {type: held}
+  - F11
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - SPACE
   - '0'
-  - .
+  - {t: ., type: held alternate}
+  - {t: Scroll, type: ball}
+  - {t: Cursor, type: ball}
   Nav:
-  - '!'
-  - '@'
-  - '#'
-  - $
-  - '%'
-  - ^
-  - '&'
+  - ESC
+  - Opt+Cmd+LEFT
+  - Cmd+T
+  - Opt+Cmd+RIGHT
+  - Ctl+Sft+Cmd+F
+  - PG UP
+  - HOME
   - UP
-  - ''
-  - {t: INSERT, h: RSHIFT}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - ''
-  - ''
+  - END
+  - DEL
+  - {t: CAPS, h: LCMD}
+  - {t: Cmd+LEFT, h: LALT}
+  - {t: Cmd+Tab, h: LCTRL}
+  - {t: Cmd+RIGHT, h: LSHIFT}
+  - Opt+Cmd+6
+  - PG DN
   - LEFT
   - DOWN
   - RIGHT
-  - RETURN
   - ''
-  - ''
-  - ''
-  - ''
-  - ''
-  - ''
-  - HOME
-  - PG DN
-  - PG UP
-  - END
-  - ''
-  - ''
+  - Sft+Cmd+5
+  - Cmd+`
+  - Cmd+W
+  - Sft+Cmd+V
+  - Ctl+Opt+Cmd+B
+  - Opt+Cmd+1
+  - Opt+Cmd+2
+  - Opt+Cmd+3
+  - Ctl+Opt+Cmd+4
+  - Ctl+Opt+Cmd+5
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - ''
+  - Sft+Cmd+SPACE
+  - {t: ▽, type: trans}
+  - Opt+BSPC
+  - {t: Cursor, type: ball}
+  - {t: Scroll, type: ball}
   Symbols:
-  - ''
-  - ''
-  - ''
-  - ''
-  - ''
+  - '>'
+  - '~'
+  - \
+  - '`'
+  - <
+  - <
+  - '`'
+  - \
+  - '~'
+  - '>'
+  - $
+  - '"'
+  - ''''
+  - '|'
+  - {type: held}
+  - {type: held alternate}
+  - '|'
+  - ''''
+  - '"'
+  - $
+  - '@'
+  - '#'
+  - _
   - '*'
   - '&'
-  - '{'
-  - $
-  - '&td_grave'
-  - ''
-  - ''
-  - ''
-  - {t: ▽, type: trans}
-  - {type: held}
-  - '&td_hyphen'
-  - ;
-  - (
-  - '['
-  - +
-  - ''
-  - ''
-  - ''
-  - ''
-  - ''
-  - '@'
+  - '&'
+  - '*'
   - _
-  - <
   - '#'
-  - '%'
+  - '@'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - ''
+  - {t: ▽, type: trans}
+  - {t: Scroll, type: ball}
+  - {t: Cursor, type: ball}
   Extra:
-  - SHRUG
-  - LGTM
-  - GIT COMMIT
-  - ''
+  - F13
+  - F14
+  - F15
+  - F22
   - BRI INC
   - BT(0)
   - BT(1)
   - BT(2)
   - BT(3)
-  - OUT TOG
-  - '&sudo'
-  - ''
-  - ''
-  - ''
+  - BT CLR
+  - F16
+  - F17
+  - F18
+  - F23
   - BRI DEC
-  - ''
+  - OUT TOG
   - PREV
   - PP
-  - STOP
   - NEXT
-  - ''
-  - ''
-  - ''
-  - ''
-  - ''
-  - NEW DIR
+  - Ctl+Opt+Cmd+T
+  - F19
+  - F20
+  - F21
+  - F24
+  - Ctl+Sft+EJECT
+  - Soft Off
   - MUTE
   - VOL DN
   - VOL UP
   - ZMK Studio
-  - ''
-  - ''
+  - Bootloader
+  - {t: Mouse, h: toggle}
+  - Reset
   - {type: held}
+  - {t: ▽, type: trans}
   - ''
-  - ''
-  - BT CLR
+  - {t: Scroll, type: ball}
+  - {t: Cursor, type: ball}
   Mouse:
-  - '&msc SCRL_LEFT'
-  - '&msc SCRL_UP'
-  - MOVE UP
-  - '&msc SCRL_DOWN'
-  - '&msc SCRL_RIGHT'
+  - Wheel ←
+  - Wheel ↑
+  - Move ↑
+  - Wheel ↓
+  - Wheel →
   - ''
   - ''
   - ''
   - ''
   - ''
-  - BACK
-  - MOVE L
-  - MOVE D
-  - MOVE R
-  - FWD
+  - Back
+  - Move ←
+  - Move ↓
+  - Move →
+  - Forward
   - ''
   - RSHIFT
   - RCTRL
-  - LALT
-  - LCMD
+  - RALT
+  - RCMD
   - UNDO
   - CUT
   - COPY
   - PASTE
-  - Mid CLK
+  - M Click
   - ''
   - ''
   - ''
@@ -219,31 +229,45 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: RETURN, type: held}
+  - {t: Base, h: toggle}
   - {t: ▽, type: trans}
   - ''
+  - {t: Scroll, type: ball}
+  - {t: Snipe ¼×, type: ball}
 combos:
 - p: [13, 16]
-  k: CAPS WORD
-- p: [23, 31]
-  k: Mid CLK
+  k: Caps Word
+  l: [Base]
+- p: [12, 31]
+  k: M Click
+  l: [Base, Mouse]
 - p: [13, 31]
-  k: R CLK
+  k: R Click
+  l: [Base, Mouse]
 - p: [13, 14]
   k: (
+  l: [Base]
 - p: [15, 16]
   k: )
+  l: [Base]
 - p: [3, 4]
   k: '['
+  l: [Base]
 - p: [5, 6]
   k: ']'
+  l: [Base]
 - p: [23, 24]
   k: '{'
+  l: [Base]
 - p: [25, 26]
   k: '}'
+  l: [Base]
 - p: [0, 1]
   k: ESC
+  l: [Base]
+- p: [31, 34]
+  k: Cmd+SPACE
+  l: [Base]
 - p: [32, 33]
-  k: L_BASE L_EXTRA
-- p: [32, 10]
-  k: L_BASE L_EXTRA
+  k: {t: Base, h: Extra}
+  l: [Base]

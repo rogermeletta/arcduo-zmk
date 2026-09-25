@@ -22,12 +22,11 @@
 		;
 };
 
-&spi0 {
-  status = "okay";
-};
-
+// The left half publishes its sensor on split input channel 1, the right
+// half on channel 0. The dongle listens to both. (&spi0 is enabled in
+// boards/nice_nano_nrf52840_zmk.overlay, so it is not repeated here.)
 &trackball_split2 {
-	device = <&trackball2>;
+	device = <&trackball>;
 };
 
 &trackball_split {

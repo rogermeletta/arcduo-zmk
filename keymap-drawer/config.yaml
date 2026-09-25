@@ -28,17 +28,34 @@ draw_config:
     rel_h: 12.0
     rx: 4.0
     ry: 4.0
-  #   svg_extra_style: "
-  # @media (prefers-color-scheme: dark) {
-  # svg.keymap { fill: #dca448; }
-  # rect.key { fill: #1e1e1e; }
-  # rect.key, rect.combo { stroke: #122532; }
-  # rect.combo, rect.combo-separate { fill: #2e4857; }
-  # rect.held, rect.combo.held { fill: #5b3131; }
-  # text.label, text.footer { stroke: #331d36;
-  #                           stroke-width: 0; }
-  # text.trans { fill: #7e8184; }
-  # path.combo { stroke: #7f7f7f; }"
+  # Styling for the two integrated trackballs, which come into the diagram as
+  # keys carrying `type: ball` (see raw_binding_map below). Drawing them round
+  # is the whole point: they are input devices, not keys, and a rounded square
+  # in the split gap would just read as another key.
+  #
+  # SVG clamps rx/ry to half the width, so 999px simply means "fully round".
+  # draw_key_sides is on, which gives every key an outer and a slightly
+  # smaller inner rect -- once both are circles that reads as a ball sitting
+  # in its socket, and rect.side's brightness(90%) shades the socket for free.
+  # The separate combo diagrams redraw the whole board from scratch, out of
+  # plain type-less keys, so `.ball` does not exist there -- and they prepend
+  # the combo's own legend box as position 0, which shifts every board key up
+  # by one. That is the only reason the balls have to be named twice, and by
+  # index: keypos-36/37 in the layer diagrams, keypos-37/38 in the combo ones.
+  # If the layout ever gains or loses a key, these numbers move with it.
+  svg_extra_style: |
+    rect.key.ball,
+    g[class^="layer-combopos"] g.keypos-37 rect.key,
+    g[class^="layer-combopos"] g.keypos-38 rect.key {
+        rx: 999px;
+        ry: 999px;
+        fill: #dbe6f2;
+    }
+    @media (prefers-color-scheme: dark) {
+    rect.key.ball,
+    g[class^="layer-combopos"] g.keypos-37 rect.key,
+    g[class^="layer-combopos"] g.keypos-38 rect.key { fill: #3d5674; }
+    }
   footer_text: ""
   shrink_wide_legends: 7
   style_layer_activators: true
@@ -49,24 +66,85 @@ draw_config:
 parse_config:
   preprocess: true
   skip_binding_parsing: false
-  raw_binding_map: {}
+  # Legends for bindings keymap-drawer cannot name on its own.
+  #
+  # This used to live as a KEYMAP_raw_binding_map env var inside the vendored
+  # copy of the draw workflow, where most of it was stale: it mapped `&msc
+  # MOVE_UP` (this keymap uses `&msc SCRL_*`), and behaviours that no longer
+  # exist (&td_cursor, &td_layers, &td_clk_scrl, &h_split, &v_split, tmux
+  # macros), while missing the tap-dances actually in use -- which is why
+  # `&td_tab` renders literally in keymap-drawer/arcduo.yaml today.
+  raw_binding_map:
+    "&td_grave": "`"
+    "&td_hyphen": "-"
+    "&td_equals": "="
+    "&td_bore": {t: Base, h: Extra}
+    "&caps_word": Caps Word
+    # `nav_hold` is the hold half of &nav_lt: a macro, so the drawer
+    # cannot see it is a layer. `cmd_tab` is the app switcher on NAV's D.
+    "&nav_hold 2": Nav
+    "&cmd_tab LGUI": Cmd+Tab
+    "&studio_unlock": ZMK Studio
+    "&bootloader": Bootloader
+    "&sys_reset": Reset
+    "&soft_off": Soft Off
+    "&mkp LCLK": L Click
+    # Position 31: holds the button and Nav together, releases both.
+    "&lclk_nav": {t: L Click, h: Nav}
+    "&mkp RCLK": R Click
+    "&mkp MCLK": M Click
+    "&mkp MB4": Back
+    "&mkp MB5": Forward
+    "&mmv MOVE_UP": Move ↑
+    "&mmv MOVE_DOWN": Move ↓
+    "&mmv MOVE_LEFT": Move ←
+    "&mmv MOVE_RIGHT": Move →
+    "&msc SCRL_UP": Wheel ↑
+    "&msc SCRL_DOWN": Wheel ↓
+    "&msc SCRL_LEFT": Wheel ←
+    "&msc SCRL_RIGHT": Wheel →
+    # The two trackballs. Not real behaviours: they come from the
+    # `#ifdef KEYMAP_DRAWER` bindings at the end of every layer in
+    # config/arcduo.keymap, which only the drawer's preprocessor sees. Their
+    # real behaviour is the input-listener chains in
+    # boards/shields/arcduo/arcduo.dtsi -- keep the two in sync.
+    #
+    # `type: ball` is the hook for the round styling in svg_extra_style above.
+    # Left ball scrolls, right ball moves the cursor. On Nav the two swap, as
+    # they do on the UHK's Mod layer; on Mouse the cursor ball drops to
+    # quarter speed for sniping.
+    "&ball_scroll": {t: Scroll, type: ball}
+    "&ball_cursor": {t: Cursor, type: ball}
+    "&ball_snipe": {t: Snipe ¼×, type: ball}
+    # Umlaut macros carried over from the UHK's Fn layer.
+    "&ae_macro": ä
+    "&oe_macro": ö
+    "&ue_macro": ü
   sticky_label: sticky
   toggle_label: toggle
   tap_toggle_label: tap-toggle
   trans_legend:
     t: ▽
     type: trans
-  mark_alternate_layer_activators: false
+  # Three layers now have two ways in -- Num from either outer thumb, Nav from
+  # either inner thumb, Symbols from G or H -- and with this off the diagram
+  # marked only the first one it found as held, so the second looked like an
+  # ordinary transparent key.
+  mark_alternate_layer_activators: true
+  # macOS names, matching both the keycaps and the way the UHK Agent labels
+  # these keys (LCmd / LOption in its own UI). The keymap is a macOS keymap;
+  # rendering LG() as "Gui" made the carried-over UHK chords needlessly hard
+  # to read against the shortcuts they came from.
   modifier_fn_map:
     left_ctrl: Ctl
     right_ctrl: Ctl
     left_shift: Sft
     right_shift: Sft
-    left_alt: Alt
+    left_alt: Opt
     right_alt: AGr
-    left_gui: Gui
-    right_gui: Gui
-    keycode_combiner: "{mods}+ {key}"
+    left_gui: Cmd
+    right_gui: Cmd
+    keycode_combiner: "{mods}+{key}"
     mod_combiner: "{mod_1}+{mod_2}"
     special_combinations:
       left_ctrl+left_alt+left_gui+left_shift: Hyper
@@ -211,7 +289,6 @@ parse_config:
     LG(E): "WINDOW"
     LC(LA(LEFT_SHIFT)): "MEH"
     LA(LC(LG(LEFT_SHIFT))): "HYPER"
-    LC(F10): "ALL WIN"
     LS(LC(H)): "PANE ◀"
     LS(LC(J)): "PANE ▲"
     LS(LC(K)): "PANE ▼"
@@ -236,7 +313,13 @@ parse_config:
     LA(KP_N1): "REJECT"
     LA(KP_N2): "PENDING"
     LA(KP_N3): "ACCEPT"
-    F12: "DEV TOOLS"
+    # F13-F21 on EXTRAS are deliberately left to render as themselves --
+    # what they do lives in Raycast/Karabiner, not here. F12 used to be
+    # relabelled "DEV TOOLS" and LC(F10) "ALL WIN", both leftovers from the
+    # vendored config this file replaced; F12 is really bound (NUM, hold on
+    # `/`) and was being mislabelled. Several neighbours below are dead too
+    # -- SHELL, PANE, TAG, REJECT/PENDING/ACCEPT reference bindings this
+    # keymap does not have -- but they are harmless and left alone.
     BRIGHTNESS INC: "BRIGHT ▲"
     BRIGHTNESS DEC: "BRIGHT ▼"
   zmk_combos: {}

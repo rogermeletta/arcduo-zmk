@@ -1,16 +1,22 @@
 name: Build ZMK firmware
-on: 
+
+on:
   push:
+  pull_request:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 1 */2 *" # run every two months to keep artifacts from expiring
+    # Monthly, so build artifacts do not expire.
+    #
+    # This was "0 0 1 */2 *" -- every second month, i.e. 59-62 days apart.
+    # GitHub disables a scheduled workflow after 60 days of repository
+    # inactivity, so that schedule could not reliably keep itself alive, and
+    # did not: this workflow was found in state `disabled_inactivity`, which
+    # takes the push and workflow_dispatch triggers down with it.
+    #
+    # Offset from midnight because jobs scheduled on the hour sit in the
+    # longest queues and get dropped most often.
+    - cron: "37 4 8 * *"
 
 jobs:
   build:
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
-
-  keymap_images:
-    needs: build
-    permissions:
-      contents: write
-    uses: ./.github/workflows/draw_keymaps.yaml

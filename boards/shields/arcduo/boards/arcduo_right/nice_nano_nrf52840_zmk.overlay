@@ -1,0 +1,16 @@
+// vim: set ft=dts:
+//
+// Right half sensor tuning. See the left half's file for why this lives in a
+// shield-named directory.
+//
+// The right ball is the cursor ball, so it runs at a much higher CPI than the
+// left one and is scaled down again by the input listener in arcduo.dtsi.
+
+&trackball {
+    cpi = <1200>;
+
+    // Replaces CONFIG_PMW3610_INVERT_X=y and CONFIG_PMW3610_INVERT_Y=y from
+    // config/arcduo_right.conf.
+    invert-x;
+    invert-y;
+};
