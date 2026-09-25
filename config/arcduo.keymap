@@ -136,7 +136,7 @@
 // rolled quickly resolve the first one as a hold. Typing "12" after a pause
 // therefore fired F1 -- Help, in a lot of applications -- and swallowed the
 // "1". F12 stays a hold on 29 because it has nowhere else to live.
-     &ae_macro        &oe_macro        &ue_macro        &kp LS(LG(V))    &kp LG(LA(V))                                                &td_equals       &kp N1           &kp N2           &kp N3           &hm F12 SLASH
+     &ae_macro        &oe_macro        &ue_macro        &kp LC(LA(LG(V)))&kp LG(LA(V))                                                &td_equals       &kp N1           &kp N2           &kp N3           &hm F12 SLASH
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
                                                         &none            &kp F11          &trans                   &kp SPACE          &kp N0           &kp DOT
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
@@ -157,7 +157,8 @@
 // boards with completely different key counts -- the finger already knows
 // "Mod plus C closes the tab", and it does not care that the UHK's C is in a
 // different place. 28 of these 30 positions come straight across that way;
-// the two exceptions are Z and X, which the UHK leaves empty (see below).
+// the exceptions are Z and X, which the UHK leaves empty, and V and ; (see
+// below).
 //
 // Row 1 uses &hml rather than plain &kp. The UHK's Mod layer keeps LShift,
 // LCtrl, LCmd and LOption on their own dedicated keys in the bottom row, so
@@ -168,15 +169,16 @@
 // the right hand only, which is exactly where the arrows are, and
 // hold-trigger-on-release lets several of them chord (Cmd+Shift+Left).
 //
-// Three deliberate deviations from the letter rule:
+// Deliberate deviations from the letter rule:
 //   Z, X  The UHK leaves both empty on Mod. They take the two left-hand
 //         functions whose UHK keys have no counterpart here: Shift+Cmd+5
 //         (UHK Tab) and Cmd+` (UHK ISO key, cycle windows of the front app).
 //         Both stay on the left hand, which is where they are on the UHK.
-//   ;     The UHK has Insert here. Insert does nothing on macOS, so this is
-//         Ctrl+Opt+Cmd+T instead -- AirPods noise cancelling via AirBuddy,
-//         which the UHK has on RShift. RShift has no counterpart on a 36-key,
-//         and the right pinky home is the closest thing to it.
+//   V     Shift+Cmd+V (clipboard history), traded with NUM's V, which now
+//         carries the UHK's Ctrl+Opt+Cmd+V. Swapped on request.
+//   ;     Empty. The UHK has Insert here, which does nothing on macOS. It
+//         held Ctrl+Opt+Cmd+T (AirPods noise cancelling via AirBuddy) until
+//         that moved to EXTRAS ; on request.
 //
 // Dropped with no replacement, all from UHK keys this board does not have:
 // PrtScn ([), Scroll Lock (]), Pause/Break (\) -- none of them do anything on
@@ -186,9 +188,9 @@
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
      &kp ESC          &kp LA(LG(LEFT))&kp LG(T)        &kp LA(LG(RIGHT))&kp LC(LS(LG(F)))                                            &kp PG_UP        &kp HOME         &kp UP           &kp END          &kp DEL
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &hml LCMD CAPS   &hml LALT LG(LEFT) &hml_ct LCTRL LGUI &hml LSHIFT LG(RIGHT) &kp LA(LG(N6))                                     &kp PG_DN        &kp LEFT_ARROW   &kp DOWN         &kp RIGHT_ARROW  &kp LC(LA(LG(T)))
+     &hml LCMD CAPS   &hml LALT LG(LEFT) &hml_ct LCTRL LGUI &hml LSHIFT LG(RIGHT) &kp LA(LG(N6))                                     &kp PG_DN        &kp LEFT_ARROW   &kp DOWN         &kp RIGHT_ARROW  &none
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &kp LS(LG(N5))   &kp LG(GRAVE)    &kp LG(W)        &kp LC(LA(LG(V)))&kp LC(LA(LG(B)))                                            &kp LA(LG(N1))   &kp LA(LG(N2))   &kp LA(LG(N3))   &kp LC(LA(LG(N4)))&kp LC(LA(LG(N5)))
+     &kp LS(LG(N5))   &kp LG(GRAVE)    &kp LG(W)        &kp LS(LG(V))    &kp LC(LA(LG(B)))                                            &kp LA(LG(N1))   &kp LA(LG(N2))   &kp LA(LG(N3))   &kp LC(LA(LG(N4)))&kp LC(LA(LG(N5)))
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
                                                         &trans           &trans           &trans                   &kp LS(LG(SPACE))  &trans           &kp LA(BSPC)
                                                    // ╰────────────────┴────────────────┴────────────────╯       ╰──────────────────┴────────────────┴────────────────╯
@@ -274,19 +276,23 @@
 //
 // RIGHT HAND: radios on the top row, transport and volume below.
 //
-// All five BT profiles are on the top row now. ZMK derives the profile count as
-// BT_MAX_PAIRED - ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS = 7 - 2 = 5, and the fifth
-// had no key at all -- pair a fifth host and you could not select it without a
-// reflash. OUT_TOG moved down to position 15 to make room. It is pressed about
-// once per pairing, so the less prominent key is the right home for it, and the
-// top row now reads as the block it is.
+// BT profiles 0-3 are on the top row, and BT_CLR closes it at position 9.
+// ZMK derives the profile count as BT_MAX_PAIRED - ZMK_SPLIT_BLE_CENTRAL_
+// PERIPHERALS = 7 - 2 = 5, so a fifth profile exists but has no key: BT_CLR
+// took BT_SEL(4)'s slot on request, to free position 19 for Ctrl+Opt+Cmd+T.
+// OUT_TOG sits on position 15; it is pressed about once per pairing, so the
+// less prominent key is the right home for it.
 //
-// BT_CLR stays at position 19, which keeps it reachable at all. It used to be
-// on thumb 35. This layer is HELD with a right thumb, so no other right thumb
-// key can be pressed while it is active: one thumb cannot hold 33 and tap 35.
-// BT_CLR is the key you need to re-pair a host, so having it there meant the
-// pairing flow did not work. Same trap applies to anything else put on 34/35
-// of this layer.
+// BT_CLR is in the finger block, not on a thumb. It used to be on thumb 35.
+// This layer is HELD with a right thumb, so no other right thumb key can be
+// pressed while it is active: one thumb cannot hold 33 and tap 35. BT_CLR is
+// the key you need to re-pair a host, so having it there meant the pairing
+// flow did not work. Same trap applies to anything else put on 34/35 of this
+// layer.
+//
+// Position 19 is Ctrl+Opt+Cmd+T -- AirPods noise cancelling via AirBuddy,
+// which the UHK has on RShift. It lived on NAV ; until it moved here on
+// request.
 //
 // &soft_off at position 25 powers the board down for travel, halves included --
 // the central notifies the peripherals, and ZMK powers a peripheral off
@@ -300,9 +306,9 @@
 // overridden to hold-time-ms = 2000 in config/behaviors.dtsi, so a slip is a
 // tap and a tap does nothing.
 // ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮                                           ╭────────────────┬────────────────┬────────────────┬────────────────┬────────────────╮
-     &kp F13          &kp F14          &kp F15          &kp F22          &kp C_BRI_INC                                                &bt BT_SEL(0)    &bt BT_SEL(1)    &bt BT_SEL(2)    &bt BT_SEL(3)    &bt BT_SEL(4)
+     &kp F13          &kp F14          &kp F15          &kp F22          &kp C_BRI_INC                                                &bt BT_SEL(0)    &bt BT_SEL(1)    &bt BT_SEL(2)    &bt BT_SEL(3)    &bt BT_CLR
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
-     &kp F16          &kp F17          &kp F18          &kp F23          &kp C_BRI_DEC                                                &out OUT_TOG     &kp C_PREV       &kp C_PP         &kp C_NEXT       &bt BT_CLR
+     &kp F16          &kp F17          &kp F18          &kp F23          &kp C_BRI_DEC                                                &out OUT_TOG     &kp C_PREV       &kp C_PP         &kp C_NEXT       &kp LC(LA(LG(T)))
 // ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤                                           ├────────────────┼────────────────┼────────────────┼────────────────┼────────────────┤
      &kp F19          &kp F20          &kp F21          &kp F24          &kp LC(LS(C_EJECT))                                          &soft_off        &kp K_MUTE       &kp C_VOL_DN     &kp C_VOL_UP     &studio_unlock
 // ╰────────────────┴────────────────┴────────────────┼────────────────┼────────────────┼────────────────╮       ╭──────────────────┼────────────────┼────────────────┴────────────────┴────────────────┴────────────────╯
