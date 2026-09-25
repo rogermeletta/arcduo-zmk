@@ -63,7 +63,7 @@ layers:
   - ä
   - ö
   - ü
-  - Sft+Cmd+V
+  - Ctl+Opt+Cmd+V
   - Cmd+Opt+V
   - '='
   - '1'
@@ -98,11 +98,11 @@ layers:
   - LEFT
   - DOWN
   - RIGHT
-  - Ctl+Opt+Cmd+T
+  - ''
   - Sft+Cmd+5
   - Cmd+`
   - Cmd+W
-  - Ctl+Opt+Cmd+V
+  - Sft+Cmd+V
   - Ctl+Opt+Cmd+B
   - Opt+Cmd+1
   - Opt+Cmd+2
@@ -166,7 +166,7 @@ layers:
   - BT(1)
   - BT(2)
   - BT(3)
-  - BT(4)
+  - BT CLR
   - F16
   - F17
   - F18
@@ -176,7 +176,7 @@ layers:
   - PREV
   - PP
   - NEXT
-  - BT CLR
+  - Ctl+Opt+Cmd+T
   - F19
   - F20
   - F21
