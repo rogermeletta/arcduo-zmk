@@ -153,19 +153,18 @@ in logs.
 
 There are **five host profiles**, not four. ZMK derives them as
 `BT_MAX_PAIRED - ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS` = 7 − 2, which is why
-`BT_MAX_PAIRED` is bumped to 7. All five are now bound: `BT0`–`BT4` sit on
-`Y U I O P`, the whole top row of Extra's right hand. The fifth used to have no
-key at all, so a fifth paired host could not be selected without a reflash.
-`USB/BLE` moved down one row to `H` to make room — it is pressed about once per
-pairing, so it is the one that gives way.
+`BT_MAX_PAIRED` is bumped to 7. Four are bound: `BT0`–`BT3` sit on `Y U I O`
+of Extra's right hand, and `BT CLR` takes `P`, where `BT4` used to be. The fifth
+profile has no key, so a fifth paired host cannot be selected without a
+reflash. `USB/BLE` is on `H`.
 
 To pair a host, hold **Extra** and:
 
-1. Tap `BT0`–`BT4` (`Y U I O P`) to select a profile. The dongle advertises
+1. Tap `BT0`–`BT3` (`Y U I O`) to select a profile. The dongle advertises
    whenever the selected profile is not *connected*, so an unused profile is
    immediately discoverable.
-2. If the profile is already bonded to something else, tap `BT CLR` (right
-   pinky home) first. That clears **only the active host profile** —
+2. If the profile is already bonded to something else, tap `BT CLR` (`P`,
+   right pinky top) first. That clears **only the active host profile** —
    `zmk_ble_clear_bonds()` calls `clear_profile_bond(active_profile)` and does
    not touch the split bonds, so the halves stay paired.
 3. Pair from the host's Bluetooth settings.

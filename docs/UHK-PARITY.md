@@ -107,7 +107,7 @@ the UHK's Mod layer and this layer put on it.
 | `Z` | — | `Shift+Cmd+5` | *deviation, see below* |
 | `X` | — | ``Cmd+` `` | *deviation, see below* |
 | `C` | `Cmd+W` | same | close tab |
-| `V` | `Ctrl+Opt+Cmd+V` | same | |
+| `V` | `Ctrl+Opt+Cmd+V` | `Shift+Cmd+V` | *deviation, see below* |
 | `B` | `Ctrl+Opt+Cmd+B` | same | |
 | `Y` | PgUp | same | |
 | `U` | Home | same | |
@@ -116,7 +116,7 @@ the UHK's Mod layer and this layer put on it.
 | `P` | Delete | same | |
 | `H` | PgDn | same | |
 | `J` `K` `L` | ← ↓ → | same | |
-| `;` | Insert | `Ctrl+Opt+Cmd+T` | *deviation, see below* |
+| `;` | Insert | — | *deviation, see below* |
 | `N` `M` `,` | `Opt+Cmd+1/2/3` | same | |
 | `.` `/` | `Ctrl+Opt+Cmd+4/5` | same | |
 
@@ -129,17 +129,19 @@ side plus a bottom modifier row, this board has three:
 | Delete word (`Opt+Bspc`) | 35 — the UHK's `delete word (mac)` macro |
 | Left click, Tab, Return, Space | pass through from `BASE` |
 
-### The three deviations
+### The deviations
 
 **`Z` and `X`.** The UHK leaves both empty on Mod. They take the two left-hand
 functions whose UHK keys do not exist here: `Shift+Cmd+5` (screenshot, on the
 UHK's `Tab`) and ``Cmd+` `` (cycle windows of the front app, on the UHK's ISO
 key). Both stay on the left hand, which is the hand that has them on the UHK.
 
-**`;`.** The UHK has Insert here. Insert does nothing on macOS. It becomes
-`Ctrl+Opt+Cmd+T` — AirPods noise cancelling via AirBuddy — which the UHK has on
-`RShift`. A 36-key board has no `RShift`, and the right pinky home is the
-closest thing to it.
+**`V`.** Traded with `NUM`'s `V` on request: `NAV` gets `Shift+Cmd+V`
+(clipboard history), `NUM` gets the UHK's `Ctrl+Opt+Cmd+V`.
+
+**`;`.** The UHK has Insert here. Insert does nothing on macOS, so it is empty.
+It held `Ctrl+Opt+Cmd+T` — AirPods noise cancelling via AirBuddy, which the UHK
+has on `RShift` — until that moved to `EXTRAS` `;` on request.
 
 **The home row holds.** The UHK's Mod layer keeps LShift, LCtrl, LCmd and
 LOption on dedicated keys in its bottom row, so `Shift+←` still selects text
@@ -160,7 +162,7 @@ key over while switching tabs.
 
 | Key | UHK Fn | ArcDuo `NUM` | |
 | --- | --- | --- | --- |
-| `V` | `Shift+Cmd+V` | same | clipboard history |
+| `V` | `Shift+Cmd+V` | `Ctrl+Opt+Cmd+V` | traded with `NAV`'s `V` |
 | `B` | — | `Cmd+Opt+V` | sanitised paste, not a UHK binding |
 | `U` `I` `O` | 7 8 9 | same | |
 | `J` `K` `L` | 4 5 6 | same | |
